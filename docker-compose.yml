@@ -3,11 +3,9 @@ version: '3.8'
 services:
   db:
     image: mysql:8.0.29-oracle
-    command: --default-authentication-plugin=mysql_native_password --sql_mode=""
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: sample
-      MYSQL_PASSWORD: password
     ports:
       - 4306:3306
     volumes:
@@ -17,12 +15,13 @@ services:
     depends_on:
       - db
     build:
-      context: ./api/
+      context: .
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 3001:3000
     volumes:
-      - ./api:/app
+      - .:/app
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
 volumes:
   mysql-db:
+    driver: local

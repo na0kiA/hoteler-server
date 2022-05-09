@@ -1,13 +1,51 @@
-FROM ruby:3.1.2
+FROM ruby:3.1.2-alpine3.15 as builder
 
-ENV LANG=C.UTF-8 \
-  TZ=Asia/Tokyo
+ENV ROOT="/app"
+ENV LANG=C.UTF-8
+ENV TZ=Asia/Tokyo
 
-WORKDIR /app
-RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
+WORKDIR ${ROOT}
+
+RUN apk update && \
+    apk add --no-cache \
+        gcc \
+        g++ \
+        libc-dev \
+        libxml2-dev \
+        linux-headers \
+        make \
+        postgresql-dev \
+        tzdata && \
+    apk add --virtual build-packs --no-cache \
+        build-base \
+        curl-dev
+
+COPY Gemfile ${ROOT}
+COPY Gemfile.lock ${ROOT}
+
 RUN bundle install
+RUN apk del build-packs
 
-# Start the main process.
+
+FROM ruby:3.1.2-alpine3.15
+
+ENV ROOT="/app"
+ENV LANG=C.UTF-8
+ENV TZ=Asia/Tokyo
+
+RUN apk update && \
+    apk add \
+        postgresql-dev \
+        tzdata
+
+WORKDIR ${ROOT}
+
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY . ${ROOT}
+COPY entrypoint.sh /usr/bin/
+
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+EXPOSE 3001
+
 CMD ["rails", "server", "-b", "0.0.0.0"]
