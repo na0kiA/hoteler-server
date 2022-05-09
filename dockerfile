@@ -1,4 +1,4 @@
-FROM ruby:3.1.1-alpine as builder
+FROM ruby:3.1.2-alpine3.15 as builder
 
 ENV ROOT="/app"
 ENV LANG=C.UTF-8
@@ -20,7 +20,7 @@ RUN apk add \
 RUN gem install bundler
 RUN bundle install
 
-FROM ruby:3.1.1-alpine
+FROM ruby:3.1.2-alpine3.15
 
 ENV ROOT="/app"
 ENV LANG=C.UTF-8
@@ -30,7 +30,7 @@ RUN apk update && \
     apk add \
         mysql-dev \
         tzdata \
-        sh
+        bash
 
 WORKDIR ${ROOT}
 
