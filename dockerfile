@@ -1,4 +1,4 @@
-FROM ruby:3.1.2-alpine3.15 as builder
+FROM ruby:3.1.1-alpine as builder
 
 ENV ROOT="/app"
 ENV LANG=C.UTF-8
@@ -6,28 +6,21 @@ ENV TZ=Asia/Tokyo
 
 WORKDIR ${ROOT}
 
-RUN apk update && \
-    apk add --no-cache \
-        gcc \
-        g++ \
-        libc-dev \
-        libxml2-dev \
-        linux-headers \
-        make \
-        postgresql-dev \
-        tzdata && \
-    apk add --virtual build-packs --no-cache \
-        build-base \
-        curl-dev
+COPY Gemfile Gemfile.lock ${ROOT}
 
-COPY Gemfile ${ROOT}
-COPY Gemfile.lock ${ROOT}
+RUN apk add \
+    alpine-sdk \
+    build-base \
+    sqlite-dev \
+    mysql-client \
+    mysql-dev \
+    tzdata \
+    git 
 
+RUN gem install bundler
 RUN bundle install
-RUN apk del build-packs
 
-
-FROM ruby:3.1.2-alpine3.15
+FROM ruby:3.1.1-alpine
 
 ENV ROOT="/app"
 ENV LANG=C.UTF-8
@@ -35,8 +28,9 @@ ENV TZ=Asia/Tokyo
 
 RUN apk update && \
     apk add \
-        postgresql-dev \
-        tzdata
+        mysql-dev \
+        tzdata \
+        sh
 
 WORKDIR ${ROOT}
 
