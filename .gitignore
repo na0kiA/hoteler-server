@@ -31,4 +31,4 @@
 /config/master.key
 
 .env
-.devcontainer/
+.devcontainer/coverage
