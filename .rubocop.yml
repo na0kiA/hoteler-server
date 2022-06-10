@@ -7,3 +7,9 @@ require:
 
 AllCops:
   NewCops: enable
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 25
