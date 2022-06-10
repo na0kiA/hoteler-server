@@ -673,9 +673,15 @@
           null
         ]
       },
-      "/app/spec/factories/posts.rb": {
+      "/app/app/models/application_record.rb": {
         "lines": [
           1,
+          1,
+          null
+        ]
+      },
+      "/app/spec/factories/posts.rb": {
+        "lines": [
           1,
           null,
           null,
@@ -687,8 +693,14 @@
           1,
           null
         ]
+      },
+      "/app/app/models/post.rb": {
+        "lines": [
+          1,
+          null
+        ]
       }
     },
-    "timestamp": 1654849915
+    "timestamp": 1654865727
   }
 }

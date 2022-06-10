@@ -14,7 +14,7 @@
       <img src="./assets/0.12.3/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" class="hide">
-      <div class="timestamp">Generated <abbr class="timeago" title="2022-06-10T17:31:55+09:00">2022-06-10T17:31:55+09:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2022-06-10T21:55:28+09:00">2022-06-10T21:55:28+09:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -39,12 +39,12 @@
   <a name="AllFiles"></a>
 
   <div>
-    <b>17</b> files in total.
+    <b>19</b> files in total.
   </div>
 
   <div class="t-line-summary">
-    <b>78</b> relevant lines,
-    <span class="green"><b>78</b> lines covered</span> and
+    <b>80</b> relevant lines,
+    <span class="green"><b>80</b> lines covered</span> and
     <span class="red"><b>0</b> lines missed. </span>
     (<span class="green">
   100.0%
@@ -72,6 +72,28 @@
         
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#d9bb6ae4328bef863171723d65f913f9c3803bfe" class="src_link" title="app/helpers/application_helper.rb">app/helpers/application_helper.rb</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2c5f70c0710b67d4338de4845d83cd2187f429f2" class="src_link" title="app/models/application_record.rb">app/models/application_record.rb</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#188a41b0f7fba38c24dcc3a55d78362f8cd8a0b8" class="src_link" title="app/models/post.rb">app/models/post.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
             <td class="cell--number">2</td>
             <td class="cell--number">1</td>
@@ -249,9 +271,9 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#1bb692b038338426f94d350cd0292ddd179d8165" class="src_link" title="spec/factories/posts.rb">spec/factories/posts.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">5</td>
-            <td class="cell--number">2</td>
-            <td class="cell--number">2</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
             <td class="cell--number">0</td>
             <td class="cell--number">1.00</td>
             
@@ -327,6 +349,123 @@
 </div>
 
       
+        <div class="source_table" id="2c5f70c0710b67d4338de4845d83cd2187f429f2">
+  <div class="header">
+    <h3>app/models/application_record.rb</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>2</b> relevant lines.
+      <span class="green"><b>2</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="1">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">class ApplicationRecord &lt; ActiveRecord::Base</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="2">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  primary_abstract_class</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">end</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="188a41b0f7fba38c24dcc3a55d78362f8cd8a0b8">
+  <div class="header">
+    <h3>app/models/post.rb</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
+      <span class="green"><b>1</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="1">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">class Post &lt; ApplicationRecord</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby">end</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
         <div class="source_table" id="4a07c80a4841a4bea1d05c6d98daf9bb801c62d0">
   <div class="header">
     <h3>app/models/user.rb</h3>
@@ -382,7 +521,7 @@
 
             
 
-            <code class="ruby">class User &lt; ActiveRecord::Base</code>
+            <code class="ruby">class User &lt; ApplicationRecord</code>
           </li>
         </div>
       
@@ -633,7 +772,7 @@
 
             
 
-            <code class="ruby">    </code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -677,7 +816,7 @@
 
             
 
-            <code class="ruby">    config.middleware.use ActionDispatch::Session::CookieStore, {:key=&gt;&quot;_app_session&quot;}</code>
+            <code class="ruby">    config.middleware.use ActionDispatch::Session::CookieStore, { key: &quot;_app_session&quot; }</code>
           </li>
         </div>
       
@@ -7538,8 +7677,8 @@
     
 
     <div class="t-line-summary">
-      <b>2</b> relevant lines.
-      <span class="green"><b>2</b> lines covered</span> and
+      <b>1</b> relevant lines.
+      <span class="green"><b>1</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
 
@@ -7562,13 +7701,13 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="2">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="2">
+            
             
 
             
 
-            <code class="ruby">  factory :post do</code>
+            <code class="ruby">  # factory :post do</code>
           </li>
         </div>
       
@@ -7579,23 +7718,12 @@
 
             
 
-            <code class="ruby">    </code>
+            <code class="ruby">  # end</code>
           </li>
         </div>
       
         <div>
           <li class="never" data-hits="" data-linenumber="4">
-            
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="5">
             
             
 
