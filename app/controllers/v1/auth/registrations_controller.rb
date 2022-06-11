@@ -1,2 +1,2 @@
-class V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
+class V1::Auth::RegistrationsController < ApiController
 end
