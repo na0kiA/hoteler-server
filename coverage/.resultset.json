@@ -713,19 +713,7 @@
       },
       "/app/spec/requests/v1/auth/auth_users_apis_spec.rb": {
         "lines": [
-          1,
-          null,
-          1,
-          1,
-          1,
-          1,
-          1,
-          0,
-          0,
-          null,
-          null,
-          null,
-          null
+
         ]
       },
       "/app/spec/requests/v1/auth/registrations_spec.rb": {
@@ -735,11 +723,17 @@
           1,
           1,
           1,
+          1,
+          null,
+          1,
+          0,
+          null,
+          null,
           null,
           null
         ]
       }
     },
-    "timestamp": 1655109605
+    "timestamp": 1655112692
   }
 }
