@@ -14,7 +14,7 @@
       <img src="./assets/0.12.3/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" class="hide">
-      <div class="timestamp">Generated <abbr class="timeago" title="2022-06-13T18:31:32+09:00">2022-06-13T18:31:32+09:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2022-06-13T23:11:19+09:00">2022-06-13T23:11:19+09:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -23,7 +23,7 @@
     <span class="group_name">All Files</span>
     (<span class="covered_percent">
       <span class="green">
-  96.97%
+  97.2%
 </span>
 
      </span>
@@ -43,11 +43,11 @@
   </div>
 
   <div class="t-line-summary">
-    <b>99</b> relevant lines,
-    <span class="green"><b>96</b> lines covered</span> and
+    <b>107</b> relevant lines,
+    <span class="green"><b>104</b> lines covered</span> and
     <span class="red"><b>3</b> lines missed. </span>
     (<span class="green">
-  96.97%
+  97.2%
 </span>
 )
   </div>
@@ -183,7 +183,7 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#d488c6da2ba90804c394c7dbec66f5d7956b0d42" class="src_link" title="config/initializers/cors.rb">config/initializers/cors.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">9</td>
+            <td class="cell--number">10</td>
             <td class="cell--number">4</td>
             <td class="cell--number">4</td>
             <td class="cell--number">0</td>
@@ -206,8 +206,8 @@
             <td class="strong t-file__name"><a href="#2c3c375ea9c039d240641f2b50c5f6058a50bdcc" class="src_link" title="config/initializers/devise_token_auth.rb">config/initializers/devise_token_auth.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
             <td class="cell--number">60</td>
-            <td class="cell--number">2</td>
-            <td class="cell--number">2</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">3</td>
             <td class="cell--number">0</td>
             <td class="cell--number">1.00</td>
             
@@ -260,9 +260,9 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#056289cd38b96f93ffdda478bab2d38195c6ce01" class="src_link" title="config/routes.rb">config/routes.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">12</td>
             <td class="cell--number">7</td>
-            <td class="cell--number">5</td>
-            <td class="cell--number">5</td>
+            <td class="cell--number">7</td>
             <td class="cell--number">0</td>
             <td class="cell--number">1.00</td>
             
@@ -281,23 +281,23 @@
         
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#41b9cd9b5be863914cc167be6d1e6add1e2b2236" class="src_link" title="spec/requests/v1/auth/auth_users_apis_spec.rb">spec/requests/v1/auth/auth_users_apis_spec.rb</a></td>
-            <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">0</td>
-            <td class="cell--number">0</td>
-            <td class="cell--number">0</td>
-            <td class="cell--number">0</td>
-            <td class="cell--number">0.00</td>
+            <td class="yellow strong cell--number t-file__coverage">87.50 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">8</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.88</td>
             
           </tr>
         
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#1730250746a5ba1a01b0b4c373931423a4163a91" class="src_link" title="spec/requests/v1/auth/registrations_spec.rb">spec/requests/v1/auth/registrations_spec.rb</a></td>
-            <td class="yellow strong cell--number t-file__coverage">85.71 %</td>
-            <td class="cell--number">13</td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
             <td class="cell--number">7</td>
-            <td class="cell--number">6</td>
-            <td class="cell--number">1</td>
-            <td class="cell--number">0.86</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
             
           </tr>
         
@@ -2465,7 +2465,7 @@
 
             
 
-            <code class="ruby">      methods: [:get, :post, :put, :patch, :delete, :options, :head]</code>
+            <code class="ruby">      expose: %w[access-token expiry token-type uid client],</code>
           </li>
         </div>
       
@@ -2476,12 +2476,23 @@
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">      methods: [:get, :post, :put, :patch, :delete, :options, :head]</code>
           </li>
         </div>
       
         <div>
           <li class="never" data-hits="" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="10">
             
             
 
@@ -5962,8 +5973,8 @@
     
 
     <div class="t-line-summary">
-      <b>2</b> relevant lines.
-      <span class="green"><b>2</b> lines covered</span> and
+      <b>3</b> relevant lines.
+      <span class="green"><b>3</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
 
@@ -6459,13 +6470,13 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="45">
-            
-            
-
+          <li class="covered" data-hits="1" data-linenumber="45">
+            <span class="hits">1</span>
             
 
-            <code class="ruby">  # config.headers_names = {:&#39;access-token&#39; =&gt; &#39;access-token&#39;,</code>
+            
+
+            <code class="ruby">  config.headers_names = { &#39;access-token&#39;: &#39;access-token&#39;,</code>
           </li>
         </div>
       
@@ -6476,7 +6487,7 @@
 
             
 
-            <code class="ruby">  #                        :&#39;client&#39; =&gt; &#39;client&#39;,</code>
+            <code class="ruby">                           client: &#39;client&#39;,</code>
           </li>
         </div>
       
@@ -6487,7 +6498,7 @@
 
             
 
-            <code class="ruby">  #                        :&#39;expiry&#39; =&gt; &#39;expiry&#39;,</code>
+            <code class="ruby">                           expiry: &#39;expiry&#39;,</code>
           </li>
         </div>
       
@@ -6498,7 +6509,7 @@
 
             
 
-            <code class="ruby">  #                        :&#39;uid&#39; =&gt; &#39;uid&#39;,</code>
+            <code class="ruby">                           uid: &#39;uid&#39;,</code>
           </li>
         </div>
       
@@ -6509,7 +6520,7 @@
 
             
 
-            <code class="ruby">  #                        :&#39;token-type&#39; =&gt; &#39;token-type&#39; }</code>
+            <code class="ruby">                           &#39;token-type&#39;: &#39;token-type&#39; }</code>
           </li>
         </div>
       
@@ -7690,8 +7701,8 @@
     
 
     <div class="t-line-summary">
-      <b>5</b> relevant lines.
-      <span class="green"><b>5</b> lines covered</span> and
+      <b>7</b> relevant lines.
+      <span class="green"><b>7</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
 
@@ -7720,7 +7731,7 @@
 
             
 
-            <code class="ruby">  namespace :v1 do</code>
+            <code class="ruby">  resources :posts, only: :index</code>
           </li>
         </div>
       
@@ -7731,7 +7742,7 @@
 
             
 
-            <code class="ruby">    mount_devise_token_auth_for &#39;User&#39;, at: &#39;auth&#39;</code>
+            <code class="ruby">  namespace :v1 do</code>
           </li>
         </div>
       
@@ -7747,7 +7758,73 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="5">
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    mount_devise_token_auth_for &#39;User&#39;, at: &#39;auth&#39;, controllers: {</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby">      registrations: &#39;v1/auth/registrations&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">    }</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="8">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    namespace :auth do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="9">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">      resources :sessions, only: %i[index]</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="10">
+            
+            
+
+            
+
+            <code class="ruby">    end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="11">
             
             
 
@@ -7758,18 +7835,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="6">
-            <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  resources :posts, only: :index</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="7">
+          <li class="never" data-hits="" data-linenumber="12">
             
             
 
@@ -7885,39 +7951,8 @@
   <div class="header">
     <h3>spec/requests/v1/auth/auth_users_apis_spec.rb</h3>
     <h4>
-      <span class="green">
-  100.0%
-</span>
-
-      lines covered
-    </h4>
-
-    
-
-    <div class="t-line-summary">
-      <b>0</b> relevant lines.
-      <span class="green"><b>0</b> lines covered</span> and
-      <span class="red"><b>0</b> lines missed.</span>
-    </div>
-
-    
-
-  </div>
-
-  <pre>
-    <ol>
-      
-    </ol>
-  </pre>
-</div>
-
-      
-        <div class="source_table" id="1730250746a5ba1a01b0b4c373931423a4163a91">
-  <div class="header">
-    <h3>spec/requests/v1/auth/registrations_spec.rb</h3>
-    <h4>
       <span class="yellow">
-  85.71%
+  87.5%
 </span>
 
       lines covered
@@ -7926,8 +7961,8 @@
     
 
     <div class="t-line-summary">
-      <b>7</b> relevant lines.
-      <span class="green"><b>6</b> lines covered</span> and
+      <b>8</b> relevant lines.
+      <span class="green"><b>7</b> lines covered</span> and
       <span class="red"><b>1</b> lines missed.</span>
     </div>
 
@@ -8005,13 +8040,13 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="7">
-            
-            
-
+          <li class="covered" data-hits="1" data-linenumber="7">
+            <span class="hits">1</span>
             
 
-            <code class="ruby">        # client_user = build(:user)</code>
+            
+
+            <code class="ruby">        params = { email: &#39;test2@example.com&#39;, password: &#39;test2525&#39; }</code>
           </li>
         </div>
       
@@ -8022,7 +8057,7 @@
 
             
 
-            <code class="ruby">        post v1_auth_path, params = { email: &#39;test2@example.com&#39;, password: &#39;test2525&#39; } </code>
+            <code class="ruby">        post v1_auth_path, params: params</code>
           </li>
         </div>
       
@@ -8072,6 +8107,114 @@
       
         <div>
           <li class="never" data-hits="" data-linenumber="13">
+            
+            
+
+            
+
+            <code class="ruby">end</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="1730250746a5ba1a01b0b4c373931423a4163a91">
+  <div class="header">
+    <h3>spec/requests/v1/auth/registrations_spec.rb</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
+      <span class="green"><b>4</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="1">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">require &#39;rails_helper&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">RSpec.describe &quot;V1::Auth::Registrations&quot;, type: :request do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  describe &quot;GET /index&quot; do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    pending &quot;add some examples (or delete) #{__FILE__}&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
             
             
 
