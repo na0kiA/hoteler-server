@@ -1,6 +1,8 @@
 module V1
   module Auth
-    class RegistrationsController < ApiController
+    class RegistrationsController < DeviseTokenAuth::RegistrationsController
+      # before_action :sign_up_params,                only: :create
+
       private
 
       def sign_up_params
