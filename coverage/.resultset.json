@@ -701,6 +701,7 @@
           1,
           1,
           1,
+          1,
           null,
           null
         ]
@@ -709,6 +710,11 @@
         "lines": [
           1,
           null
+        ]
+      },
+      "/app/spec/support/authorization_spec.rb": {
+        "lines": [
+
         ]
       },
       "/app/app/models/post.rb": {
@@ -725,6 +731,7 @@
           1,
           1,
           1,
+          null,
           1,
           1,
           0,
@@ -746,6 +753,6 @@
         ]
       }
     },
-    "timestamp": 1655129479
+    "timestamp": 1655133694
   }
 }
