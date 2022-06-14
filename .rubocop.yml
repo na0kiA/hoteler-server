@@ -21,3 +21,6 @@ Metrics/BlockLength:
 
 RSpec/ContextWording:
   Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 5
