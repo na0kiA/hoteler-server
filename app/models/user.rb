@@ -6,4 +6,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :lockable, :validatable
   include DeviseTokenAuth::Concerns::User
+
+  has_many :hotels, dependent: :destroy
 end
