@@ -15,5 +15,5 @@
 #   inflect.acronym "RESTful"
 # end
 ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.acronym 'PvP'
+  inflect.acronym 'RuboCop'
 end

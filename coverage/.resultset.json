@@ -588,6 +588,9 @@
           null,
           null,
           null,
+          null,
+          1,
+          1,
           null
         ]
       },
@@ -701,6 +704,8 @@
         "lines": [
           1,
           1,
+          1,
+          1,
           null,
           null
         ]
@@ -724,7 +729,13 @@
       },
       "/app/spec/support/authorization_spec.rb": {
         "lines": [
-
+          1,
+          1,
+          0,
+          null,
+          0,
+          null,
+          null
         ]
       },
       "/app/app/models/hotel.rb": {
@@ -796,6 +807,6 @@
         ]
       }
     },
-    "timestamp": 1655214253
+    "timestamp": 1655221527
   }
 }
