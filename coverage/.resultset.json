@@ -669,6 +669,7 @@
           null,
           1,
           1,
+          1,
           null,
           null,
           null
@@ -683,6 +684,7 @@
           null,
           1,
           null,
+          1,
           null,
           1,
           null
@@ -692,6 +694,14 @@
         "lines": [
           1,
           1,
+          null
+        ]
+      },
+      "/app/spec/factories/hotels.rb": {
+        "lines": [
+          1,
+          1,
+          null,
           null
         ]
       },
@@ -717,6 +727,28 @@
 
         ]
       },
+      "/app/app/models/hotel.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          1,
+          null
+        ]
+      },
+      "/app/spec/models/post_spec.rb": {
+        "lines": [
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
       "/app/app/models/post.rb": {
         "lines": [
           1,
@@ -725,16 +757,16 @@
       },
       "/app/spec/requests/v1/auth/auth_users_apis_spec.rb": {
         "lines": [
-          1,
           null,
-          1,
-          1,
-          1,
-          1,
           null,
-          1,
-          1,
-          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
           null,
           null,
           null,
@@ -742,6 +774,17 @@
         ]
       },
       "/app/spec/requests/v1/auth/registrations_spec.rb": {
+        "lines": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "/app/spec/requests/v1/hotels_spec.rb": {
         "lines": [
           1,
           null,
@@ -753,6 +796,6 @@
         ]
       }
     },
-    "timestamp": 1655133694
+    "timestamp": 1655214253
   }
 }

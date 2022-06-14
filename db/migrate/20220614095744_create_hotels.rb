@@ -6,7 +6,7 @@ class CreateHotels < ActiveRecord::Migration[7.0]
       t.text :content, null: false
       t.string :image
       t.boolean :accepted, default: false, null: false
-      t.timestamps  
+      t.timestamps
     end
   end
 end
