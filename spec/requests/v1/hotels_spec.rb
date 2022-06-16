@@ -1,7 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "V1::Hotels", type: :request do
-  describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
+  describe "POST /create" do
+    context "ログインしている場合" do
+      it "POSTができること" do
+        
+      end
+    end
   end
 end
