@@ -4,7 +4,7 @@ RSpec.describe "V1::Hotels", type: :request do
   describe "POST /create" do
     let!(:client_user)  { create(:user) }
     let!(:auth_tokens)  { client_user.create_new_auth_token }
-    let!(:hotel)  { client_user.hotels.create(name: "hotelName", content: "hotelContent") }
+    # let!(:hotel)  { client_user.hotels.create(name: "hotelName", content: "hotelContent") }
 
     context "ログインしている場合" do
       it "POSTができること" do
@@ -25,8 +25,8 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしていない場合" do
       it "POSTができないこと" do
-        params = build(:hotel)
-        post v1_hotels_path, params: {hotel: params}
+        params = { name: "hotelName", content: "hotelContent"}
+        post v1_hotels_path, params: params, headers: nil
         expect(response).to have_http_status(401)
         expect(response.message).to include('Unauthorized')
       end
