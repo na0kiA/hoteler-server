@@ -1,11 +1,13 @@
 require 'spec_helper'
+
 # require 'simplecov'
 ENV['RAILS_ENV'] ||= 'test'
-# SimpleCov.start
 require_relative '../config/environment'
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 
 require 'rspec/rails'
+# SimpleCov.start
+require 'devise'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
@@ -21,5 +23,8 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
+  config.raise_errors_for_deprecations!
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :request
   # config.include AuthorizationHelper, type: :request
 end

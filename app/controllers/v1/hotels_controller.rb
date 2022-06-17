@@ -12,10 +12,10 @@ module V1
 
     def create
       hotel = Hotel.new(hotel_params)
-      if hotel.save
+      if hotel.save && hotel.present?
         render json: hotel, status: :ok
       else
-        render json: hotel.errors
+        render json: hotel.errors, status: :bad_request
       end
     end
 
