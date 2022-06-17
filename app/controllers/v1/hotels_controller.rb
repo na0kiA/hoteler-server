@@ -15,7 +15,7 @@ module V1
       if hotel.save && hotel.present?
         render json: hotel, status: :ok
       else
-        render json: hotel.errors, status: :bad_request
+        render json: hotel.errors
       end
     end
 
