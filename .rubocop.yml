@@ -19,6 +19,9 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Max: 40
 
+RSpec/ExampleLength:
+  Max: 20
+
 RSpec/ContextWording:
   Enabled: false
 
