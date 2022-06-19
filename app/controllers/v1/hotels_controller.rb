@@ -19,6 +19,16 @@ module V1
       end
     end
 
+    def destroy
+      hotel = Hotel.find_by(id: params[:id])
+      if hotel.present? && hotel.user.id === current_v1_user.id
+        hotel.destroy
+        render json: hotel, status: :ok
+      else
+        render json: hotel.errors, status: :bad_request
+      end
+    end
+
     private
 
     def hotel_params
