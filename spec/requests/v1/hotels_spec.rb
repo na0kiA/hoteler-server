@@ -1,10 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "V1::Hotels", type: :request do
-  describe "POST /create" do
+  describe "POST /v1/hotels - v1/hotels#create" do
     let!(:client_user)  { create(:user) }
     let!(:auth_tokens)  { client_user.create_new_auth_token }
-    # let!(:hotel)  { client_user.hotels.create(name: "hotelName", content: "hotelContent") }
 
     context "ログインしている場合" do
       it "POSTができること" do
@@ -19,7 +18,7 @@ RSpec.describe "V1::Hotels", type: :request do
         expect do 
           post v1_hotels_path, params: hotel_empty, headers: auth_tokens
         end.to change(Hotel, :count).by(0)
-        # expect(response).to have_http_status(400)
+        expect(response).to have_http_status(400)
       end
     end
 
@@ -32,4 +31,28 @@ RSpec.describe "V1::Hotels", type: :request do
       end
     end
   end
+
+  describe "DELETE /v1/hotels - v1/hotels#destroy" do
+    let!(:client_user)  { create(:user) }
+    let!(:client_user_hotel)  { create(:hotel, user_id: client_user.id) }
+    let!(:auth_tokens)  { client_user.create_new_auth_token }
+
+    context "DELETEできる場合" do
+      it "userが投稿したhotelsをDELETEできること" do
+        delete v1_hotels_path(client_user_hotel.id), headers: auth_tokens
+        expect(response).to have_http_status: ok
+      end
+    end
+
+    context "DELETEできない場合" do
+
+    end
+  end
+
+
+
+
+
+
+
 end
