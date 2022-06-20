@@ -39,13 +39,20 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "DELETEできる場合" do
       it "userが投稿したhotelsをDELETEできること" do
-        delete "/v1" + "/hotels/" + client_user_hotel.id.to_s, headers: auth_tokens
+        expect do
+          delete "/v1" + "/hotels/" + client_user_hotel.id.to_s, headers: auth_tokens
+        end.to change {Hotel.count}.by(-1)
         expect(response).to have_http_status :ok
       end
     end
 
     context "DELETEできない場合" do
-
+      it "userが投稿したhotelsをDELETEできないこと" do
+        expect do
+          delete "/v1" + "/hotels/" + client_user_hotel.id.to_s, headers: nil
+        end.to change {Hotel.count}.by(0)
+        expect(response).to have_http_status(401)
+      end
     end
   end
 
