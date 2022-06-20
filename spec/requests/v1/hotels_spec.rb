@@ -40,7 +40,7 @@ RSpec.describe "V1::Hotels", type: :request do
     context "DELETEできる場合" do
       it "userが投稿したhotelsをDELETEできること" do
         delete "/v1" + "/hotels/" + client_user_hotel.id.to_s, headers: auth_tokens
-        expect(response).to have_http_status: ok
+        expect(response).to have_http_status :ok
       end
     end
 
