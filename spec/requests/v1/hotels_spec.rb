@@ -37,7 +37,7 @@ RSpec.describe "V1::Hotels", type: :request do
     let!(:client_user_hotel)  { create(:hotel, user_id: client_user.id) }
     let!(:auth_tokens)  { client_user.create_new_auth_token }
 
-    context "DELETEできる場合" do
+    context "ログインしている場合" do
       it "userが投稿したhotelsをDELETEできること" do
         expect do
           delete "/v1" + "/hotels/" + client_user_hotel.id.to_s, headers: auth_tokens
@@ -46,7 +46,7 @@ RSpec.describe "V1::Hotels", type: :request do
       end
     end
 
-    context "DELETEできない場合" do
+    context "ログインしていない場合" do
       it "userが投稿したhotelsをDELETEできないこと" do
         expect do
           delete "/v1" + "/hotels/" + client_user_hotel.id.to_s, headers: nil
@@ -56,6 +56,20 @@ RSpec.describe "V1::Hotels", type: :request do
     end
   end
 
+  describe "GET /v1/hotels - v1/hotels#index" do
+    let!(:client_user)  { create(:user) }
+    let!(:client_user_hotel)  { create(:hotel, user_id: client_user.id) }
+    let!(:auth_tokens)  { client_user.create_new_auth_token }
+
+    context "acceptedがtrueの場合" do
+      it "acceptedがtrueのホテルを取得できること" do
+        expect do
+          delete "/v1" + "/hotels/" + client_user_hotel.id.to_s, headers: auth_tokens
+        end.to change {Hotel.count}.by(-1)
+        expect(response).to have_http_status :ok
+      end
+    end
+  end
 
 
 

@@ -2,10 +2,17 @@ module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
 
+    # TODO:acceptedがtrueのホテルのみ表示させる
     def index
-      render json: Hotel.all
+      hotel_accepted = Hotel.find_by(accepted: params[:accepted])
+      if hotel_accepted == true
+        render json: Hotel.all
+      else 
+        render json: hotel_accepted.errors, status: :bad_reques
+      end
     end
 
+    # TODO:acceptedがtrueのホテルのみ表示させる
     def show
       render json: Hotel.find(params[:id])
     end
