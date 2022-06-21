@@ -2,7 +2,7 @@ name: Run rspec, rubocop, slack-send
 
 on:
   push:
-  pull_request:
+  # pull_request:
 
 jobs:
   slack:
