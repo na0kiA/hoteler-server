@@ -14,7 +14,7 @@ jobs:
       if: success()
       uses: tokorom/action-slack-incoming-webhook@main
       env:
-        INCOMING_WEBHOOK_URL: ${{ SLACK_WEBHOOK_URL }}
+        INCOMING_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
       with:
         text: Successfully automated deployment.
         attachments: |
