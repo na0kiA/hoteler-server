@@ -1,41 +1,17 @@
-name: Run rspec, rubocop, slack-send
+name: Slack Notify
 
 on:
   push:
-  # pull_request:
 
 jobs:
-  slack:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Set COMMIT_MESSAGE
-      run: echo ::set-output name=COMMIT_MESSAGE::$(echo "${{ github.event.head_commit.message }}" | tr '\n' ' ')
-    - name: Slack Notification on SUCCESS
-      if: success()
-      uses: tokorom/action-slack-incoming-webhook@main
+  slackNotification:
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
       env:
-        INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      with:
-        text: Successfully automated deployment.
-        attachments: |
-          [
-            {
-              "color": "good",
-              "author_name": "${{ github.actor }}",
-              "author_icon": "${{ github.event.sender.avatar_url }}",
-              "fields": [
-                {
-                  "title": "Commit Message",
-                  "value": "${{ env.COMMIT_MESSAGE }}"
-                },
-                {
-                  "title": "GitHub Actions URL",
-                  "value": "${{ github.event.repository.url }}/actions/runs/${{ github.run_id }}"
-                },
-                {
-                  "title": "Compare URL",
-                  "value": "${{ github.event.compare }}"
-                }
-              ]
-            }
-          ]
+        SLACK_CHANNEL: general
+        SLACK_COLOR: ${{ job.status }} 
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'Post Content :rocket:'
+        SLACK_TITLE: Post Title
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
