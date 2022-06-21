@@ -4,6 +4,8 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+  - rubocop-inflector
+  - ./config/initializers/inflections # My custom rule file
 
 AllCops:
   NewCops: enable
@@ -17,5 +19,11 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Max: 40
 
+RSpec/ExampleLength:
+  Max: 20
+
 RSpec/ContextWording:
   Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 5
