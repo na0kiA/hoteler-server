@@ -5,6 +5,8 @@ ruby "3.1.2"
 
 gem "rails", "~> 7.0.2", ">= 7.0.2.4"
 
+gem "rack", ">= 2.2.3.1"
+
 gem "bcrypt"
 gem "bootsnap", require: false
 gem "importmap-rails"

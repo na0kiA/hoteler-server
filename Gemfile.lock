@@ -187,7 +187,7 @@ GEM
     puma (5.6.4)
       nio4r (~> 2.0)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
     rack-test (1.1.0)
@@ -348,6 +348,7 @@ DEPENDENCIES
   jbuilder
   mysql2 (~> 0.5)
   puma (~> 5.0)
+  rack (>= 2.2.3.1)
   rack-cors
   rails (~> 7.0.2, >= 7.0.2.4)
   rails_admin (~> 3.0)

@@ -4,11 +4,13 @@ module V1
 
     # TODO:acceptedがtrueのホテルのみ表示させる
     def index
-      hotel_accepted = Hotel.find_by(accepted: params[:accepted])
-      if hotel_accepted == true
-        render json: Hotel.all
+      hotel = Hotel.where(accepted: params[:accepted])
+      accepted_hotel = Hotel.where(accepted: true)
+      if hotel == true
+        render json: accepted_hotel
       else 
-        render json: hotel_accepted.errors, status: :bad_reques
+        # TODO カスタムエラーを作成する
+        render json: hotel.errors status: :bad_request
       end
     end
 
