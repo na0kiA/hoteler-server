@@ -8,7 +8,7 @@ module V1
       accepted_hotel = Hotel.where(accepted: true)
       if hotel == true
         render json: accepted_hotel
-      else 
+      else
         # TODO カスタムエラーを作成する
         render json: hotel.errors status: :bad_request
       end
