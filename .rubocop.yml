@@ -4,7 +4,7 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
-  - rubocop-inflector
+  # - rubocop-inflector
   - ./config/initializers/inflections # My custom rule file
 
 AllCops:
