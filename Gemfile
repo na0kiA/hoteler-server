@@ -23,6 +23,7 @@ gem 'devise_token_auth', '>= 1.2.0', git: "https://github.com/lynndylanhurley/de
 gem 'rack-cors'
 gem 'rails_admin', '~> 3.0'
 gem "sassc-rails"
+gem 'rails-i18n'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
