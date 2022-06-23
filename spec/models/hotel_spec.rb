@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Hotel, type: :model do
-  describe "models/hotel.rb #validation"do 
-    let!(:user)  {create(:user)}
-    let!(:hotel_invalid)  {Hotel.new(name: nil, content: nil)}
+  describe "models/hotel.rb #validation" do
+    let!(:user) { create(:user) }
+    let!(:hotel_invalid) { described_class.new(name: nil, content: nil) }
 
     context "入力値が正常な場合" do
       it "nameとcontentがあれば正常なこと" do
