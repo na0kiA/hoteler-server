@@ -9,12 +9,10 @@ module V1
       if hotel == true
         render json: accepted_hotel
       else
-        # TODO カスタムエラーを作成する
-        render json: hotel.errors status: :bad_request
+        render json: hotel.errors, status: :bad_request
       end
     end
 
-    # TODO:acceptedがtrueのホテルのみ表示させる
     def show
       render json: Hotel.find(params[:id])
     end
@@ -30,7 +28,7 @@ module V1
 
     def destroy
       hotel = Hotel.find_by(id: params[:id])
-      if hotel.present? && hotel.user.id === current_v1_user.id
+      if hotel.present? && hotel.user.id == current_v1_user.id
         hotel.destroy
         render json: hotel, status: :ok
       else

@@ -22,8 +22,8 @@ gem 'devise', '>= 4.8.1'
 gem 'devise_token_auth', '>= 1.2.0', git: "https://github.com/lynndylanhurley/devise_token_auth"
 gem 'rack-cors'
 gem 'rails_admin', '~> 3.0'
-gem "sassc-rails"
 gem 'rails-i18n'
+gem "sassc-rails"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
@@ -38,6 +38,7 @@ group :development do
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
+  # gem 'solargraph', '~> 0.45.0'
   gem "web-console"
 end
 

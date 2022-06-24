@@ -6,19 +6,28 @@ ENV TZ=Asia/Tokyo
 
 WORKDIR ${ROOT}
 
-COPY Gemfile Gemfile.lock ${ROOT}
+RUN apk update && \
+    apk add --no-cache \
+        gcc \
+        g++ \
+        libc-dev \
+        libxml2-dev \
+        linux-headers \
+        make \
+        mysql-dev \
+        mysql-client \
+        git \
+        tzdata && \
+    apk add --virtual build-packs --no-cache \
+        build-base \
+        curl-dev
 
-RUN apk add \
-    alpine-sdk \
-    build-base \
-    sqlite-dev \
-    mysql-client \
-    mysql-dev \
-    tzdata \
-    git 
+COPY Gemfile ${ROOT}
+COPY Gemfile.lock ${ROOT}
 
-RUN gem install bundler
 RUN bundle install
+RUN apk del build-packs
+
 
 FROM ruby:3.1.2-alpine3.15
 
@@ -29,9 +38,8 @@ ENV TZ=Asia/Tokyo
 RUN apk update && \
     apk add \
         mysql-dev \
-        tzdata \
-        bash \
-        git
+        git \
+        tzdata
 
 WORKDIR ${ROOT}
 
@@ -43,4 +51,4 @@ RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3001
 
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-b", "0.0.0.0"
