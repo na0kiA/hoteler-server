@@ -8,7 +8,10 @@ gem "rails", "~> 7.0.2", ">= 7.0.2.4"
 gem "rack", ">= 2.2.3.1"
 
 gem "bcrypt"
-gem "bootsnap", require: false
+gem 'jaro_winkler', '~> 1.5', '>= 1.5.4'
+gem 'bootsnap', '~> 1.12'
+gem 'msgpack', '~> 1.5', '>= 1.5.2'
+gem 'strscan', '~> 3.0', '>= 3.0.3'
 gem "importmap-rails"
 gem "jbuilder"
 gem "mysql2", "~> 0.5"
@@ -38,7 +41,7 @@ group :development do
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
-  # gem 'solargraph', '~> 0.45.0'
+  gem 'solargraph'
   gem "web-console"
 end
 
