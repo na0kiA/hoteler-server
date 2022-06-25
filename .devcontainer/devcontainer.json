@@ -30,11 +30,5 @@
   // ホストOS側からみられるようにしたいポート
   "forwardPorts": [3001],
   // 起動するサービス (空にしておくとdocker-compose.ymlにあるサービスが全て起動する)
-  "runServices": ["api", "db"],
-  // コンテナ生成後に実行されるコマンド
-  // lessを入れないとbinding.pryで止めたときのページャーの挙動が使いにくい
-  // vimを入れないとpryでeditが使えない
-  // yard gemsを実行しておくとgemの中身までsolargraphが補完したりしてくれるようになる
-  // ちなみにyardはsolargraphの依存で入っている。
-  "postCreateCommand": "apt install -y less vim && bin/bundle exec yard gems"
+  "runServices": ["api", "db"]
 }
