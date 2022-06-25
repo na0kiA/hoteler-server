@@ -1,0 +1,40 @@
+{
+  "name": "Existing Docker Compose (Extend)",
+  // 後述のdocker-compose.ymlで、プロジェクトで使っているdocker-compose.ymlの設定を上書きすることができる
+  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.yml"],
+  // VSCodeで接続したいコンテナのサービス名に合わせる
+  "service": "api",
+  // Dockerfileでソースをコピーしているパスに合わせるのがおすすめ
+  "workspaceFolder": "/app",
+  // コンテナ接続時の設定を上書きできる
+  "settings": {
+    // デフォルトで書いてあったのでそのままにしているだけ
+    // solargraph (Ruby用のLanguage Server) 用の設定
+    "solargraph.useBundler": true,
+    "solargraph.bundlerPath": "/usr/local/bundle/bin"
+  },
+  // ここに書いておいた拡張は自動的にコンテナ作成時にインストールされる
+  "extensions": [
+    "karunamurti.haml",
+    "dbaeumer.vscode-eslint",
+    "github.vscode-pull-request-github",
+    "oderwat.indent-rainbow",
+    "esbenp.prettier-vscode",
+    "mechatroner.rainbow-csv",
+    "rebornix.ruby",
+    "octref.vetur",
+    "visualstudioexptteam.vscodeintellicode",
+    "redhat.vscode-yaml",
+    "castwide.solargraph"
+  ],
+  // ホストOS側からみられるようにしたいポート
+  "forwardPorts": [3001],
+  // 起動するサービス (空にしておくとdocker-compose.ymlにあるサービスが全て起動する)
+  "runServices": ["api", "db"],
+  // コンテナ生成後に実行されるコマンド
+  // lessを入れないとbinding.pryで止めたときのページャーの挙動が使いにくい
+  // vimを入れないとpryでeditが使えない
+  // yard gemsを実行しておくとgemの中身までsolargraphが補完したりしてくれるようになる
+  // ちなみにyardはsolargraphの依存で入っている。
+  "postCreateCommand": "apt install -y less vim && bin/bundle exec yard gems"
+}
