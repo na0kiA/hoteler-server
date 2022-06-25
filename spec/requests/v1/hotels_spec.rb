@@ -62,13 +62,16 @@ RSpec.describe "V1::Hotels", type: :request do
     let!(:client_user_hotel) { create(:hotel, user_id: client_user.id) }
     let!(:auth_tokens) { client_user.create_new_auth_token }
 
-    context "acceptedがtrueの場合" do
-      it "acceptedがtrueのホテルを取得できること" do
-        expect do
-          delete "/v1/hotels/#{client_user_hotel.id}", headers: auth_tokens
-        end.to change(Hotel, :count).by(-1)
-        expect(response).to have_http_status :ok
+    context "ホテルのacceptedカラムがtrueのとき" do
+      it "acceptedカラムがtrueのホテル一覧を取得できること" do
+        Hotel.create(name: "Hotel", content: "Hotel", accepted: true, user_id: client_user.id)
+        get v1_hotels_path
+        expect(response.body).to include("Hotel")
       end
     end
+    # context "ホテルのacceptedカラムがfalseのとき" do
+    #   it "acceptedカラムがfalseのホテルを取得できないこと" do
+    #   end
+    # end
   end
 end
