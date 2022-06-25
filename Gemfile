@@ -8,16 +8,16 @@ gem "rails", "~> 7.0.2", ">= 7.0.2.4"
 gem "rack", ">= 2.2.3.1"
 
 gem "bcrypt"
-gem 'jaro_winkler', '~> 1.5', '>= 1.5.4'
 gem 'bootsnap', '~> 1.12'
-gem 'msgpack', '~> 1.5', '>= 1.5.2'
-gem 'strscan', '~> 3.0', '>= 3.0.3'
 gem "importmap-rails"
+gem 'jaro_winkler', '~> 1.5', '>= 1.5.4'
 gem "jbuilder"
+gem 'msgpack', '~> 1.5', '>= 1.5.2'
 gem "mysql2", "~> 0.5"
 gem "puma", "~> 5.0"
 gem "sprockets-rails"
 gem "stimulus-rails"
+gem 'strscan', '~> 3.0', '>= 3.0.3'
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 

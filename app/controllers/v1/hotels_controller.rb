@@ -2,7 +2,7 @@ module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
 
-    # TODO:acceptedがtrueのホテルのみ表示させる
+    # TODO: acceptedがtrueのホテルのみ表示させる
     def index
       hotel = Hotel.where(accepted: params[:accepted])
       accepted_hotel = Hotel.where(accepted: true)
