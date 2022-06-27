@@ -5,4 +5,9 @@ FactoryBot.define do
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
   end
+  factory :hotel_accepted, class: 'Hotel' do
+    sequence(:accepted) { true }
+    sequence(:name) { |n| "hotel#{n}" }
+    sequence(:content) { |n| "hotel_content#{n}" }
+  end
 end

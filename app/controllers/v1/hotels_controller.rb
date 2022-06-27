@@ -9,7 +9,12 @@ module V1
     end
 
     def show
-      render json: Hotel.find(params[:id])
+      accepted_hotel = Hotel.find_by(accepted: true, id: params[:id])
+      if accepted_hotel.present?
+        render json: accepted_hotel
+      else
+        render json: [], status: :bad_request
+      end
     end
 
     def create

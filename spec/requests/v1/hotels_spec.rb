@@ -61,16 +61,30 @@ RSpec.describe "V1::Hotels", type: :request do
     let!(:client_user) { create(:user) }
     let!(:client_user_hotel) { create(:hotel, user_id: client_user.id) }
     let!(:auth_tokens) { client_user.create_new_auth_token }
+    let!(:accepted_hotel){create(:hotel_accepted, user_id: client_user.id)}
+
+    let!(:params) do
+       { name: "Hotel", content: "Hotel"}
+    end
+
+    before do
+      post v1_hotels_path, params: params, headers: auth_tokens
+      # post v1_hotels_path, params: accepted_hotel, headers: auth_tokens
+    end
 
     context "ホテルのacceptedカラムがtrueのとき" do
       it "acceptedカラムがtrueのホテル一覧を取得できること" do
-        Hotel.create(name: "Hotel", content: "Hotel", accepted: true, user_id: client_user.id)
+        # hotel = Hotel.create(name: "Hotel", content: "Hotel", accepted: true, user_id: client_user.id)
         get v1_hotels_path
-        expect(response.body).to include("Hotel")
+        # response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response.body).to eq(accepted_hotel)
       end
     end
     # context "ホテルのacceptedカラムがfalseのとき" do
     #   it "acceptedカラムがfalseのホテルを取得できないこと" do
+    #     get v1_hotels_path
+    #     response_body = JSON.parse(response.body, symbolize_names: true)
+    #     expect(response_body).to eq([])
     #   end
     # end
   end
