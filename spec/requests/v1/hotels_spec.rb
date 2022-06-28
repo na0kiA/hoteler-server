@@ -72,12 +72,15 @@ RSpec.describe "V1::Hotels", type: :request do
         expect(response_body.length).to eq 1
       end
     end
-    # context "ホテルのacceptedカラムがfalseのとき" do
-    #   it "acceptedカラムがfalseのホテルを取得できないこと" do
-    #     get v1_hotels_path
-    #     response_body = JSON.parse(response.body, symbolize_names: true)
-    #     expect(response_body).to eq([])
-    #   end
-    # end
+    context "ホテルのacceptedカラムがfalseのとき" do
+      it "acceptedカラムがfalseのホテルを取得できないこと" do
+        # params = { name: "hotelName", content: "hotelContent" }
+        # post v1_hotels_path, params: params, headers: auth_tokens
+        # expect(response).to have_http_status(:success)
+        get v1_hotels_path
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body.length).not_to eq 2
+      end
+    end
   end
 end
