@@ -2,18 +2,18 @@ module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
 
-    # TODO: acceptedがtrueのホテルのみ表示させる
     def index
-      accepted_hotel = Hotel.where(accepted: true)
-      render json: accepted_hotel
+      # accepted_hotels = Hotel.accepted
+      render json: Hotel.accepted
     end
 
     def show
-      accepted_hotel = Hotel.find_by(accepted: true, id: params[:id])
+      accepted_hotel = Hotel.accepted.find_by(id: params[:id])
       if accepted_hotel.present?
         render json: accepted_hotel
       else
-        render json: [], status: :bad_request
+        # TODO: 存在しないホテルがURLに入った場合エラーメッセージ
+        record_not_found
       end
     end
 

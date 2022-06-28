@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Hotel, type: :model do
   describe "models/hotel.rb #validation" do
     let_it_be(:user) { create(:user) }
-    
+
     context "入力値が正常な場合" do
       it "nameとcontentがあれば正常なこと" do
         hotel = build(:hotel, user_id: user.id)

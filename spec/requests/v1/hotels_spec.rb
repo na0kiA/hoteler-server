@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "V1::Hotels", type: :request do
   describe "POST /v1/hotels - v1/hotels#create" do
-    let!(:client_user)  { create(:user) }
-    let!(:auth_tokens)  { client_user.create_new_auth_token }
+    let_it_be(:client_user)  { create(:user) }
+    let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
 
     context "ログインしている場合" do
-      it "POSTができること" do
+      it "ホテルのPOSTができること" do
         params = { name: "hotelName", content: "hotelContent" }
         expect do
           post v1_hotels_path, params:, headers: auth_tokens
@@ -24,7 +24,7 @@ RSpec.describe "V1::Hotels", type: :request do
     end
 
     context "ログインしていない場合" do
-      it "POSTができないこと" do
+      it "ホテルのPOSTができないこと" do
         params = { name: "hotelName", content: "hotelContent" }
         post v1_hotels_path, params: params, headers: nil
         expect(response).to have_http_status(:unauthorized)
@@ -34,9 +34,9 @@ RSpec.describe "V1::Hotels", type: :request do
   end
 
   describe "DELETE /v1/hotels - v1/hotels#destroy" do
-    let!(:client_user) { create(:user) }
-    let!(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
-    let!(:auth_tokens) { client_user.create_new_auth_token }
+    let_it_be(:client_user) { create(:user) }
+    let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
+    let_it_be(:auth_tokens) { client_user.create_new_auth_token }
 
     context "ログインしている場合" do
       it "userが投稿したhotelsをDELETEできること" do
@@ -72,6 +72,7 @@ RSpec.describe "V1::Hotels", type: :request do
         expect(response_body.length).to eq 1
       end
     end
+
     context "ホテルのacceptedカラムがfalseのとき" do
       it "acceptedカラムがfalseのホテルを取得できないこと" do
         get v1_hotels_path
@@ -96,10 +97,11 @@ RSpec.describe "V1::Hotels", type: :request do
         expect(response_body.length).to eq 8
       end
     end
+
     context "ホテルのacceptedカラムがfalseのとき" do
       it "acceptedカラムがfalseのホテル詳細を取得できないこと" do
         get "/v1/hotels/#{hidden_hotel.id}"
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
