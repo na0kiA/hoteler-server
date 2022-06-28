@@ -35,13 +35,13 @@ RSpec.describe "V1::Hotels", type: :request do
 
   describe "DELETE /v1/hotels - v1/hotels#destroy" do
     let!(:client_user) { create(:user) }
-    let!(:client_user_hotel) { create(:hotel, user_id: client_user.id) }
+    let!(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let!(:auth_tokens) { client_user.create_new_auth_token }
 
     context "ログインしている場合" do
       it "userが投稿したhotelsをDELETEできること" do
         expect do
-          delete "/v1/hotels/#{client_user_hotel.id}", headers: auth_tokens
+          delete "/v1/hotels/#{hidden_hotel.id}", headers: auth_tokens
         end.to change(Hotel, :count).by(-1)
         expect(response).to have_http_status :ok
       end
@@ -50,7 +50,7 @@ RSpec.describe "V1::Hotels", type: :request do
     context "ログインしていない場合" do
       it "userが投稿したhotelsをDELETEできないこと" do
         expect do
-          delete "/v1/hotels/#{client_user_hotel.id}", headers: nil
+          delete "/v1/hotels/#{hidden_hotel.id}", headers: nil
         end.not_to change(Hotel, :count)
         expect(response).to have_http_status(:unauthorized)
       end
@@ -59,29 +59,17 @@ RSpec.describe "V1::Hotels", type: :request do
 
   describe "GET /v1/hotels - v1/hotels#index" do
     let!(:client_user) { create(:user) }
-    let!(:client_user_hotel) { create(:hotel, user_id: client_user.id) }
+    let!(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let!(:auth_tokens) { client_user.create_new_auth_token }
-    let!(:accepted_hotel) { create(:hotel_accepted, user_id: client_user.id) }
-
-    let!(:params) do
-      { name: "Hotel", content: "Hotel Information" }
-    end
-
-    before do
-      post v1_hotels_path, params:, headers: auth_tokens
-    end
+    let!(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
 
     context "ホテルのacceptedカラムがtrueのとき" do
       it "acceptedカラムがtrueのホテル一覧を取得できること" do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[0]).to include(
-          name: 'Hotel',
-          id: client_user_hotel.id,
-          content: "Hotel Information",
-          created_at: format_to_rfc3339(client_user_hotel.created_at),
-          user_id: client_user.id
-        )
+        expect(response).to have_http_status(:success)
+        expect(response_body[0][:accepted]).to be true
+        expect(response_body.length).to eq 1
       end
     end
     # context "ホテルのacceptedカラムがfalseのとき" do
