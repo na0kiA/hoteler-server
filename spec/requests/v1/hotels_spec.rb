@@ -58,10 +58,10 @@ RSpec.describe "V1::Hotels", type: :request do
   end
 
   describe "GET /v1/hotels - v1/hotels#index" do
-    let!(:client_user) { create(:user) }
-    let!(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
-    let!(:auth_tokens) { client_user.create_new_auth_token }
-    let!(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    let_it_be(:client_user) { create(:user) }
+    let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
+    let_it_be(:auth_tokens) { client_user.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
 
     context "ホテルのacceptedカラムがtrueのとき" do
       it "acceptedカラムがtrueのホテル一覧を取得できること" do
@@ -74,12 +74,32 @@ RSpec.describe "V1::Hotels", type: :request do
     end
     context "ホテルのacceptedカラムがfalseのとき" do
       it "acceptedカラムがfalseのホテルを取得できないこと" do
-        # params = { name: "hotelName", content: "hotelContent" }
-        # post v1_hotels_path, params: params, headers: auth_tokens
-        # expect(response).to have_http_status(:success)
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body.length).not_to eq 2
+      end
+    end
+  end
+
+  describe "GET /v1/hotels/:id - v1/hotels#show" do
+    let_it_be(:client_user) { create(:user) }
+    let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
+    let_it_be(:auth_tokens) { client_user.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+
+    context "ホテルのacceptedカラムがtrueのとき" do
+      it "acceptedカラムがtrueのホテル詳細を取得できること" do
+        get "/v1/hotels/#{accepted_hotel.id}"
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(:success)
+        expect(response_body[:accepted]).to be true
+        expect(response_body.length).to eq 8
+      end
+    end
+    context "ホテルのacceptedカラムがfalseのとき" do
+      it "acceptedカラムがfalseのホテル詳細を取得できないこと" do
+        get "/v1/hotels/#{hidden_hotel.id}"
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end

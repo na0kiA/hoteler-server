@@ -2,9 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Hotel, type: :model do
   describe "models/hotel.rb #validation" do
-    let!(:user) { create(:user) }
-    let!(:hotel_invalid) { described_class.new(name: nil, content: nil) }
-
+    let_it_be(:user) { create(:user) }
+    
     context "入力値が正常な場合" do
       it "nameとcontentがあれば正常なこと" do
         hotel = build(:hotel, user_id: user.id)
@@ -19,9 +18,10 @@ RSpec.describe Hotel, type: :model do
 
     context "入力値が異常な場合" do
       it "nameとcontentが無ければエラーを返すこと" do
-        expect(hotel_invalid).to be_invalid
-        expect(hotel_invalid.errors[:name]).to eq ["を入力してください"]
-        expect(hotel_invalid.errors[:content]).to eq ["を入力してください"]
+        hotel = described_class.create(name: nil, content: nil, user_id: user.id)
+        expect(hotel).to be_invalid
+        expect(hotel.errors[:name]).to eq ["を入力してください"]
+        expect(hotel.errors[:content]).to eq ["を入力してください"]
       end
 
       it "nameが51文字、contentが2001文字入力できないこと" do
