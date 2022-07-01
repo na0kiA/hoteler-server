@@ -7,7 +7,7 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしている場合" do
       it "ホテルの投稿ができること" do
-        params = { hotel: { name: "hotelName", content: "hotelContent "} }
+        params = { hotel: { name: "hotelName", content: "hotelContent" } }
         expect do
           post v1_hotels_path, params: params, headers: auth_tokens
         end.to change(Hotel.all, :count).by(1)
@@ -15,7 +15,7 @@ RSpec.describe "V1::Hotels", type: :request do
       end
 
       it "nameとcontentが空なら投稿ができないこと" do
-        hotel_empty = { hotel: {name: nil, content: nil} }
+        hotel_empty = { hotel: { name: nil, content: nil } }
         expect do
           post v1_hotels_path, params: hotel_empty, headers: auth_tokens
         end.not_to change(Hotel, :count)
@@ -33,33 +33,32 @@ RSpec.describe "V1::Hotels", type: :request do
     end
   end
 
-  # describe "PUT /v1/hotels - v1/hotels#update" do
-  #   let_it_be(:client_user)  { create(:user) }
-  #   let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
-  #   let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+  describe "PUT /v1/hotels - v1/hotels#update" do
+    let_it_be(:client_user)  { create(:user) }
+    let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
 
-  #   context "ログインしている場合" do
-  #     it "自分の投稿したホテルの編集ができること" do
-  #       put "/v1/hotels/#{accepted_hotel.id}", params: update_params, headers: auth_tokens
-  #       expect(response).to have_http_status :ok
-  #       expect(Hotel.find(accepted_hotel.id)).to include(update_params)
-  #     end
-  #     it "自分が投稿していないホテルの編集ができないこと" do
-  #       update_params = { hotel: { name: "hotel 777", content: "hotel has been updated"} }
-  #         put "/v1/hotels/#{accepted_hotel.id}", params: update_params, headers: auth_tokens
-  #       expect(response).to have_http_status(:bad_request)
-  #     end
-  #   end
+    context "ログインしている場合" do
+      it "自分の投稿したホテルの編集ができること" do
+        put v1_hotel_path(accepted_hotel.id), params: update_params, headers: auth_tokens
+        expect(response).to have_http_status :ok
+        expect(Hotel.find(accepted_hotel.id)).to include(update_params)
+      end
+      it "自分が投稿していないホテルの編集ができないこと" do
+        update_params = { hotel: { name: "hotel 777", content: "hotel has been updated"} }
+          put v1_hotel_1_path, params: update_params, headers: auth_tokens
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
 
-  #   context "ログインしていない場合" do
-  #     it "ホテルのPOSTができないこと" do
-  #       params = { name: "hotelName", content: "hotelContent" }
-  #       post v1_hotels_path, params: params, headers: nil
-  #       expect(response).to have_http_status(:unauthorized)
-  #       expect(response.message).to include('Unauthorized')
-  #     end
-  #   end
-  # end
+    context "ログインしていない場合" do
+      it "ホテルの編集ができないこと" do
+        put v1_hotel_path(accepted_hotel.id), params: update_params
+        expect(response).to have_http_status :ok
+        expect(Hotel.find(accepted_hotel.id)).to include(update_params)
+      end
+    end
+  end
 
   describe "DELETE /v1/hotels - v1/hotels#destroy" do
     let_it_be(:client_user) { create(:user) }
