@@ -9,7 +9,7 @@ RSpec.describe "V1::Hotels", type: :request do
       it "ホテルの投稿ができること" do
         params = { hotel: { name: "hotelName", content: "hotelContent" } }
         expect do
-          post v1_hotels_path, params: params, headers: auth_tokens
+          post v1_hotels_path, params:, headers: auth_tokens
         end.to change(Hotel.all, :count).by(1)
         expect(response).to have_http_status :ok
       end
@@ -40,22 +40,31 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしている場合" do
       it "自分の投稿したホテルの編集ができること" do
-        put v1_hotel_path(accepted_hotel.id), params: update_params, headers: auth_tokens
+        params = { hotel: { name: "hotel 777", content: "hotel has been updated" } }
+        put v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
         expect(response).to have_http_status :ok
-        expect(Hotel.find(accepted_hotel.id)).to include(update_params)
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body).to include(name: "hotel 777", content: "hotel has been updated")
       end
+
       it "自分が投稿していないホテルの編集ができないこと" do
-        update_params = { hotel: { name: "hotel 777", content: "hotel has been updated"} }
-          put v1_hotel_1_path, params: update_params, headers: auth_tokens
+        user = create(:user)
+        hotel = create(:accepted_hotel, user_id: user.id)
+        params = { hotel: { name: "hotel 7777", content: "hotel has been updated!" } }
+        put v1_hotel_path(hotel.id), params: params, headers: auth_tokens
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body).not_to include(name: "hotel 7777", content: "hotel has been updated!")
         expect(response).to have_http_status(:bad_request)
       end
     end
 
     context "ログインしていない場合" do
       it "ホテルの編集ができないこと" do
-        put v1_hotel_path(accepted_hotel.id), params: update_params
-        expect(response).to have_http_status :ok
-        expect(Hotel.find(accepted_hotel.id)).to include(update_params)
+        params = { hotel: { name: "hotel 77777", content: "hotel has been updated!!" } }
+        put v1_hotel_path(accepted_hotel.id), params: params
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(:unauthorized)
+        expect(response_body).not_to include(name: "hotel 77777", content: "hotel has been updated!!")
       end
     end
   end
@@ -77,7 +86,7 @@ RSpec.describe "V1::Hotels", type: :request do
     context "ログインしていない場合" do
       it "ユーザーが投稿したホテルを削除できないこと" do
         expect do
-          delete "/v1/hotels/#{accepted_hotel.id}", headers: nil
+          delete v1_hotel_path(accepted_hotel.id), headers: nil
         end.not_to change(Hotel, :count)
         expect(response).to have_http_status(:unauthorized)
       end

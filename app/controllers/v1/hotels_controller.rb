@@ -1,7 +1,7 @@
 module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
-    before_action :hotel_id, only: %i[show destroy]
+    before_action :hotel_id, only: %i[show destroy update]
 
     def index
       render json: Hotel.accepted
@@ -22,6 +22,15 @@ module V1
         render json: hotel, status: :ok
       else
         render json: hotel.errors, status: :bad_request
+      end
+    end
+
+    def update
+      if @hotel.present? && @hotel.user.id == current_v1_user.id
+        @hotel.update(hotel_params)
+        render json: @hotel, status: :ok
+      else
+        render json: @hotel.errors, status: :bad_request
       end
     end
 
