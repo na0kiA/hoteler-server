@@ -7,15 +7,15 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしている場合" do
       it "ホテルのPOSTができること" do
-        params = { name: "hotelName", content: "hotelContent" }
+        params = { hotel: { name: "hotelName", content: "hotelContent "} }
         expect do
-          post v1_hotels_path, params:, headers: auth_tokens
+          post v1_hotels_path, params: params, headers: auth_tokens
         end.to change(Hotel.all, :count).by(1)
         expect(response).to have_http_status :ok
       end
 
       it "nameとcontentが空ならPOSTができないこと" do
-        hotel_empty = { name: nil, content: nil }
+        hotel_empty = { hotel: {name: nil, content: nil} }
         expect do
           post v1_hotels_path, params: hotel_empty, headers: auth_tokens
         end.not_to change(Hotel, :count)
