@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-# require 'simplecov'
+require 'simplecov'
 ENV['RAILS_ENV'] ||= 'test'
 # require_relative '../config/environment'
 require File.expand_path('../config/environment', __dir__)
@@ -8,7 +8,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 
 require 'rspec/rails'
 require "test_prof/recipes/rspec/let_it_be"
-# SimpleCov.start
+SimpleCov.start
 require 'devise'
 
 # Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
