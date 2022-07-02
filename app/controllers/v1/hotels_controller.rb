@@ -1,20 +1,19 @@
 module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
+    before_action :hotel_id, only: %i[show destroy update]
 
-    # TODO:acceptedがtrueのホテルのみ表示させる
     def index
-      hotel_accepted = Hotel.find_by(accepted: params[:accepted])
-      if hotel_accepted == true
-        render json: Hotel.all
-      else 
-        render json: hotel_accepted.errors, status: :bad_reques
-      end
+      render json: Hotel.accepted
     end
 
-    # TODO:acceptedがtrueのホテルのみ表示させる
     def show
-      render json: Hotel.find(params[:id])
+      accepted_hotel = Hotel.accepted.find_by(id: @hotel)
+      if accepted_hotel.present?
+        render json: accepted_hotel
+      else
+        record_not_found
+      end
     end
 
     def create
@@ -26,20 +25,33 @@ module V1
       end
     end
 
-    def destroy
-      hotel = Hotel.find_by(id: params[:id])
-      if hotel.present? && hotel.user.id === current_v1_user.id
-        hotel.destroy
-        render json: hotel, status: :ok
+    def update
+      if @hotel.present? && @hotel.user.id == current_v1_user.id
+        @hotel.update(hotel_params)
+        render json: @hotel, status: :ok
       else
-        render json: hotel.errors, status: :bad_request
+        render json: @hotel.errors, status: :bad_request
+      end
+    end
+
+    def destroy
+      # hotel = Hotel.find(hotel_id)
+      if @hotel.present? && @hotel.user.id == current_v1_user.id
+        @hotel.destroy
+        render json: @hotel, status: :ok
+      else
+        render json: @hotel.errors, status: :bad_request
       end
     end
 
     private
 
     def hotel_params
-      params.permit(:name, :content).merge(user_id: current_v1_user.id)
+      params.require(:hotel).permit(:name, :content).merge(user_id: current_v1_user.id)
+    end
+
+    def hotel_id
+      @hotel = Hotel.find(params[:id])
     end
   end
 end

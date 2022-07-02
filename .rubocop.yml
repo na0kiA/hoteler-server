@@ -1,10 +1,13 @@
 inherit_from: .rubocop_todo.yml
 
+# inherit_gem:
+#   test-prof: config/rubocop-rspec.yml
+
 require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
-  - rubocop-inflector
+  # - rubocop-inflector
   - ./config/initializers/inflections # My custom rule file
 
 AllCops:
@@ -12,6 +15,9 @@ AllCops:
 
 Style/Documentation:
   Enabled: false
+
+# Style/StringConcatenation:
+
 
 Metrics/AbcSize:
   Max: 25
