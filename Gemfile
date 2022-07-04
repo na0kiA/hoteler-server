@@ -26,6 +26,8 @@ gem 'devise_token_auth', '>= 1.2.0', git: "https://github.com/lynndylanhurley/de
 gem 'rack-cors'
 gem 'rails_admin', '~> 3.0'
 gem 'rails-i18n'
+gem 'aws-sdk', '~> 3.1'
+
 gem "sassc-rails"
 
 group :development, :test do

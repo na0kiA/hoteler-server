@@ -81,7 +81,7 @@ RSpec.describe "V1::Hotels", type: :request do
         end.to change(Hotel, :count).by(-1)
         expect(response).to have_http_status :ok
       end
-
+      
       it "自分が投稿していないホテルを削除できないこと" do
         user = create(:user)
         hotel = create(:accepted_hotel, user_id: user.id)
