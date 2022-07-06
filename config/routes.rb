@@ -6,6 +6,9 @@ Rails.application.routes.draw do
       registrations: 'v1/auth/registrations'
     }
     resources :hotels
+
+    get 'presigned-url', to: 's3#s3_direct_post'
+    
     namespace :auth do
       resources :sessions, only: %i[index]
     end
