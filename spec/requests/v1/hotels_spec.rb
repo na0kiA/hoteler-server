@@ -33,7 +33,7 @@ RSpec.describe "V1::Hotels", type: :request do
     end
   end
 
-  describe "PUT /v1/hotels - v1/hotels#update" do
+  describe "PUT /v1/hotel - v1/hotels#update" do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
@@ -127,7 +127,7 @@ RSpec.describe "V1::Hotels", type: :request do
     end
   end
 
-  describe "GET /v1/hotels/:id - v1/hotels#show" do
+  describe "GET /v1/hotel/:id - v1/hotels#show" do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
