@@ -10,15 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_10_061943) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_11_093227) do
   create_table "hotels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name", null: false
     t.text "content", null: false
-    t.string "image"
     t.boolean "accepted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "image_id"
+    t.index ["image_id"], name: "index_hotels_on_image_id"
     t.index ["user_id"], name: "index_hotels_on_user_id"
   end
 
@@ -50,7 +51,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_10_061943) do
     t.string "unconfirmed_email"
     t.string "name"
     t.string "nickname"
-    t.string "image"
     t.string "email"
     t.text "tokens"
     t.datetime "created_at", null: false
@@ -58,12 +58,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_10_061943) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at", precision: nil
+    t.bigint "image_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["image_id"], name: "index_users_on_image_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "hotels", "images"
   add_foreign_key "hotels", "users"
+  add_foreign_key "users", "images"
 end
