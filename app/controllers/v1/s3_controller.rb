@@ -9,7 +9,7 @@ module V1
 
     # KeyからURLの生成
     def file_url
-      Aws::S3::Object.new(ENV['S3_BUCKET'], key).public_url
+      Aws::S3::Object.new(ENV.fetch('S3_BUCKET', nil), key).public_url
     end
   end
 end
