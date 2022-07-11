@@ -150,4 +150,40 @@ RSpec.describe "V1::Hotels", type: :request do
       end
     end
   end
+
+  # describe "POST /v1/hotels - v1/hotels#generate_generate_s3_signed_url" do
+  #   let_it_be(:client_user) { create(:user) }
+  #   let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
+  #   let_it_be(:auth_tokens) { client_user.create_new_auth_token }
+  #   let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+
+  #   context "ログインしている場合" do
+  #     it "S3の署名付きURLを発行できること" do
+  #       get v1_hotel_path(accepted_hotel.id)
+  #       response_body = JSON.parse(response.body, symbolize_names: true)
+  #       expect(response).to have_http_status(:success)
+  #       expect(response_body[:accepted]).to be true
+  #       expect(response_body.length).to eq 8
+  #     end
+  #   end
+
+  #   context "ログインしていない場合" do
+  #     it "S3の署名付きURLを発行できないこと" do
+  #       get v1_hotel_path(hidden_hotel.id)
+  #       expect(response).to have_http_status(:not_found)
+  #     end
+  #   end
+  # end
+
+#   describe "POST /v1/hotels - v1/hotels#convert_file_url_from_s3_key" do
+#   it "ユーザーが投稿したS3のKeyをURLに変換できること" do
+#     get v1_hotel_path(accepted_hotel.id)
+#     response_body = JSON.parse(response.body, symbolize_names: true)
+#     expect(response).to have_http_status(:success)
+#     expect(response_body[:accepted]).to be true
+#     expect(response_body.length).to eq 8
+#   end
+# end
+
+
 end

@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     }
     resources :hotels
 
-    get 'presigned-url', to: 's3#s3_direct_post'
+    get 'presigned-url', to: 'images#generate_s3_presigned_url'
 
     namespace :auth do
       resources :sessions, only: %i[index]
