@@ -5,14 +5,38 @@ RSpec.describe "V1::Images", type: :request do
     context "ログインしている場合" do
       it "署名付きURLを発行できること" do
 
-    end
-      it "S3のKeyをImagesテーブルのhotel_s3_keyカラムに保存できること"
-       
-      do
+      end
+    context "ログインしていない場合" do
+      it "署名付きURLを発行できないこと" do
 
+      end
     end
-      it "署名付きURLを発行できること" do
 
+    describe "GET /v1/images - v1/images#save_hotel_key" do
+      it "KeyをImagesテーブルのhotel_s3_keyカラムに保存できること" do
+        
+      end
+      it "KeyをImagesテーブルのuser_s3_keyカラムに保存できること" do
+
+      end
     end
   end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
