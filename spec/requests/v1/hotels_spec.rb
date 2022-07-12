@@ -175,15 +175,13 @@ RSpec.describe "V1::Hotels", type: :request do
   #   end
   # end
 
-#   describe "POST /v1/hotels - v1/hotels#convert_file_url_from_s3_key" do
-#   it "ユーザーが投稿したS3のKeyをURLに変換できること" do
-#     get v1_hotel_path(accepted_hotel.id)
-#     response_body = JSON.parse(response.body, symbolize_names: true)
-#     expect(response).to have_http_status(:success)
-#     expect(response_body[:accepted]).to be true
-#     expect(response_body.length).to eq 8
-#   end
-# end
-
-
+  #   describe "POST /v1/hotels - v1/hotels#convert_file_url_from_s3_key" do
+  #   it "ユーザーが投稿したS3のKeyをURLに変換できること" do
+  #     get v1_hotel_path(accepted_hotel.id)
+  #     response_body = JSON.parse(response.body, symbolize_names: true)
+  #     expect(response).to have_http_status(:success)
+  #     expect(response_body[:accepted]).to be true
+  #     expect(response_body.length).to eq 8
+  #   end
+  # end
 end
