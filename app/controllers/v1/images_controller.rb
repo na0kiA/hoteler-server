@@ -1,6 +1,6 @@
 module V1
   class ImagesController < ApplicationController
-    before_action :authenticate_v1_user!
+    # before_action :authenticate_v1_user!
 
     def signed_url
       resource = S3_BUCKET.presigned_post(
