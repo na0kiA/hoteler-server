@@ -12,6 +12,5 @@ module V1
     def file_url
       Aws::S3::Object.new(ENV.fetch('S3_BUCKET', nil), key).public_url
     end
-    
   end
 end

@@ -160,17 +160,19 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしている場合" do
       it "署名付きURLを発行できること" do
-        get v1_hotel_path(accepted_hotel.id) headers: auth_tokens
+        get v1_hotel_path(accepted_hotel.id), header: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
         expect(response_body[:url]).to include("https://")
         expect(response_body[:fields].length).to eq 7
       end
+    end
     context "ログインしていない場合" do
       it "署名付きURLを発行できないこと" do
 
       end
     end
+  end
 
     describe "POST /v1/hotels/signed-url - v1/images#save_hotel_key" do
       it "KeyをImagesテーブルのhotel_s3_keyカラムに保存できること" do
@@ -180,8 +182,5 @@ RSpec.describe "V1::Hotels", type: :request do
 
       end
     end
-  end
-
-
 
 end
