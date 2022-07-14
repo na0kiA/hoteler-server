@@ -73,3 +73,4 @@ Rails.application.configure do
   config.hosts << ENV.fetch('NGROK_HOST')
   # config.hosts << '127.0.0.1'
 end
+

@@ -21,11 +21,13 @@ gem 'strscan', '~> 3.0', '>= 3.0.3'
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
+gem 'aws-sdk', '~> 3.1'
 gem 'devise', '>= 4.8.1'
 gem 'devise_token_auth', '>= 1.2.0', git: "https://github.com/lynndylanhurley/devise_token_auth"
 gem 'rack-cors'
 gem 'rails_admin', '~> 3.0'
 gem 'rails-i18n'
+
 gem "sassc-rails"
 
 group :development, :test do
