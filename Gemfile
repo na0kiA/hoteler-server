@@ -3,29 +3,44 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.2"
 
-gem "rails", "~> 7.0.2", ">= 7.0.2.4"
+gem 'rails', '7.0.3.1'
 
-gem "rack", ">= 2.2.3.1"
+  rails_version = '7.0.3.1'
+
+  gem 'actioncable', rails_version
+  gem 'actionmailbox', rails_version
+  gem 'actionmailer', rails_version
+  gem 'actionpack', rails_version
+  gem 'actiontext', rails_version
+  gem 'actionview', rails_version
+  gem 'activejob', rails_version
+  gem 'activemodel', rails_version
+  gem 'activerecord', rails_version
+  gem 'activestorage', rails_version
+  gem 'activesupport', rails_version
+  gem 'railties', rails_version
 
 gem "bcrypt"
-gem 'bootsnap', '~> 1.12'
+gem 'json'
+gem 'sprockets-rails'
+gem 'bootsnap'
+gem "rack"
 gem "importmap-rails"
-gem 'jaro_winkler', '~> 1.5', '>= 1.5.4'
+gem 'jaro_winkler'
 gem "jbuilder"
 gem 'msgpack', '~> 1.5', '>= 1.5.2'
-gem "mysql2", "~> 0.5"
-gem "puma", "~> 5.0"
-gem "sprockets-rails"
+gem "mysql2"
+gem "puma"
 gem "stimulus-rails"
-gem 'strscan', '~> 3.0', '>= 3.0.3'
+gem 'strscan'
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
-gem 'aws-sdk', '~> 3.1'
-gem 'devise', '>= 4.8.1'
-gem 'devise_token_auth', '>= 1.2.0', git: "https://github.com/lynndylanhurley/devise_token_auth"
+gem 'aws-sdk'
+gem 'devise'
+gem 'devise_token_auth', git: "https://github.com/lynndylanhurley/devise_token_auth"
 gem 'rack-cors'
-gem 'rails_admin', '~> 3.0'
+gem 'rails_admin'
 gem 'rails-i18n'
 
 gem "sassc-rails"
@@ -51,6 +66,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem 'simplecov', require: false
-  gem "test-prof", "~> 1.0"
+  gem "test-prof"
   gem "webdrivers"
 end
