@@ -15,10 +15,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_11_093227) do
     t.bigint "user_id"
     t.string "name", null: false
     t.text "content", null: false
+    t.string "image"
     t.boolean "accepted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "image_id"
+    t.bigint "image_id", null: false
     t.index ["image_id"], name: "index_hotels_on_image_id"
     t.index ["user_id"], name: "index_hotels_on_user_id"
   end
@@ -51,6 +52,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_11_093227) do
     t.string "unconfirmed_email"
     t.string "name"
     t.string "nickname"
+    t.string "image"
     t.string "email"
     t.text "tokens"
     t.datetime "created_at", null: false
