@@ -21,16 +21,16 @@ gem 'rails', '7.0.3.1'
   gem 'railties', rails_version
 
 gem "bcrypt"
-gem 'json'
-gem 'sprockets-rails'
 gem 'bootsnap'
-gem "rack"
 gem "importmap-rails"
 gem 'jaro_winkler'
 gem "jbuilder"
+gem 'json'
 gem 'msgpack', '~> 1.5', '>= 1.5.2'
 gem "mysql2"
 gem "puma"
+gem "rack"
+gem 'sprockets-rails'
 gem "stimulus-rails"
 gem 'strscan'
 gem "turbo-rails"
