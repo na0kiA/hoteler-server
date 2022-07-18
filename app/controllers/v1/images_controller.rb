@@ -1,6 +1,6 @@
 module V1
   class ImagesController < ApplicationController
-    # before_action :authenticate_v1_user!
+    before_action :authenticate_v1_user!
 
     def signed_url
       resource = S3_BUCKET.presigned_post(
@@ -26,11 +26,11 @@ module V1
     private
 
     def hotel_s3_key
-      params.require(:image).permit(:hotel_s3_key)
+      params.require(:image).permit(:hotel_s3_key).merge(user_id: current_v1_user.id)
     end
 
     def user_s3_key
-      params.require(:image).permit(:user_s3_key)
+      params.require(:image).permit(:user_s3_key).merge(user_id: current_v1_user.id)
     end
 
     def image_id
