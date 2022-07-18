@@ -33,7 +33,7 @@ RSpec.describe "V1::Hotels", type: :request do
     end
   end
 
-  describe "PUT /v1/hotel - v1/hotels#update" do
+  describe "PATCH /v1/hotel - v1/hotels#update" do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
@@ -41,7 +41,7 @@ RSpec.describe "V1::Hotels", type: :request do
     context "ログインしている場合" do
       it "自分の投稿したホテルの編集ができること" do
         params = { hotel: { name: "hotel 777", content: "hotel has been updated" } }
-        put v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
+        patch v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body).to include(name: "hotel 777", content: "hotel has been updated")
@@ -51,7 +51,7 @@ RSpec.describe "V1::Hotels", type: :request do
         user = create(:user)
         hotel = create(:accepted_hotel, user_id: user.id)
         params = { hotel: { name: "hotel 7777", content: "hotel has been updated!" } }
-        put v1_hotel_path(hotel.id), params: params, headers: auth_tokens
+        patch v1_hotel_path(hotel.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body).not_to include(name: "hotel 7777", content: "hotel has been updated!")
         expect(response).to have_http_status(:bad_request)
@@ -61,7 +61,7 @@ RSpec.describe "V1::Hotels", type: :request do
     context "ログインしていない場合" do
       it "ホテルの編集ができないこと" do
         params = { hotel: { name: "hotel 77777", content: "hotel has been updated!!" } }
-        put v1_hotel_path(accepted_hotel.id), params: params
+        patch v1_hotel_path(accepted_hotel.id), params: params
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:unauthorized)
         expect(response_body).not_to include(name: "hotel 77777", content: "hotel has been updated!!")
@@ -148,36 +148,6 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotel_path(hidden_hotel.id)
         expect(response).to have_http_status(:not_found)
       end
-    end
-  end
-
-  describe "GET /v1/hotels/signed-url - v1/images#signed_url" do
-    let_it_be(:client_user) { create(:user) }
-    let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
-    let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
-
-    context "ログインしている場合" do
-      it "署名付きURLを発行できること" do
-        get v1_hotel_path(accepted_hotel.id), params: { header: auth_tokens }
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status(:success)
-        expect(response_body[:url]).to include("https://")
-        expect(response_body[:fields].length).to eq 7
-      end
-    end
-
-    context "ログインしていない場合" do
-      it "署名付きURLを発行できないこと" do
-      end
-    end
-  end
-
-  describe "POST /v1/hotels/signed-url - v1/images#save_hotel_key" do
-    it "KeyをImagesテーブルのhotel_s3_keyカラムに保存できること" do
-    end
-
-    it "KeyをImagesテーブルのuser_s3_keyカラムに保存できること" do
     end
   end
 end
