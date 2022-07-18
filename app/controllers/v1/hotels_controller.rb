@@ -35,7 +35,6 @@ module V1
     end
 
     def destroy
-      # hotel = Hotel.find(hotel_id)
       if @hotel.present? && @hotel.user.id == current_v1_user.id
         @hotel.destroy
         render json: @hotel, status: :ok
@@ -44,21 +43,7 @@ module V1
       end
     end
 
-    def signed_url
-      resource = S3_BUCKET.presigned_post(
-        key: "uploads/hotel/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read', content_length_range: 1..(10.megabytes)
-      )
-      render json: { url: resource.url, fields: resource.fields }
-    end
-
-    def save_key
-      
-    end
-
-    def file_url
-      Aws::S3::Object.new(ENV.fetch('S3_BUCKET', nil), key).public_url
-    end
-
+    
     private
 
     def hotel_params
