@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_11_093227) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_18_151548) do
   create_table "hotels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name", null: false
@@ -24,10 +24,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_11_093227) do
   end
 
   create_table "images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "hotel_s3_key", null: false
-    t.string "user_s3_key", null: false
+    t.string "hotel_s3_key"
+    t.string "user_s3_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_images_on_user_id"
   end
 
   create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -70,5 +72,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_11_093227) do
 
   add_foreign_key "hotels", "images"
   add_foreign_key "hotels", "users"
+  add_foreign_key "images", "users"
   add_foreign_key "users", "images"
 end
