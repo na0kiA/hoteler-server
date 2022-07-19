@@ -8,4 +8,5 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   has_many :hotels, dependent: :destroy
+  has_many :images, dependent: :destroy
 end
