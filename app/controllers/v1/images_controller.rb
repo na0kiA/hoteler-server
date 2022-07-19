@@ -12,6 +12,11 @@ module V1
     def save_hotel_key
       key = Image.new(hotel_s3_key)
       key&.save
+      # if key.save && key.present?
+      #   render json: key, status: :ok
+      # else
+      #   render json: key.errors, status: :bad_request
+      # end
     end
 
     def save_user_key

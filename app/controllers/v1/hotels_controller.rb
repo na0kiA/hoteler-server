@@ -43,7 +43,6 @@ module V1
       end
     end
 
-    
     private
 
     def hotel_params
