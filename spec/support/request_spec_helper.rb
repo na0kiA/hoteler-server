@@ -25,20 +25,4 @@ module RequestSpecHelper
   def get_current_user_by_response(response)
     User.find_by(uid: response.header['uid'])
   end
-
-  def get_not_existent_userid
-    not_existent_userid = SecureRandom.alphanumeric(15)
-    not_existent_userid = SecureRandom.alphanumeric(15) while User.find_by(userid: not_existent_userid)
-    not_existent_userid
-  end
-
-  def get_non_existent_post_id
-    non_existent_post_id = SecureRandom.alphanumeric(20)
-    non_existent_post_id = SecureRandom.alphanumeric(20) while Post.find_by(id: non_existent_post_id)
-    non_existent_post_id
-  end
-end
-
-def format_to_rfc3339(formatted_time)
-  formatted_time.to_datetime.new_offset('+0000').rfc3339
 end
