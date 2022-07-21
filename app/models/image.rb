@@ -4,5 +4,5 @@ class Image < ApplicationRecord
   # has_one :hotel
   belongs_to :user
   
-  has_many :hotels
+  belongs_to :hotel
 end
