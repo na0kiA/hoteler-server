@@ -139,7 +139,7 @@ RSpec.describe "V1::Hotels", type: :request do
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
         expect(response_body[:accepted]).to be true
-        expect(response_body.length).to eq 8
+        expect(response_body.length).to eq 7
       end
     end
 
