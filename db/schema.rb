@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_18_151548) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_22_105525) do
   create_table "hotels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name", null: false
@@ -18,8 +18,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_18_151548) do
     t.boolean "accepted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "image_id"
-    t.index ["image_id"], name: "index_hotels_on_image_id"
     t.index ["user_id"], name: "index_hotels_on_user_id"
   end
 
@@ -29,6 +27,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_18_151548) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.bigint "hotel_id"
+    t.index ["hotel_id"], name: "index_images_on_hotel_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end
 
@@ -70,8 +70,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_18_151548) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "hotels", "images"
   add_foreign_key "hotels", "users"
+  add_foreign_key "images", "hotels"
   add_foreign_key "images", "users"
   add_foreign_key "users", "images"
 end
