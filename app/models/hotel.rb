@@ -8,10 +8,14 @@ class Hotel < ApplicationRecord
 
   class << self
     def create!(params)
-      hotel = new(name: params[:name], content: params[:content])
-      # hotel.images.build(params[:images])
+      ActiveRecord::Base.transaction do
+      hotel = new(name: params[:name], content: params[:content],user_id: params[:user_id])
       hotel.save!
-      hotel
+      images = Image.new(hotel_id: hotel.id, user_id: params[:user_id], hotel_s3_key: params[:images])
+      images.save!
+      p images
+      end
     end
   end
+
 end
