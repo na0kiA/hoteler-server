@@ -9,13 +9,20 @@ class Hotel < ApplicationRecord
   class << self
     def create!(params)
       ActiveRecord::Base.transaction do
-      hotel = new(name: params[:name], content: params[:content],user_id: params[:user_id])
-      hotel.save!
-      images = Image.new(hotel_id: hotel.id, user_id: params[:user_id], hotel_s3_key: params[:images])
-      images.save!
-      p images
+        hotel = new(name: params[:name], content: params[:content], user_id: params[:user_id])
+        if hotel.valid?
+          hotel.save!
+        else
+          raise "ホテルフォームに誤りがあります"
+        end
+        # rescue ActiveRecord::StatementInvalid
+        images = Image.new(hotel_id: hotel.id, user_id: params[:user_id], hotel_s3_key: params[:images])
+        if images.valid?
+          images.save!
+        else
+          raise "ホテルフォームに誤りがあります"
+        end
       end
     end
   end
-
 end
