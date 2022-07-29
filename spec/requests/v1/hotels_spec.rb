@@ -13,21 +13,11 @@ RSpec.describe "V1::Hotels", type: :request do
         end.to change(Hotel.all, :count).by(1)
         expect(response).to have_http_status :ok
       end
-
-      it "nameとcontentとimgeいずれかが空なら投稿ができないこと" do
-        # TODO
-        
-        hotel_empty = { hotel: { name: nil, content: nil } }
-        expect do
-          post v1_hotels_path, params: hotel_empty, headers: auth_tokens
-        end.not_to change(Hotel, :count)
-        expect(response).to have_http_status(:bad_request)
-      end
     end
 
     context "ログインしていない場合" do
       it "ホテルの投稿ができないこと" do
-        params = { name: "hotelName", content: "hotelContent" }
+        params = { hotel: { name: "hotelName", content: "hotelContent", images: [hotel_s3_key: "upload/images"] } }
         post v1_hotels_path, params: params, headers: nil
         expect(response).to have_http_status(:unauthorized)
         expect(response.message).to include('Unauthorized')
