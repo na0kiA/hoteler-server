@@ -18,11 +18,8 @@ module V1
 
     def create
       hotel_form = HotelForm.new(hotel_params)
-      if hotel_form && Hotel.create!(hotel_form.params)
-        render json: hotel_form, status: :ok
-      else
-        render json: hotel_form.errors, status: :bad_request
-      end
+      hotel_form && Hotel.create!(hotel_form.params)
+      render json: hotel_form, status: :ok
     end
 
     # def create
