@@ -8,7 +8,8 @@ Rails.application.routes.draw do
     resources :hotels
 
     get 'images', to: 'images#signed_url'
-    post 'images', to: 'images#saved_key'
+    post 'images/hotel', to: 'images#save_hotel_key'
+    post 'images/user', to: 'images#save_user_key'
 
     namespace :auth do
       resources :sessions, only: %i[index]

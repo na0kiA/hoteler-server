@@ -12,6 +12,7 @@ services:
       - mysql-db:/var/lib/mysql
   api:
     tty: true
+    stdin_open: true
     depends_on:
       - db
     build:

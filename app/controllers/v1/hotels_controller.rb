@@ -17,13 +17,19 @@ module V1
     end
 
     def create
-      hotel = Hotel.new(hotel_params)
-      if hotel.save && hotel.present?
-        render json: hotel, status: :ok
-      else
-        render json: hotel.errors, status: :bad_request
-      end
+      hotel_form = HotelForm.new(hotel_params)
+      hotel_form && Hotel.create!(hotel_form.params)
+      render json: hotel_form, status: :ok
     end
+
+    # def create
+    #   hotel = Hotel.new(hotel_params)
+    #   if hotel.save && hotel.present?
+    #     render json: hotel, status: :ok
+    #   else
+    #     render json: hotel.errors, status: :bad_request
+    #   end
+    # end
 
     def update
       if @hotel.present? && @hotel.user.id == current_v1_user.id
@@ -35,7 +41,6 @@ module V1
     end
 
     def destroy
-      # hotel = Hotel.find(hotel_id)
       if @hotel.present? && @hotel.user.id == current_v1_user.id
         @hotel.destroy
         render json: @hotel, status: :ok
@@ -47,7 +52,7 @@ module V1
     private
 
     def hotel_params
-      params.require(:hotel).permit(:name, :content).merge(user_id: current_v1_user.id)
+      params.require(:hotel).permit(:name, :content, images: [:hotel_s3_key]).merge(user_id: current_v1_user.id)
     end
 
     def hotel_id
