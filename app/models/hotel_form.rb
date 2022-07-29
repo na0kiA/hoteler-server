@@ -9,7 +9,6 @@ class HotelForm
   attribute :user_id, :integer
   # attribute :hotel_id, :integer
   # attribute :hotel_s3_key, :string
-
   def params
     attributes.deep_symbolize_keys
   end
