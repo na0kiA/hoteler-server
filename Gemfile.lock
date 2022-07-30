@@ -1338,6 +1338,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.12.0)
       msgpack (~> 1.2)
+    brakeman (5.2.3)
     builder (3.2.4)
     capybara (3.37.1)
       addressable
@@ -1637,6 +1638,7 @@ DEPENDENCIES
   aws-sdk
   bcrypt
   bootsnap
+  brakeman
   capybara
   debug
   devise

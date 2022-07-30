@@ -42,6 +42,7 @@ gem 'devise_token_auth', git: "https://github.com/lynndylanhurley/devise_token_a
 gem 'rack-cors'
 gem 'rails_admin'
 gem 'rails-i18n'
+gem 'brakeman'
 
 gem "sassc-rails"
 
