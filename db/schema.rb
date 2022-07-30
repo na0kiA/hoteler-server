@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_22_105525) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_30_134157) do
   create_table "hotels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name", null: false
@@ -37,6 +37,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_105525) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "reviews", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "hotel_id"
+    t.string "title", null: false
+    t.text "content", null: false
+    t.string "image_s3_key"
+    t.integer "helpful_counts", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hotel_id"], name: "index_reviews_on_hotel_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -73,5 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_105525) do
   add_foreign_key "hotels", "users"
   add_foreign_key "images", "hotels"
   add_foreign_key "images", "users"
+  add_foreign_key "reviews", "hotels"
+  add_foreign_key "reviews", "users"
   add_foreign_key "users", "images"
 end
