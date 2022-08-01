@@ -37,12 +37,12 @@ gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
 gem 'aws-sdk'
+gem 'brakeman'
 gem 'devise'
 gem 'devise_token_auth', git: "https://github.com/lynndylanhurley/devise_token_auth"
 gem 'rack-cors'
 gem 'rails_admin'
 gem 'rails-i18n'
-gem 'brakeman'
 
 gem "sassc-rails"
 
