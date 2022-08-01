@@ -30,4 +30,25 @@ RSpec.describe Hotel, type: :model do
       end
     end
   end
+
+  describe "models/hotel.rb #create!" do
+    let_it_be(:user) { create(:user) }
+    # let_it_be(:hotel) { build(:hotel, user_id: user.id) }
+
+    context "ホテルを作成できる場合" do
+      it "paramsに必要項目が含まれていること" do
+        # params = { hotel: { name: "hotelName", content: "hotelContent", images: [hotel_s3_key: "upload/test"] } }
+        # ActiveRecord::Base.transaction do
+          # images = Image.new(hotel_id: hotel.id, user_id: user.id, hotel_s3_key: "upload/test")
+          # images.save!
+        # end
+        hotel = Hotel.new(name: "hotelName", content: "hotelContent", user_id: user.id)
+        expect(hotel.name).to eq "hotelName"
+      end
+    end
+
+    # context "ホテルを作成できない場合" do
+
+    # end
+  end
 end
