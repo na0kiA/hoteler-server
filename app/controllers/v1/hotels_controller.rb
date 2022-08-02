@@ -18,8 +18,12 @@ module V1
 
     def create
       hotel_form = HotelForm.new(hotel_params)
-      hotel_form && Hotel.create!(hotel_form.params)
-      render json: hotel_form, status: :ok
+      if hotel_form.valid?
+        Hotel.create!(hotel_form.params)
+        render json: hotel_form, status: :ok
+      else
+        raise "ホテルフォームに誤りがあります"
+      end
     end
 
     # def create
