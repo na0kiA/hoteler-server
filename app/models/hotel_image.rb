@@ -1,0 +1,2 @@
+class HotelImage < ApplicationRecord
+end
