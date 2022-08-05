@@ -3,18 +3,15 @@ class Hotel < ApplicationRecord
 
   belongs_to :user
   has_many :images, dependent: :destroy
-  validates :name, presence: true, length: { maximum: 50 }
-  validates :content, presence: true, length: { maximum: 2000 }
-
+  has_many :hotel_images, dependent: :destroy
 
   class << self
     def create!(params)
       ActiveRecord::Base.transaction do
-        hotel = new(name: params[:name], content: params[:content], user_id: params[:user_id])
+        hotel = Hotel.new(name: params[:name], content: params[:content], user_id: params[:user_id])
         hotel.save!
-        images = Image.new(hotel_id: hotel.id, user_id: params[:user_id], hotel_s3_key: params[:images][0][:hotel_s3_key][])
-        images.save!
-        binding.break
+        hotel_images = HotelImage.new(hotel_id: hotel.id, key: params[:hotel_images][0][:key], file_url: params[:hotel_images][0][:file_url])
+        hotel_images.save!
       end
     end
   end
