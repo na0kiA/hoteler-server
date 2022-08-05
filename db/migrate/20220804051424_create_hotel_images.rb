@@ -7,6 +7,6 @@ class CreateHotelImages < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :hotel_images, [:key, :file_url], unique: true 
+    add_index :hotel_images, [:key, :file_url], unique: true
   end
 end
