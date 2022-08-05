@@ -40,8 +40,8 @@ RSpec.describe HotelForm, type: :model do
 
     context "正常に動作する場合" do
       it "受け取ったparamsをシンボルにすること" do
-        hotel = described_class.new("name" => "hotelName", "content" => "hotelContent", "hotel_images" => [ "key" => "upload/test", "file_url" => "https://example/aws/s3"], "user_id" => user.id)
-        
+        hotel = described_class.new("name" => "hotelName", "content" => "hotelContent", "hotel_images" => ["key" => "upload/test", "file_url" => "https://example/aws/s3"], "user_id" => user.id)
+
         expect(hotel.params).to eq(name: "hotelName", content: "hotelContent", hotel_images: [{ key: "upload/test", file_url: "https://example/aws/s3" }], user_id: user.id)
       end
     end
