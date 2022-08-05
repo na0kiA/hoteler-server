@@ -4,12 +4,11 @@ class HotelForm
 
   attribute :name, :string
   attribute :content, :string
-  # attribute :hotel_s3_key, :string
-  attribute :images
+  attribute :hotel_images
   attribute :user_id, :integer
-  
+
   with_options presence: true do
-    validates :images
+    validates :hotel_images
     validates :user_id
   end
 
