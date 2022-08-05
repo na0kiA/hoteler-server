@@ -56,7 +56,7 @@ module V1
     private
 
     def hotel_params
-      params.require(:hotel).permit(:name, :content, images: [:hotel_s3_key]).merge(user_id: current_v1_user.id)
+      params.require(:hotel).permit(:name, :content, hotel_images: [:key, :file_url]).merge(user_id: current_v1_user.id)
     end
 
     def hotel_id
