@@ -4,24 +4,20 @@ RSpec.describe HotelForm, type: :model do
   describe "models/hotel_form.rb #validation" do
     let_it_be(:user) { create(:user) }
 
-    # before :each do
-    #   @hotel_form = HotelForm.new
-    # end
-
     context "入力値が正常な場合" do
       it "nameとcontentとhotel_imagesがあれば正常なこと" do
-        hotel = described_class.new(name: "hotelName", content: "hotelContent", hotel_images: [key: "upload/test", file_url: "https://example/aws/s3"], user_id: user.id)
+        hotel = described_class.new(name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id)
         expect(hotel).to be_valid
       end
 
       it "nameが50文字、contentが2000文字入力できること" do
-        hotel = described_class.new(name: "Hotel" * 10, content: "Hotel" * 400, hotel_images: [key: "upload/test", file_url: "https://example/aws/s3"], user_id: user.id)
+        hotel = described_class.new(name: "Hotel" * 10, content: "Hotel" * 400, key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id)
         expect(hotel).to be_valid
       end
     end
 
     context "入力値が異常な場合" do
-      it "nameとcontentとhotel_s3_keyが無ければエラーを返すこと" do
+      it "nameとcontentとが無ければエラーを返すこと" do
         hotel = described_class.new(name: nil, content: nil, user_id: user.id)
         expect(hotel).to be_invalid
         expect(hotel.errors[:name]).to eq ["を入力してください"]
@@ -35,14 +31,15 @@ RSpec.describe HotelForm, type: :model do
     end
   end
 
-  describe "models/hotel_form.rb #params" do
+  describe "models/hotel_form.rb #save" do
     let_it_be(:user) { create(:user) }
-
-    context "正常に動作する場合" do
-      it "受け取ったparamsをシンボルにすること" do
-        hotel = described_class.new("name" => "hotelName", "content" => "hotelContent", "hotel_images" => ["key" => "upload/test", "file_url" => "https://example/aws/s3"], "user_id" => user.id)
-
-        expect(hotel.params).to eq(name: "hotelName", content: "hotelContent", hotel_images: [{ key: "upload/test", file_url: "https://example/aws/s3" }], user_id: user.id)
+    context "正常に保存ができる場合" do
+      def save(params)
+        hotel = Hotel.create!(name: params[:name], content: params[:content], user_id: params[:user_id])
+        HotelImage.create!(hotel_id: hotel.id, key: params[:key], file_url: params[:file_url])
+      end
+      it "HotelとHotelImageを保存できること" do
+        # expect(Hotel).to receive(:)
       end
     end
   end
