@@ -19,10 +19,10 @@ module V1
     def create
       hotel_form = HotelForm.new(hotel_params)
       if hotel_form.valid?
-        Hotel.create!(hotel_form.params)
+        hotel_form.save
         render json: hotel_form, status: :ok
       else
-        raise "ホテルフォームに誤りがあります"
+        render json: hotel_form.errors, status: :bad_request
       end
     end
 
@@ -56,7 +56,7 @@ module V1
     private
 
     def hotel_params
-      params.require(:hotel).permit(:name, :content, hotel_images: [:key, :file_url]).merge(user_id: current_v1_user.id)
+      params.require(:hotel).permit(:name, :content, :key, :file_url).merge(user_id: current_v1_user.id)
     end
 
     def hotel_id
