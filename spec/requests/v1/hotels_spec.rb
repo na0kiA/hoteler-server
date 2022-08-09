@@ -7,7 +7,7 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしている場合" do
       it "ホテルの投稿ができること" do
-        params = { hotel: { name: "hotelName", content: "Kobe Kitanosaka is location", hotel_images: [key: "upload/test", file_url: "https://example/aws/s3"] } }
+        params = { hotel: { name: "hotelName", content: "Kobe Kitanosaka is location", key: "upload/test", file_url: "https://example/aws/s3" } }
         expect do
           post v1_hotels_path, params:, headers: auth_tokens
         end.to change(Hotel.all, :count).by(1)
@@ -17,7 +17,7 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしていない場合" do
       it "ホテルの投稿ができないこと" do
-        params = { hotel: { name: "hotelName", content: "hotelContent", hotel_images: [hotel_s3_key: "upload/images"] } }
+        params = { hotel: { name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3" } }
         post v1_hotels_path, params: params, headers: nil
         expect(response).to have_http_status(:unauthorized)
         expect(response.message).to include('Unauthorized')

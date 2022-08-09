@@ -15,6 +15,16 @@ RSpec.describe Hotel, type: :model do
           end
         end.to change(described_class, :count).by(1)
       end
+
+      it "saveができること" do
+        ActiveRecord::Base.transaction do
+          hotel = described_class.new(name: "Trance", content: "Kobe Kitanosaka is location", user_id: user.id)
+          expect { hotel.save! }.to change(described_class, :count).by(1)
+
+          hotel_images = HotelImage.new(hotel_id: hotel.id, key: "upload/test2", file_url: "https://example/aws/s3/2")
+          expect { hotel_images.save! }.to change(HotelImage, :count).by(1)
+        end
+      end
     end
 
     context "ホテルを作成できない場合" do
