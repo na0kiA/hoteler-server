@@ -5,6 +5,7 @@ RSpec.describe "V1::Reviews", type: :request do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    let_it_be(:hotel) { create(:hotel, user_id: client_user.id) }
 
     context "ログインしている場合" do
       it "口コミの投稿ができること" do
@@ -20,6 +21,15 @@ RSpec.describe "V1::Reviews", type: :request do
         params = { review: { title: "", content: "Kobe Kitanosaka is location" } }
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
         expect(response.status).to eq(400)
+      end
+
+      it "未承認のホテルへの口コミ投稿はできないこと" do
+        params = { review: { title: "hotelName", content: "Kobe Kitanosaka is location" } } 
+        puts hotel
+        post v1_hotel_reviews_path(hotel_id: hotel.id), params: params, headers: auth_tokens
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body).not_to include( title: "hotelName")
+        expect(response).to have_http_status(:not_found)
       end
     end
 
@@ -99,12 +109,13 @@ RSpec.describe "V1::Reviews", type: :request do
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
     let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
+    let_it_be(:params) { { review: { title: "title uploaded", content: "content uploaded" } } }
 
     context "ログインしている場合" do
       it "自分の投稿した口コミの編集ができること" do
-        params = { review: { title: "title uploaded", content: "content uploaded" } }
         patch v1_user_review_path(id: review.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
+        puts response_body
         expect(response).to have_http_status :ok
         expect(response_body).to include(title: "title uploaded", content: "content uploaded")
       end
@@ -112,7 +123,6 @@ RSpec.describe "V1::Reviews", type: :request do
       it "自分が投稿していない口コミの編集ができないこと" do
         user = create(:user)
         different_review = create(:review, user_id: user.id, hotel_id: accepted_hotel.id)
-        params = { review: { title: "title uploaded", content: "content uploaded" } }
         patch v1_user_review_path(id: different_review.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body).not_to include(title: "title uploaded", content: "content uploaded")
@@ -122,7 +132,6 @@ RSpec.describe "V1::Reviews", type: :request do
 
     context "ログインしていない場合" do
       it "口コミの編集ができないこと" do
-        params = { review: { title: "title uploaded", content: "content uploaded" } }
         patch v1_user_review_path(id: review.id), params: params
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:unauthorized)
