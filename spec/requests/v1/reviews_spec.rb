@@ -140,25 +140,38 @@ RSpec.describe "V1::Reviews", type: :request do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    # let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
 
     context "口コミ詳細を取得できる場合" do
       it "口コミ自体が存在するホテルに書かれていること" do
-        create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)
-        get v1_hotel_reviews_path(hotel_id: accepted_hotel.id)
+        review = create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)
+        get v1_user_review_path(id: review.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq(1)
+        expect(response_body.length).to eq(8)
       end
     end
 
     context "口コミ詳細を取得できない場合" do
       it "ホテルそのものが存在しないこと" do
         unknow_hotel = create(:accepted_hotel, user_id: client_user.id)
+        review = create(:review, user_id: client_user.id, hotel_id: unknow_hotel.id)
         delete v1_hotel_path(id: unknow_hotel.id), headers: auth_tokens
-        get v1_hotel_reviews_path(hotel_id: unknow_hotel.id)
+        get v1_user_review_path(id: review.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body.length).to eq(1)
         expect(response).to have_http_status(:not_found)
+      end
+
+      it "口コミを消去していること" do
+        hotel = create(:accepted_hotel, user_id: client_user.id)
+        review = create(:review, user_id: client_user.id, hotel_id: hotel.id)
+        delete v1_user_review_path(id: review.id), headers: auth_tokens
+        get v1_user_review_path(id: review.id)
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body.length).to eq(1)
+        expect(response).to have_http_status(:not_found)
+        expect(response.status).to eq(400)
       end
     end
   end
