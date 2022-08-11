@@ -6,10 +6,10 @@ RSpec.describe "V1::Reviews", type: :request do
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
     let_it_be(:hotel) { create(:hotel, user_id: client_user.id) }
+    let_it_be(:params) {  { review: { title: "hotelName", content: "Kobe Kitanosaka is location" } } }
 
     context "ログインしている場合" do
       it "口コミの投稿ができること" do
-        params = { review: { title: "hotelName", content: "Kobe Kitanosaka is location" } }
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status :ok
@@ -23,9 +23,7 @@ RSpec.describe "V1::Reviews", type: :request do
         expect(response.status).to eq(400)
       end
 
-      it "未承認のホテルへの口コミ投稿はできないこと" do
-        params = { review: { title: "hotelName", content: "Kobe Kitanosaka is location" } } 
-        puts hotel
+      it "未承認のホテルへの口コミ投稿はできないこと" do 
         post v1_hotel_reviews_path(hotel_id: hotel.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body).not_to include( title: "hotelName")
@@ -35,7 +33,6 @@ RSpec.describe "V1::Reviews", type: :request do
 
     context "ログインしていない場合" do
       it "口コミの投稿ができないこと" do
-        params = { review: { title: "hotelName", content: "Kobe Kitanosaka is location" } }
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: nil
         expect(response).to have_http_status(:unauthorized)
         expect(response.status).to eq(401)
@@ -43,7 +40,7 @@ RSpec.describe "V1::Reviews", type: :request do
     end
   end
 
-  describe "GET /v1/hotels/:hotel_id/reviews - v1/hotels#index" do
+  describe "GET /v1/hotels/:hotel_id/reviews - v1/reviews#index" do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
@@ -115,7 +112,6 @@ RSpec.describe "V1::Reviews", type: :request do
       it "自分の投稿した口コミの編集ができること" do
         patch v1_user_review_path(id: review.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
-        puts response_body
         expect(response).to have_http_status :ok
         expect(response_body).to include(title: "title uploaded", content: "content uploaded")
       end
@@ -139,4 +135,32 @@ RSpec.describe "V1::Reviews", type: :request do
       end
     end
   end
+
+  describe "GET /v1/reviews/:id - v1/reviews#show" do
+    let_it_be(:client_user) { create(:user) }
+    let_it_be(:auth_tokens) { client_user.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+
+    context "口コミ詳細を取得できる場合" do
+      it "口コミ自体が存在するホテルに書かれていること" do
+        create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)
+        get v1_hotel_reviews_path(hotel_id: accepted_hotel.id)
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(:success)
+        expect(response_body.length).to eq(1)
+      end
+    end
+
+    context "口コミ詳細を取得できない場合" do
+      it "ホテルそのものが存在しないこと" do
+        unknow_hotel = create(:accepted_hotel, user_id: client_user.id)
+        delete v1_hotel_path(id: unknow_hotel.id), headers: auth_tokens
+        get v1_hotel_reviews_path(hotel_id: unknow_hotel.id)
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body.length).to eq(1)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
 end
