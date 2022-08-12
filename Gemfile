@@ -44,6 +44,7 @@ gem 'rack-cors'
 gem 'rails_admin'
 gem 'rails-i18n'
 
+
 gem "sassc-rails"
 
 group :development, :test do
@@ -61,6 +62,7 @@ group :development do
   gem "rubocop-rspec", require: false
   gem 'solargraph'
   gem "web-console"
+  gem 'bullet'
 end
 
 group :test do
