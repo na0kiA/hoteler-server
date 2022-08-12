@@ -18,22 +18,12 @@ module V1
 
     def create
       hotel_form = HotelForm.new(hotel_params)
-      if hotel_form.valid?
-        hotel_form.save
+      if hotel_form.valid? && hotel_form.save(hotel_params)
         render json: hotel_form, status: :ok
       else
         render json: hotel_form.errors, status: :bad_request
       end
     end
-
-    # def create
-    #   hotel = Hotel.new(hotel_params)
-    #   if hotel.save && hotel.present?
-    #     render json: hotel, status: :ok
-    #   else
-    #     render json: hotel.errors, status: :bad_request
-    #   end
-    # end
 
     def update
       if @hotel.present? && @hotel.user.id == current_v1_user.id
