@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :hotel do
+    sequence(:accepted) { false }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
   end
