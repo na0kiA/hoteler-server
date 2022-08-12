@@ -171,7 +171,13 @@ RSpec.describe "V1::Reviews", type: :request do
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body.length).to eq(1)
         expect(response).to have_http_status(:not_found)
-        expect(response.status).to eq(400)
+      end
+
+      it "口コミが存在しないこと" do
+        get v1_user_review_path(" ")
+        expect(response).to         have_http_status(404)
+        expect(response.message).to include('Not Found')
+        # expect(JSON.parse(response.body)['errors']['title']).to include('パラメータのidが不正です')
       end
     end
   end
