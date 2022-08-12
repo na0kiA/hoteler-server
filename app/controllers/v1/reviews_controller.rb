@@ -14,12 +14,12 @@ module V1
       if review.present?
         render json: review
       else
-        render json: review.errors, status: :bad_request
+        render json: review.errors, status: :not_found
+        # record_not_found
       end
     end
 
     def create
-      # binding.break
       review_form = Review.new(review_params)
       if review_form.save && review_form.present?
         render json: review_form, status: :ok
@@ -28,18 +28,9 @@ module V1
       end
     end
 
-    # def create
-    #   hotel = Hotel.new(review_params)
-    #   if hotel.save && hotel.present?
-    #     render json: hotel, status: :ok
-    #   else
-    #     render json: hotel.errors, status: :bad_request
-    #   end
-    # end
-
     def update
       if @review.present? && @review.user.id == current_v1_user.id
-        @review.update(review_params)
+        @review.update(review_update_params)
         render json: @review, status: :ok
       else
         render json: @review.errors, status: :bad_request
@@ -58,8 +49,11 @@ module V1
     private
 
     def review_params
-      hotel = Hotel.find(params[:hotel_id])
-      params.require(:review).permit(:title, :content).merge(user_id: current_v1_user.id, hotel_id: hotel.id)
+      params.require(:review).permit(:title, :content).merge(user_id: current_v1_user.id, hotel_id: hotel_params.id)
+    end
+
+    def review_update_params
+      params.require(:review).permit(:title, :content)
     end
 
     def review_ids
@@ -67,7 +61,7 @@ module V1
     end
 
     def hotel_params
-      Hotel.find(params[:hotel_id])
+     Hotel.accepted.find(params[:hotel_id])
     end
   end
 end
