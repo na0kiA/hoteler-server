@@ -140,7 +140,6 @@ RSpec.describe "V1::Reviews", type: :request do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
-    # let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
 
     context "口コミ詳細を取得できる場合" do
       it "口コミ自体が存在するホテルに書かれていること" do
@@ -177,7 +176,6 @@ RSpec.describe "V1::Reviews", type: :request do
         get v1_user_review_path(" ")
         expect(response).to         have_http_status(404)
         expect(response.message).to include('Not Found')
-        # expect(JSON.parse(response.body)['errors']['title']).to include('パラメータのidが不正です')
       end
     end
   end
