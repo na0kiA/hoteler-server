@@ -32,10 +32,21 @@ RSpec.describe HotelForm, type: :model do
   end
 
   describe "models/hotel_form.rb #save" do
-    let_it_be(:user) { create(:user) }
     context "正常に保存ができる場合" do
+      let_it_be(:user) { create(:user) }
+      let_it_be(:params)  { {name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id }}
+
+      # def save(params)
+      #   hotel = Hotel.create!(name: params[:name], content: params[:content], user_id: params[:user_id])
+      #   HotelImage.create!(hotel_id: hotel.id, key: params[:key], file_url: params[:file_url])
+      # end
+
+      it "paramsの値が正常なこと" do
+        hotel_form = HotelForm.new(params)
+        expect{hotel_form.save(params)}.to change(Hotel, :count).by(1)
+      end
+
       it "saveがparamsを受け取って実行できていること" do
-        params = { name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id }
         s = spy
         s.save(params)
         expect(s).to have_received(:save).with(name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id)
@@ -47,10 +58,6 @@ RSpec.describe HotelForm, type: :model do
         image = { hotel_id: hotel_form.id, key: params[:key], file_url: params[:file_url] }
 
         expect { HotelImage.create!(image) }.to change(HotelImage, :count).by(1)
-
-        # hotel_form = HotelForm.new(params)
-        # allow(hotel_form).to receive(:save).and_return(hotel_form)
-        # expect(hotel_form.save(params)).to include("name")
       end
     end
 
