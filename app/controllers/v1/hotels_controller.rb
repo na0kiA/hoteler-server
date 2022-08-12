@@ -1,7 +1,7 @@
 module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
-    before_action :hotel_id, only: %i[show destroy update]
+    before_action :hotel_id, only: %i[show update destroy]
 
     def index
       render json: Hotel.accepted
