@@ -18,6 +18,6 @@ class HotelForm
 
   def save(params)
     hotel = Hotel.create!(name: params[:name], content: params[:content], user_id: params[:user_id])
-    HotelImage.create!(hotel_id: hotel.id, key: params[:key], file_url: params[:file_url])
+    hotel.hotel_images.create!(key: params[:key], file_url: params[:file_url])
   end
 end
