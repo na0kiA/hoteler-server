@@ -5,7 +5,16 @@ Rails.application.routes.draw do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
       registrations: 'v1/auth/registrations'
     }
-    resources :hotels
+    # resources :hotels do
+    #   resources :reviews, only: [:index, :new, :create]
+    # end
+    # resources :reviews, only: [:show, :edit, :update, :destroy]
+
+    scope shallow_prefix: "user" do
+      resources :hotels do
+        resources :reviews, shallow: true
+      end
+    end
 
     get 'images', to: 'images#signed_url'
     post 'images/hotel', to: 'images#save_hotel_key'

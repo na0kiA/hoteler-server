@@ -3,26 +3,17 @@ class Hotel < ApplicationRecord
 
   belongs_to :user
   has_many :images, dependent: :destroy
-  validates :name, presence: true, length: { maximum: 50 }
-  validates :content, presence: true, length: { maximum: 2000 }
+  has_many :hotel_images, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
-  class << self
-    def create!(params)
-      ActiveRecord::Base.transaction do
-        hotel = new(name: params[:name], content: params[:content], user_id: params[:user_id])
-        if hotel.valid?
-          hotel.save!
-        else
-          raise "ホテルフォームに誤りがあります"
-        end
-        # rescue ActiveRecord::StatementInvalid
-        images = Image.new(hotel_id: hotel.id, user_id: params[:user_id], hotel_s3_key: params[:images])
-        if images.valid?
-          images.save!
-        else
-          raise "ホテルフォームに誤りがあります"
-        end
-      end
-    end
-  end
+  # class << self
+  #   def create!(params)
+  #     ActiveRecord::Base.transaction do
+  #       hotel = Hotel.new(name: params[:name], content: params[:content], user_id: params[:user_id])
+  #       hotel.save!
+  #       hotel_images = HotelImage.new(hotel_id: hotel.id, key: params[:hotel_images][0][:key], file_url: params[:hotel_images][0][:file_url])
+  #       hotel_images.save!
+  #     end
+  #   end
+  # end
 end

@@ -3,13 +3,13 @@ module RequestSpecHelper
     post v1_auth_path, params: {
       password: 'test2525',
       password_confirmation: 'test2525',
-      email: "#{account}@gmail.com"
+      email: "#{account}@example.com"
     }
   end
 
   def login(account)
     post v1_auth_session_path, params: {
-      email: "#{account}@gmail.com",
+      email: "#{account}@example.com",
       password: 'test2525'
     }
   end

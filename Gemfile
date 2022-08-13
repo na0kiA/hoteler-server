@@ -37,6 +37,7 @@ gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
 gem 'aws-sdk'
+gem 'brakeman'
 gem 'devise'
 gem 'devise_token_auth', git: "https://github.com/lynndylanhurley/devise_token_auth"
 gem 'rack-cors'
@@ -53,6 +54,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'bullet'
   gem 'rubocop', require: false
   gem 'rubocop-inflector', require: false
   gem "rubocop-performance", require: false

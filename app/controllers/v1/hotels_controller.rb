@@ -1,7 +1,7 @@
 module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
-    before_action :hotel_id, only: %i[show destroy update]
+    before_action :hotel_id, only: %i[show update destroy]
 
     def index
       render json: Hotel.accepted
@@ -18,18 +18,12 @@ module V1
 
     def create
       hotel_form = HotelForm.new(hotel_params)
-      hotel_form && Hotel.create!(hotel_form.params)
-      render json: hotel_form, status: :ok
+      if hotel_form.valid? && hotel_form.save(hotel_params)
+        render json: hotel_form, status: :ok
+      else
+        render json: hotel_form.errors, status: :bad_request
+      end
     end
-
-    # def create
-    #   hotel = Hotel.new(hotel_params)
-    #   if hotel.save && hotel.present?
-    #     render json: hotel, status: :ok
-    #   else
-    #     render json: hotel.errors, status: :bad_request
-    #   end
-    # end
 
     def update
       if @hotel.present? && @hotel.user.id == current_v1_user.id
@@ -52,7 +46,7 @@ module V1
     private
 
     def hotel_params
-      params.require(:hotel).permit(:name, :content, images: [:hotel_s3_key]).merge(user_id: current_v1_user.id)
+      params.require(:hotel).permit(:name, :content, :key, :file_url).merge(user_id: current_v1_user.id)
     end
 
     def hotel_id
