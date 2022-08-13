@@ -61,7 +61,7 @@ module V1
     end
 
     def hotel_params
-     Hotel.accepted.find(params[:hotel_id])
+      Hotel.accepted.find(params[:hotel_id])
     end
   end
 end

@@ -18,6 +18,6 @@ class ApplicationController < ActionController::Base
   end
 
   def render_json_bad_request(title, detail)
-    render json: { errors: { title: title, detail: detail } }, status: :bad_request
+    render json: { errors: { title:, detail: } }, status: :bad_request
   end
 end

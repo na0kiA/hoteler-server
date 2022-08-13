@@ -12,8 +12,8 @@ RSpec.describe Review, type: :model do
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
 
     it "承認済みのホテルのidを受け取っていること" do
-      params = {title: "title uploaded", content: "content uploaded", user_id: client_user.id, hotel_id: accepted_hotel.id}
-      expect{Review.save(params)}.to change(Review, :count).by(1)
+      params = { title: "title uploaded", content: "content uploaded", user_id: client_user.id, hotel_id: accepted_hotel.id }
+      expect { described_class.save(params) }.to change(described_class, :count).by(1)
     end
 
     it "承認済みのホテルのidを受け取っていること" do
@@ -29,12 +29,12 @@ RSpec.describe Review, type: :model do
 
     it "Reviewに新規レコードが作成できていること" do
       hotel = Hotel.find(accepted_hotel.id)
-      expect{ hotel.reviews.create!(title: "title uploaded", content: "content uploaded", user_id: client_user.id, hotel_id: hotel.id)}.to change(Review, :count).by(1)
+      expect { hotel.reviews.create!(title: "title uploaded", content: "content uploaded", user_id: client_user.id, hotel_id: hotel.id) }.to change(described_class, :count).by(1)
     end
   end
 
   context "saveができない場合" do
-    let_it_be(:client_user)  { create(:user) }
+    let_it_be(:client_user) { create(:user) }
     it "未承認のホテルであること" do
       hotel = create(:hotel, user_id: client_user.id)
       hotel.reviews.create!(title: "title uploaded", content: "content uploaded", user_id: client_user.id, hotel_id: hotel.id)

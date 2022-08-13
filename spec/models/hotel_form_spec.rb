@@ -34,34 +34,29 @@ RSpec.describe HotelForm, type: :model do
   describe "models/hotel_form.rb #save" do
     context "正常に保存ができる場合" do
       let_it_be(:user) { create(:user) }
-      let_it_be(:params)  { {name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id }}
-
-      # def save(params)
-      #   hotel = Hotel.create!(name: params[:name], content: params[:content], user_id: params[:user_id])
-      #   HotelImage.create!(hotel_id: hotel.id, key: params[:key], file_url: params[:file_url])
-      # end
+      let_it_be(:params)  { { name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id } }
 
       it "paramsの値が正常なこと" do
-        hotel_form = HotelForm.new(params)
-        expect{hotel_form.save(params)}.to change(Hotel, :count).by(1)
-      end
-
-      it "saveがparamsを受け取って実行できていること" do
-        s = spy
-        s.save(params)
-        expect(s).to have_received(:save).with(name: "hotelName", content: "hotelContent", key: "upload/test", file_url: "https://example/aws/s3", user_id: user.id)
-
-        hotel = { name: params[:name], content: params[:content], user_id: params[:user_id] }
-
-        expect { Hotel.create!(hotel) }.to change(Hotel, :count).by(1)
-        hotel_form = Hotel.create!(hotel)
-        image = { hotel_id: hotel_form.id, key: params[:key], file_url: params[:file_url] }
-
-        expect { HotelImage.create!(image) }.to change(HotelImage, :count).by(1)
+        hotel_form = described_class.new(params)
+        expect { hotel_form.save(params) }.to change(Hotel, :count).by(1)
       end
     end
 
     context "保存ができない場合" do
+      let_it_be(:user) { create(:user) }
+      let_it_be(:unknow_hotel) { create(:hotel, user_id: user.id) }
+
+      it "RecordInvalidでHotel.create!に失敗すること" do
+        expect { Hotel.create!(name: "", content: "", user_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "RecordInvalidでhotel_images.create!に失敗すること" do
+        expect { unknow_hotel.hotel_images.create!(key: 22, file_url: "https://example/aws/s3") }.to raise_error(ActiveRecord::RecordInvalid)
+      end
     end
   end
+  # def save(params)
+  #   hotel = Hotel.create!(name: params[:name], content: params[:content], user_id: params[:user_id])
+  #   hotel.hotel_images.create!(key: params[:key], file_url: params[:file_url])
+  # end
 end

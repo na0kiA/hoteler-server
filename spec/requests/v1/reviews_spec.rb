@@ -6,7 +6,7 @@ RSpec.describe "V1::Reviews", type: :request do
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
     let_it_be(:hotel) { create(:hotel, user_id: client_user.id) }
-    let_it_be(:params) {  { review: { title: "hotelName", content: "Kobe Kitanosaka is location" } } }
+    let_it_be(:params) { { review: { title: "hotelName", content: "Kobe Kitanosaka is location" } } }
 
     context "ログインしている場合" do
       it "口コミの投稿ができること" do
@@ -23,10 +23,10 @@ RSpec.describe "V1::Reviews", type: :request do
         expect(response.status).to eq(400)
       end
 
-      it "未承認のホテルへの口コミ投稿はできないこと" do 
+      it "未承認のホテルへの口コミ投稿はできないこと" do
         post v1_hotel_reviews_path(hotel_id: hotel.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body).not_to include( title: "hotelName")
+        expect(response_body).not_to include(title: "hotelName")
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -174,10 +174,9 @@ RSpec.describe "V1::Reviews", type: :request do
 
       it "口コミが存在しないこと" do
         get v1_user_review_path(" ")
-        expect(response).to         have_http_status(404)
+        expect(response).to         have_http_status(:not_found)
         expect(response.message).to include('Not Found')
       end
     end
   end
-
 end
