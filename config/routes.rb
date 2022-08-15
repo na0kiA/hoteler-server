@@ -5,15 +5,17 @@ Rails.application.routes.draw do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
       registrations: 'v1/auth/registrations'
     }
-    # resources :hotels do
-    #   resources :reviews, only: [:index, :new, :create]
-    # end
-    # resources :reviews, only: [:show, :edit, :update, :destroy]
 
-    scope shallow_prefix: "user" do
+    scope shallow_prefix: 'user' do
       resources :hotels do
         resources :reviews, shallow: true
       end
+    end
+
+    scope '/reviews/:review_id' do
+      resource :helpfulnesses, only: [:create, :destroy]
+      # post 'helpfulness', to: 'helpfulnesses#create'
+      # delete 'helpfulness/:id', to: 'helpfulnesses#destroy'
     end
 
     get 'images', to: 'images#signed_url'
