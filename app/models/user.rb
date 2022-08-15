@@ -9,4 +9,5 @@ class User < ApplicationRecord
 
   has_many :hotels, dependent: :nullify
   has_many :images, dependent: :destroy
+  has_many :helpfulnesses, dependent: :destroy
 end

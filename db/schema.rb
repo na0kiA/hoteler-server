@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_14_060744) do
-  create_table "helpful_reviews", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2022_08_15_063018) do
+  create_table "helpfulnesses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["review_id", "user_id"], name: "index_helpful_reviews_on_review_id_and_user_id", unique: true
-    t.index ["review_id"], name: "index_helpful_reviews_on_review_id"
-    t.index ["user_id"], name: "index_helpful_reviews_on_user_id"
+    t.index ["review_id", "user_id"], name: "index_helpfulnesses_on_review_id_and_user_id", unique: true
+    t.index ["review_id"], name: "index_helpfulnesses_on_review_id"
+    t.index ["user_id"], name: "index_helpfulnesses_on_user_id"
   end
 
   create_table "hotel_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -102,8 +102,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_14_060744) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "helpful_reviews", "reviews"
-  add_foreign_key "helpful_reviews", "users"
+  add_foreign_key "helpfulnesses", "reviews"
+  add_foreign_key "helpfulnesses", "users"
   add_foreign_key "hotel_images", "hotels"
   add_foreign_key "hotels", "users"
   add_foreign_key "images", "hotels"

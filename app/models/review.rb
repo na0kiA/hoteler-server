@@ -1,6 +1,7 @@
 class Review < ApplicationRecord
   belongs_to :user
   belongs_to :hotel
+  has_many :helpfulnesses, dependent: :destroy
 
   validates :title, presence: true, length: { minimum: 5, maximum: 50 }
   validates :content, presence: true, length: { minimum: 10, maximum: 1000 }
