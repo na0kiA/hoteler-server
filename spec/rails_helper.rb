@@ -4,10 +4,10 @@ require 'simplecov'
 ENV['RAILS_ENV'] ||= 'test'
 # require_relative '../config/environment'
 require File.expand_path('../config/environment', __dir__)
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 
 require 'rspec/rails'
-require "test_prof/recipes/rspec/let_it_be"
+require 'test_prof/recipes/rspec/let_it_be'
 SimpleCov.start
 require 'devise'
 
