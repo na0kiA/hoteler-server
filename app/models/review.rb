@@ -1,5 +1,5 @@
 class Review < ApplicationRecord
-  validates_with ReviewValidator
+  validates_with XssValidator, fields: [:title, :content]
 
   belongs_to :user
   belongs_to :hotel
