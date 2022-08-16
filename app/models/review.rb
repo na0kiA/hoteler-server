@@ -1,4 +1,6 @@
 class Review < ApplicationRecord
+  validates_with ReviewValidator
+
   belongs_to :user
   belongs_to :hotel
   has_many :helpfulnesses, dependent: :destroy
@@ -9,7 +11,6 @@ class Review < ApplicationRecord
   class << self
     def save(params)
       hotel = Hotel.accepted.find(params[:hotel_id])
-      # hotel = Hotel.accepted.exists?(id: params[:hotel_id])
       hotel.reviews.create!(title: params[:title], content: params[:content], user_id: params[:user_id])
     end
   end
