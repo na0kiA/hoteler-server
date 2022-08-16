@@ -12,8 +12,8 @@ class HotelForm
     validates :user_id
     validates :name, length: { maximum: 50 }
     validates :content, length: { minimum: 10, maximum: 2000 }
-    validates :key, length: { minimum: 10 }
-    validates :file_url, length: { minimum: 10 }
+    validates :key, length: { minimum: 10 }, uniquness: true
+    validates :file_url, length: { minimum: 10 }, uniquness: true
   end
 
   def save(params)
