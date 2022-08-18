@@ -1,0 +1,17 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        review:
+          attributes:
+            title:
+              contain_invalid_regex: "無効な記号です"
+              blank: "空白です"
+            content:
+              contain_invalid_regex: "無効な記号です"
+    models:
+      review: "ユーザー"
+    attributes:
+      review:
+        title: "タイトル"
+        content: "内容"
