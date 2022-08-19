@@ -11,7 +11,6 @@ require 'test_prof/recipes/rspec/let_it_be'
 SimpleCov.start
 require 'devise'
 
-# Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 
 begin
@@ -22,6 +21,8 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  # Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+  # Dir[Rails.root.join('spec/support/*.rb')].each { |f| require f }
   config.include FactoryBot::Syntax::Methods
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
@@ -29,5 +30,6 @@ RSpec.configure do |config|
   config.raise_errors_for_deprecations!
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include CustomValidatorHelper, type: :model
   config.include RequestSpecHelper
 end

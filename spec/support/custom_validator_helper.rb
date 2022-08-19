@@ -11,10 +11,6 @@ module CustomValidatorHelper
     Struct.new(attribute, record, keyword_init: true) do
       include ActiveModel::Validations
 
-      def self.name
-        'DummyModel'
-      end
-
       validates attribute, validator => options
     end
   end
