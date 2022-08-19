@@ -49,14 +49,8 @@ RSpec.describe HotelForm, type: :model do
       end
 
       it 'RecordInvalidでhotel_images.create!に失敗すること' do
-        # hotel_form = described_class.new(invalid_images_params)
-        # expect(hotel_form.save(invalid_images_params)).to eq("")
         expect { HotelImage.create!(key: '', file_url: '', hotel_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end
-  # def save(params)
-  #   hotel = Hotel.create!(name: params[:name], content: params[:content], user_id: params[:user_id])
-  #   hotel.hotel_images.create!(key: params[:key], file_url: params[:file_url])
-  # end
 end
