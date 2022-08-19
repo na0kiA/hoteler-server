@@ -2,16 +2,31 @@ ja:
   activerecord:
     errors:
       models:
+        hotel:
+          attributes:
+            name:
+              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
+              contain_same_words: "同じ文字が含まれています"
+              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
+            content:
+              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
+              contain_same_words: "同じ文字が含まれています"
+              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
         review:
           attributes:
             title:
-              contain_invalid_regex: "無効な記号です"
-              blank: "空白です"
+              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
+              contain_same_words: "同じ文字が含まれています"
+              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
             content:
-              contain_invalid_regex: "無効な記号です"
-    models:
-      review: "ユーザー"
+              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
+              contain_same_words: "同じ文字が含まれています"
+              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
+  models:
+    hotel: "ホテル"
+    hotel_form: "ホテルフォーム"
+    user: "ユーザー"
+    review: "口コミ"
     attributes:
-      review:
-        title: "タイトル"
-        content: "内容"
+      hotel:
+        name: "ホテル名"
