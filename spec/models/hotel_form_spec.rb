@@ -46,11 +46,11 @@ RSpec.describe HotelForm, type: :model do
 
     context '保存ができない場合' do
       it 'RecordInvalidでHotel.create!に失敗すること' do
-        expect { Hotel.create!(name: '', content: '', user_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect {Hotel.create!(name: '', content: '', user_id: 0)}.to raise_error(ActiveRecord::RecordInvalid)
       end
 
       it 'RecordInvalidでhotel_images.create!に失敗すること' do
-        expect { HotelImage.create!(key: '', file_url: '', hotel_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect {HotelImage.create!(key: '', file_url: '', hotel_id: 0)}.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end
