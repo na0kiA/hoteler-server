@@ -1,32 +1,43 @@
 ja:
   activerecord:
-    errors:
-      models:
-        hotel:
-          attributes:
-            name:
-              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
-              contain_same_words: "同じ文字が含まれています"
-              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
-            content:
-              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
-              contain_same_words: "同じ文字が含まれています"
-              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
-        review:
-          attributes:
-            title:
-              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
-              contain_same_words: "同じ文字が含まれています"
-              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
-            content:
-              contain_blacklist_words: "暴力的もしくは卑猥な言葉が含まれています"
-              contain_same_words: "同じ文字が含まれています"
-              contain_invalid_regex: "無効な記号もしくはURLが含まれています"
-  models:
-    hotel: "ホテル"
-    hotel_form: "ホテルフォーム"
-    user: "ユーザー"
-    review: "口コミ"
     attributes:
-      hotel:
+      review:
+        title: "タイトル"
+        content: "内容"
+      hotel_form:
         name: "ホテル名"
+        content: "内容"
+        key: "画像ファイル"
+        file_url: "画像ファイル"
+      review:
+        title: "タイトル"
+        content: "内容"
+    errors:
+      messages:
+        invalid: "%{attribute}が正しくありません。"
+        blank: "%{attribute}を入力してください。"
+        too_short: "%{attribute}は%{count}文字以上入力してください。"
+        contain_blacklist_words: "%{attribute}に暴力的もしくは卑猥なワードが含まれています"
+        contain_same_words: "%{attribute}に同じ文字列が羅列しています"
+        contain_invalid_regex: "%{attribute}に無効な記号もしくはURLが含まれています"
+  activemodel:
+    attributes:
+      review:
+        title: "タイトル"
+        content: "内容"
+      hotel_form:
+        name: "ホテル名"
+        content: "内容"
+        key: "画像ファイル"
+        file_url: "画像ファイル"
+      review:
+        title: "タイトル"
+        content: "内容"
+    errors:
+      messages:
+        invalid: "%{attribute}が正しくありません。"
+        blank: "%{attribute}を入力してください。"
+        too_short: "%{attribute}は%{count}文字以上入力してください。"
+        contain_blacklist_words: "%{attribute}に暴力的もしくは卑猥なワードが含まれています"
+        contain_same_words: "%{attribute}に同じ文字列が羅列しています"
+        contain_invalid_regex: "%{attribute}に無効な記号もしくはURLが含まれています"
