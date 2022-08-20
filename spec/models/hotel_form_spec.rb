@@ -19,9 +19,10 @@ RSpec.describe HotelForm, type: :model do
     context '入力値が異常な場合' do
       it 'nameとcontentが無ければエラーを返すこと' do
         hotel = described_class.new(name: nil, content: nil, user_id: user.id)
+        hotel.valid?
         expect(hotel).to be_invalid
-        expect(hotel.errors[:name]).to eq ['を入力してください']
-        expect(hotel.errors[:content]).to eq %w[を入力してください は10文字以上で入力してください]
+        expect(hotel.errors.messages[:name]).to eq ["ホテル名を入力してください。"]
+        expect(hotel.errors.messages[:content]).to eq ["内容を入力してください。", "内容は10文字以上入力してください。"]
       end
 
       it 'nameが51文字、contentが2001文字入力できないこと' do
