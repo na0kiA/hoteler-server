@@ -1475,9 +1475,6 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
-    rails-i18n (7.0.3)
-      i18n (>= 0.7, < 2)
-      railties (>= 6.0.0, < 8)
     rails_admin (3.0.0)
       activemodel-serializers-xml (>= 1.0)
       kaminari (>= 0.14, < 2.0)
@@ -1660,7 +1657,6 @@ DEPENDENCIES
   rack
   rack-cors
   rails (= 7.0.3.1)
-  rails-i18n
   rails_admin
   railties (= 7.0.3.1)
   rspec-rails

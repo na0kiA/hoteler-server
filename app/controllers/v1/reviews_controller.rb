@@ -21,7 +21,7 @@ module V1
 
     def create
       review_form = Review.new(review_params)
-      if review_form.save && review_form.present?
+      if review_form.present? && review_form.save
         render json: review_form, status: :ok
       else
         render json: review_form.errors, status: :bad_request

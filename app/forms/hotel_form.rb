@@ -4,16 +4,18 @@ class HotelForm
 
   attribute :name, :string
   attribute :content, :string
-  attribute :user_id, :integer
   attribute :key, :string
   attribute :file_url, :string
+  attribute :user_id, :integer
 
   with_options presence: true do
+    with_options invalid_words: true do
+      validates :name, length: { maximum: 50 }
+      validates :content, length: { minimum: 10, maximum: 2000 }
+      validates :key, length: { minimum: 10 }
+    end
+    validates :file_url, length: { minimum: 10 }
     validates :user_id
-    validates :name, length: { maximum: 50 }
-    validates :content, length: { minimum: 10, maximum: 2000 }
-    validates :key
-    validates :file_url
   end
 
   def save(params)

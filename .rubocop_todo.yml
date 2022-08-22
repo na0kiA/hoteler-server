@@ -13,6 +13,7 @@
 Layout/ArgumentAlignment:
   Exclude:
     - 'config/initializers/cors.rb'
+    
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
@@ -168,7 +169,8 @@ Style/SpecialGlobalVars:
 # Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
 # SupportedStyles: single_quotes, double_quotes
 Style/StringLiterals:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: single_quotes
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
