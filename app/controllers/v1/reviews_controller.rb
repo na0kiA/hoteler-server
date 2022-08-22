@@ -49,11 +49,11 @@ module V1
     private
 
     def review_params
-      params.require(:review).permit(:title, :content).merge(user_id: current_v1_user.id, hotel_id: hotel_params.id)
+      params.require(:review).permit(:title, :content, :five_star_rate).merge(user_id: current_v1_user.id, hotel_id: hotel_params.id)
     end
 
     def review_update_params
-      params.require(:review).permit(:title, :content)
+      params.require(:review).permit(:title, :content, :five_star_rate)
     end
 
     def review_ids
