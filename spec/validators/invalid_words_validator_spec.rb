@@ -8,14 +8,6 @@ RSpec.describe InvalidWordsValidator, type: :model do
 
     let(:mock) { build_validator_mock.new(attribute: value) }
 
-    # context '' do
-    #   let(:value) { 'よかったです' }
-
-    #   it 'バリデーションをパスすること' do
-    #     expect(mock).to be_valid
-    #   end
-    # end
-
     context '正常な場合' do
       let(:value) { 'よかったです' }
 
@@ -46,7 +38,6 @@ RSpec.describe InvalidWordsValidator, type: :model do
       let(:value) { 'http://example.com' }
 
       it 'エラーが返ること' do
-        p mock.errors
         expect(mock).to be_invalid
         expect(mock.errors).to be_added(:attribute, :contain_invalid_regex)
       end

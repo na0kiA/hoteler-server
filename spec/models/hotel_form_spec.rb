@@ -21,8 +21,8 @@ RSpec.describe HotelForm, type: :model do
         hotel = described_class.new(name: nil, content: nil, user_id: user.id)
         hotel.valid?
         expect(hotel).to be_invalid
-        expect(hotel.errors.messages[:name]).to eq ["ホテル名を入力してください。"]
-        expect(hotel.errors.messages[:content]).to eq ["内容を入力してください。", "内容は10文字以上入力してください。"]
+        expect(hotel.errors.messages[:name]).to eq ['ホテル名を入力してください。']
+        expect(hotel.errors.messages[:content]).to eq ['内容を入力してください。', '内容は10文字以上入力してください。']
       end
 
       it 'nameが51文字、contentが2001文字入力できないこと' do
@@ -46,11 +46,11 @@ RSpec.describe HotelForm, type: :model do
 
     context '保存ができない場合' do
       it 'RecordInvalidでHotel.create!に失敗すること' do
-        expect {Hotel.create!(name: '', content: '', user_id: 0)}.to raise_error(ActiveRecord::RecordInvalid)
+        expect { Hotel.create!(name: '', content: '', user_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
       it 'RecordInvalidでhotel_images.create!に失敗すること' do
-        expect {HotelImage.create!(key: '', file_url: '', hotel_id: 0)}.to raise_error(ActiveRecord::RecordInvalid)
+        expect { HotelImage.create!(key: '', file_url: '', hotel_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end
