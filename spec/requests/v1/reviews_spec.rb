@@ -2,47 +2,48 @@ require 'rails_helper'
 
 RSpec.describe 'V1::Reviews', type: :request do
   describe 'POST /v1/hotels/:hotel_id/reviews - v1/reviews#create' do
-    let_it_be(:client_user)  { create(:user) }
-    let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
+    let_it_be(:client_user) { create(:user) }
+    let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
     let_it_be(:hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:params) { { review: { title: 'hotelName', content: 'Kobe Kitanosaka is location', five_star_rate: 5 } } }
 
-    context 'ログインしている場合' do
-      it '口コミの投稿ができること' do
+    context 'ログインしていて口コミの投稿ができる場合' do
+      it '200を返すこと' do
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status :ok
-        expect(response_body.length).to eq(8)
-        expect(response_body).to include(title: 'hotelName', content: 'Kobe Kitanosaka is location')
+        expect(response.status).to eq(200)
+        expect(symbolized_body(response).length).to eq(7)
+        expect(symbolized_body(response)).to include(title: 'hotelName', content: 'Kobe Kitanosaka is location')
       end
+    end
 
-      it 'titleの値が不正な時は口コミの投稿ができないこと' do
+    context 'ログインしていてtitleの値が不正な場合' do
+      it '400を返すこと' do
         params = { review: { title: '', content: 'Kobe Kitanosaka is location', five_star_rate: 5 } }
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
         expect(response.status).to eq(400)
       end
+    end
 
-      it '未承認のホテルへの口コミ投稿はできないこと' do
+    context '未承認のホテルへの口コミ投稿をする場合' do
+      it '404 NOT FOUNDを返すこと' do
         post v1_hotel_reviews_path(hotel_id: hotel.id), params: params, headers: auth_tokens
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body).not_to include(title: 'hotelName')
-        expect(response).to have_http_status(:not_found)
+        expect(symbolized_body(response)).not_to include(title: 'hotelName')
+        expect(response.status).to eq(404)
       end
     end
 
     context '星評価をしていない場合' do
-      it '口コミの投稿ができないこと' do
+      it '400を返すこと' do
         params = { review: { title: 'hotelName', content: 'Kobe Kitanosaka is location', five_star_rate: 0 } }
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status(:bad_request)
-        expect(response_body).not_to include(title: 'hotelName', content: 'Kobe Kitanosaka is location')
+        expect(response.status).to eq(400)
+        expect(symbolized_body(response)).not_to include(title: 'hotelName', content: 'Kobe Kitanosaka is location')
       end
     end
 
-    context 'ログインしていない場合' do
-      it '口コミの投稿ができないこと' do
+    context 'ログインをしていない場合' do
+      it '401を返すこと' do
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: nil
         expect(response).to have_http_status(:unauthorized)
         expect(response.status).to eq(401)
@@ -55,24 +56,22 @@ RSpec.describe 'V1::Reviews', type: :request do
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
 
-    context '口コミ一覧を取得できる場合' do
-      it '口コミ自体が存在するホテルに書かれていること' do
+    context '口コミ自体が存在するホテルに書かれている場合' do
+      it 'okを返すこと' do
         create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)
         get v1_hotel_reviews_path(hotel_id: accepted_hotel.id)
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq(1)
+        expect(response.status).to eq(200)
+        expect(symbolized_body(response).length).to eq(1)
       end
     end
 
-    context '口コミ一覧を取得できない場合' do
-      it 'ホテルそのものが存在しないこと' do
+    context 'ホテルそのものが存在しない場合' do
+      it '404 NOT FOUNDを返すこと' do
         unknow_hotel = create(:accepted_hotel, user_id: client_user.id)
         delete v1_hotel_path(id: unknow_hotel.id), headers: auth_tokens
         get v1_hotel_reviews_path(hotel_id: unknow_hotel.id)
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body.length).to eq(1)
-        expect(response).to have_http_status(:not_found)
+        expect(symbolized_body(response).length).to eq(1)
+        expect(response.status).to eq(404)
       end
     end
   end
@@ -83,76 +82,75 @@ RSpec.describe 'V1::Reviews', type: :request do
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
     let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
 
-    context 'ログインしている場合' do
-      it 'ユーザーが投稿した口コミを削除できること' do
+    context '口コミを削除できる場合' do
+      it '200を返すこと' do
         expect do
           delete v1_user_review_path(id: review.id), headers: auth_tokens
         end.to change(Review, :count).by(-1)
-        expect(response).to have_http_status :ok
+        expect(response.status).to eq(200)
       end
+    end
 
-      it '自分が投稿していない口コミを削除できないこと' do
+    context '他人の口コミを削除する場合' do
+      it '400を返すこと' do
         user = create(:user)
         other_review = create(:review, hotel_id: accepted_hotel.id, user_id: user.id)
         expect do
           delete v1_user_review_path(id: other_review.id), headers: auth_tokens
         end.not_to change(Review, :count)
-        expect(response).to have_http_status(:bad_request)
+        expect(response.status).to eq(400)
       end
     end
 
     context 'ログインしていない場合' do
-      it 'ユーザーが投稿した口コミを削除できないこと' do
+      it '401を返すこと' do
         expect do
           delete v1_user_review_path(id: review.id), headers: nil
         end.not_to change(Review, :count)
-        expect(response).to have_http_status(:unauthorized)
+        expect(response.status).to eq(401)
       end
     end
   end
 
   describe 'PATCH /v1/user/review/:id - v1/reviews#update' do
     let_it_be(:client_user)  { create(:user) }
-    let_it_be(:auth_tokens)  { client_user.create_new_auth_token}
+    let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
     let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
-    let_it_be(:params) { { review: { title: 'title uploaded', content: 'content uploaded', five_star_rate: 5} } }
+    let_it_be(:params) { { review: { title: 'title uploaded', content: 'content uploaded', five_star_rate: 5 } } }
 
-    context 'ログインしている場合' do
-      it '自分の投稿した口コミの編集ができること' do
+    context '自分の投稿した口コミの編集ができる場合' do
+      it '200を返すこと' do
         patch v1_user_review_path(id: review.id), params: params, headers: auth_tokens
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status :ok
-        expect(response_body).to include(title: 'title uploaded', content: 'content uploaded')
+        expect(response.status).to eq(200)
+        expect(symbolized_body(response)).to include(title: 'title uploaded', content: 'content uploaded')
       end
+    end
 
-      it '五つ星の編集ができること' do
+    context '五つ星の編集ができる場合' do
+      it '200を返すこと' do
         params = { review: { title: '五つ星を変えました', content: '五つ星を変えました。よかったです', five_star_rate: 2.5 } }
-        p params
-        headers = auth_tokens.merge("ACCEPT" => "application/json")
-        patch v1_user_review_path(id: review.id), params: params.to_json, headers: auth_tokens
-        p response.body
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status :ok
-        expect(response_body[:five_star_rate]).to eq("2.5")
+        patch v1_user_review_path(id: review.id), params: params, headers: auth_tokens
+        expect(response.status).to eq(200)
+        expect(symbolized_body(response)[:five_star_rate]).to eq('2.5')
       end
+    end
 
-      it '自分が投稿していない口コミの編集ができないこと' do
+    context '自分が投稿していない口コミの編集ができない場合' do
+      it '400を返すこと' do
         user = create(:user)
         different_review = create(:review, user_id: user.id, hotel_id: accepted_hotel.id)
         patch v1_user_review_path(id: different_review.id), params: params, headers: auth_tokens
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body).not_to include(title: 'title uploaded', content: 'content uploaded')
-        expect(response).to have_http_status(:bad_request)
+        expect(symbolized_body(response)).not_to include(title: 'title uploaded', content: 'content uploaded')
+        expect(response.status).to eq(400)
       end
     end
 
     context 'ログインしていない場合' do
-      it '口コミの編集ができないこと' do
+      it '401を返すこと' do
         patch v1_user_review_path(id: review.id), params: params
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status(:unauthorized)
-        expect(response_body).not_to include(title: 'title uploaded', content: 'content uploaded')
+        expect(response.status).to eq(401)
+        expect(symbolized_body(response)).not_to include(title: 'title uploaded', content: 'content uploaded')
       end
     end
   end
@@ -162,40 +160,41 @@ RSpec.describe 'V1::Reviews', type: :request do
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
 
-    context '口コミ詳細を取得できる場合' do
-      it '口コミ自体が存在するホテルに書かれていること' do
+    context '口コミが書かれている場合' do
+      it '200を返すこと' do
         review = create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)
         get v1_user_review_path(id: review.id)
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq(8)
+        expect(response.status).to eq(200)
+        expect(symbolized_body(response).length).to eq(8)
       end
     end
 
-    context '口コミ詳細を取得できない場合' do
-      it 'ホテルそのものが存在しないこと' do
+    context 'ホテルそのものが存在しない場合' do
+      it 'NOT FOUNDを返すこと' do
         unknow_hotel = create(:accepted_hotel, user_id: client_user.id)
         review = create(:review, user_id: client_user.id, hotel_id: unknow_hotel.id)
         delete v1_hotel_path(id: unknow_hotel.id), headers: auth_tokens
         get v1_user_review_path(id: review.id)
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body.length).to eq(1)
-        expect(response).to have_http_status(:not_found)
+        expect(symbolized_body(response).length).to eq(1)
+        expect(response.status).to eq(404)
       end
+    end
 
-      it '口コミを消去していること' do
+    context '口コミを消去している場合' do
+      it '404 NOT FOUNDを返すこと' do
         hotel = create(:accepted_hotel, user_id: client_user.id)
         review = create(:review, user_id: client_user.id, hotel_id: hotel.id)
         delete v1_user_review_path(id: review.id), headers: auth_tokens
         get v1_user_review_path(id: review.id)
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body.length).to eq(1)
-        expect(response).to have_http_status(:not_found)
+        expect(symbolized_body(response).length).to eq(1)
+        expect(response.status).to eq(404)
       end
+    end
 
-      it '口コミが存在しないこと' do
+    context '口コミが存在しない場合' do
+      it '404 NOT FOUNDを返すこと' do
         get v1_user_review_path(' ')
-        expect(response).to         have_http_status(:not_found)
+        expect(response.status).to eq(404)
         expect(response.message).to include('Not Found')
       end
     end
