@@ -20,7 +20,7 @@ module V1
 
     def create
       review_form = ReviewForm.new(review_params)
-      if review_form.valid? && review_form.save(review_params)
+      if review_form.valid? && review_form.save
         render json: review_form
       else
         render json: review_form.errors, status: :bad_request
@@ -54,15 +54,6 @@ module V1
     def review_update_params
       params.require(:review).permit(:title, :content, :five_star_rate)
     end
-    
-    # def params_int(review_update_params)
-    #   review_update_params.each do |key, value|
-    #     if integer_string?(value)
-    #       review_update_params[key] = value.to_i
-    #     end
-    #   end
-    # end
-
     def set_review
       @review = Review.find(params[:id])
     end
