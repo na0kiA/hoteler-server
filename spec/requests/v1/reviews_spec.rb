@@ -129,8 +129,8 @@ RSpec.describe 'V1::Reviews', type: :request do
       it '五つ星の編集ができること' do
         params = { review: { title: '五つ星を変えました', content: '五つ星を変えました。よかったです', five_star_rate: 2.5 } }
         p params
-        # headers = auth_tokens.merge("ACCEPT" => "application/json")
-        patch v1_user_review_path(id: review.id), params: params, headers: auth_tokens
+        headers = auth_tokens.merge("ACCEPT" => "application/json")
+        patch v1_user_review_path(id: review.id), params: params.to_json, headers: auth_tokens
         p response.body
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status :ok
