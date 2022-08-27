@@ -20,12 +20,12 @@ gem 'rails', '7.0.3.1'
   gem 'activesupport', rails_version
   gem 'railties', rails_version
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bcrypt'
 gem 'bootsnap'
 gem 'importmap-rails'
 gem 'jaro_winkler'
 gem 'jbuilder'
-gem 'active_model_serializers', '~> 0.10.0'
 gem 'json'
 gem 'msgpack', '~> 1.5', '>= 1.5.2'
 gem 'mysql2'
