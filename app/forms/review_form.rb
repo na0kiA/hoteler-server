@@ -38,6 +38,23 @@ class ReviewForm
     # review.update!(title: title, content: content, five_star_rate: five_star_rate, hotel_id: hotel_id, user_id: user_id)
 
     review.update!(title: title, content: content, five_star_rate: five_star_rate)
+    #=>{
+#     "review": {
+#       "title": "よかったです",
+#       "content": "コノホテルはよかったです",
+#       "five_star_rate": "3.5",
+#       "id": 50,
+#       "user_id": 1,
+#       "hotel_id": 59,
+#       "created_at": "2022-08-27T04:15:03.047+09:00",
+#       "updated_at": "2022-08-27T17:06:25.545+09:00"
+#   },
+#   "title": "よかったです",
+#   "content": "コノホテルはよかったです",
+#   "five_star_rate": 3.5,
+#   "validation_context": null,
+#   "errors": {}
+# }
 
     rescue ActiveRecord::RecordInvalid
       false
