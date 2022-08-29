@@ -1,88 +1,49 @@
 class ReviewForm
   include ActiveModel::Model
+  include ActiveModel::Attributes
 
-  attr_accessor :title, :content, :five_star_rate, :user_id, :hotel_id, :attributes
+  attr_accessor :five_star_rate
+
+  attribute :title, :string
+  attribute :content, :string
+  # attribute :five_star_rate, :integer
+  attribute :hotel_id, :integer
+  attribute :user_id, :integer
 
   with_options presence: true do
-    validates :five_star_rate, numericality: { in: 1..5 }, length: { maximum: 1 }
+    validates :five_star_rate, numericality: { in: 1..5}, length: { maximum: 1 }
     with_options invalid_words: true do
-      validates :title, length: { minimum: 2, maximum: 1000 }
-      validates :content, length: { minimum: 10, maximum: 1000 }
+      validates :title, length: { minimum: 2, maximum: 30 }
+      validates :content, length: { minimum: 5, maximum: 1000 }
     end
   end
 
-  def initialize(attributes:, review: nil, user_id:, hotel_id:)
-
-    attributes = default_attributes if attributes.empty?
+  def initialize(user_id:, hotel_id:, attributes: nil, review: nil)
+    attributes ||= default_attributes
     @review = review || Review.new(user_id:, hotel_id:)
-    super(attributes)
+
     # Active Modelのinitializeを引数attributesで呼び出している
     # 結果として書き込みメソッドを用いてtitleなどを書き込んでいる
-
-    # pp attributes
-      #<ActionController::Parameters {"title"=>"hotelName", "content"=>"Kobe Kitanosaka is location", "five_star_rate"=>"5", "user_id"=>970, "hotel_id"=>1183} permitted: true>
-
-      # p default_attributes
-      # => {:title=>nil, :content=>nil, :five_star_rate=>0.0, :hotel_id=>1192, :user_id=>977}
+    super(attributes)
   end
 
-  
   def save
     return if invalid?
 
-      # p default_attributes
-      # => {:title=>nil, :content=>nil, :five_star_rate=>0.0, :hotel_id=>1192, :user_id=>977}
-
-    #このupdateでreview.newしたnilの値にattributesの値を挿入
-
-    # review.update!(title: title, content: content, five_star_rate: five_star_rate, hotel_id: hotel_id, user_id: user_id)
-
-    review.update!(title: title, content: content, five_star_rate: five_star_rate)
-    #=>{
-#     "review": {
-#       "title": "よかったです",
-#       "content": "コノホテルはよかったです",
-#       "five_star_rate": "3.5",
-#       "id": 50,
-#       "user_id": 1,
-#       "hotel_id": 59,
-#       "created_at": "2022-08-27T04:15:03.047+09:00",
-#       "updated_at": "2022-08-27T17:06:25.545+09:00"
-#   },
-#   "title": "よかったです",
-#   "content": "コノホテルはよかったです",
-#   "five_star_rate": 3.5,
-#   "validation_context": null,
-#   "errors": {}
-# }
-
-    rescue ActiveRecord::RecordInvalid
-      false
+    review.update!(title:, content:, five_star_rate:)
   end
 
-  # def update(params)
-  #   self.attributes = params
-  #   save
-  # end
-  
-  # def save
-  #   return if invalid?
-
-  #   Review.create!(title:, content:, five_star_rate:, hotel_id:, user_id:)
-  # end
   private
-  
+
   attr_reader :review
 
-  #createの場合はデフォルトでnilになる
-  #updateの場合はコントローラーの@reviewが挿入される？
   def default_attributes
-    { 
+    {
       title: review.title,
       content: review.content,
       five_star_rate: review.five_star_rate,
       hotel_id: review.hotel_id,
       user_id: review.user_id
-     }
+    }
   end
 end
