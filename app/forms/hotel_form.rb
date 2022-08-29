@@ -18,8 +18,36 @@ class HotelForm
     validates :user_id
   end
 
-  def save(params)
-    hotel = Hotel.create!(name: params[:name], content: params[:content], user_id: params[:user_id])
-    hotel.hotel_images.create!(key: params[:key], file_url: params[:file_url])
+  def initialize(user_id:, attributes: nil, hotel: nil)
+    attributes ||= default_attributes
+    @hotel = hotel || Hotel.new(user_id:)
+    # @hotel_images = hotel_images || HotelImage.new(hotel_id: hotel.id)
+
+    super(attributes)
+  end
+
+  def save
+    return if invalid?
+
+    ActiveRecord::Base.transaction do
+      hotel.update!(name:, content:)
+      hotel.hotel_images.update!(key:, file_url:)
+    end
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
+  private
+
+  attr_reader :hotel, :hotel_images
+
+  def default_attributes
+    {
+      name: hotel.name,
+      content: hotel.content,
+      key: hotel.hotel_images.pluck(:key),
+      file_url: hotel.hotel_images.pluck(:file_url),
+      user_id: hotel.user_id
+    }
   end
 end
