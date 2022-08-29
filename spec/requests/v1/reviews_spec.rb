@@ -1,3 +1,5 @@
+# このspecではitに期待値のみをコメント
+# 所感 : 期待値のみをitに記述するより文脈を記述した方が分かりやすい
 require 'rails_helper'
 
 RSpec.describe 'V1::Reviews', type: :request do
@@ -12,7 +14,7 @@ RSpec.describe 'V1::Reviews', type: :request do
       it '200を返すこと' do
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(7)
+        expect(symbolized_body(response).length).to eq(8)
         expect(symbolized_body(response)).to include(title: 'hotelName', content: 'Kobe Kitanosaka is location')
       end
     end
@@ -129,10 +131,10 @@ RSpec.describe 'V1::Reviews', type: :request do
 
     context '五つ星の編集ができる場合' do
       it '200を返すこと' do
-        params = { review: { title: '五つ星を変えました', content: '五つ星を変えました。よかったです', five_star_rate: 2.5 } }
+        params = { review: { title: '五つ星を変えました', content: '五つ星を変えました。よかったです', five_star_rate: 2 } }
         patch v1_user_review_path(id: review.id), params: params, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:five_star_rate]).to eq('2.5')
+        expect(symbolized_body(response)[:five_star_rate]).to eq('2')
       end
     end
 
