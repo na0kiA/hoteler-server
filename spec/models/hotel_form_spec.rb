@@ -40,7 +40,7 @@ RSpec.describe HotelForm, type: :model do
     context '正常に保存ができる場合' do
       it 'paramsの値が正常なこと' do
         hotel_form = described_class.new(params)
-        expect { hotel_form.save(params) }.to change(Hotel, :count).by(1)
+        expect { hotel_form.save }.to change(Hotel, :count).by(1)
       end
     end
 
