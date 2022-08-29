@@ -22,5 +22,5 @@ ja:
         contain_same_words: "%{attribute}に同じ文字列が羅列しています。"
         contain_invalid_regex: "%{attribute}に無効な記号もしくはURLが含まれています。"
         not_a_number: "%{attribute}が文字列になっています。"
-        too_long: "%{attribute}は小数点第一位までです。"
+        too_long: "%{attribute}は1から5までの整数しか付けられません。"
         in: "%{attribute}が不正な値です。"

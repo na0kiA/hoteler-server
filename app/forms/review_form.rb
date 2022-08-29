@@ -4,7 +4,7 @@ class ReviewForm
   attr_accessor :title, :content, :five_star_rate, :user_id, :hotel_id, :attributes
 
   with_options presence: true do
-    validates :five_star_rate, numericality: { in: 1..5 }, length: { maximum: 3 }
+    validates :five_star_rate, numericality: { in: 1..5 }, length: { maximum: 1 }
     with_options invalid_words: true do
       validates :title, length: { minimum: 2, maximum: 1000 }
       validates :content, length: { minimum: 10, maximum: 1000 }
