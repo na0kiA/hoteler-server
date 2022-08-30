@@ -1,4 +1,5 @@
 require 'rails_helper'
+# TODO: saveメソッドのテストが未完成
 
 RSpec.describe HotelForm, type: :model do
   describe 'models/hotel_form.rb #validation' do
@@ -59,9 +60,9 @@ RSpec.describe HotelForm, type: :model do
       end
 
       it "saveができること" do
-        hotel = spy('hotel')
-        s.save
-        expect(s).to have_received(:save)
+        params = { name: 'Hotel Kobe', content: 'このホテルは北野坂で最近できたホテルで..', key: 'upload/test', file_url: 'https://example/aws/s3'}
+        hotel_form = HotelForm.new(attributes: params, user_id: user.id)
+        expect(hotel_form.save).to be_nil
       end
     end
 

@@ -14,8 +14,8 @@ RSpec.describe 'V1::Reviews', type: :request do
       it '200を返すこと' do
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(8)
-        expect(symbolized_body(response)).to include(title: 'hotelName', content: 'Kobe Kitanosaka is location')
+        expect(symbolized_body(response).length).to eq(5)
+        expect(symbolized_body(response)[:attributes]).to include(title: 'hotelName', content: 'Kobe Kitanosaka is location')
       end
     end
 
@@ -125,7 +125,8 @@ RSpec.describe 'V1::Reviews', type: :request do
       it '200を返すこと' do
         patch v1_user_review_path(id: review.id), params: params, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)).to include(title: 'title uploaded', content: 'content uploaded')
+        # response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(symbolized_body(response)[:attributes]).to include(title: 'title uploaded', content: 'content uploaded')
       end
     end
 

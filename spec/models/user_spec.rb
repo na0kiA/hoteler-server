@@ -5,7 +5,7 @@ RSpec.describe User, type: :model do
     let_it_be(:user) { create(:user) }
     context 'userを削除した場合' do
       it 'userを削除したときuserが投稿したhotelsは削除されないこと' do
-        user.hotels.create(name: 'Hotel_name', content: 'Hotel_content')
+        Hotel.create(name: 'Hotel_name', content: 'Hotel_content',user_id: user.id)
         expect { user.destroy }.not_to change(Hotel, :count)
       end
     end

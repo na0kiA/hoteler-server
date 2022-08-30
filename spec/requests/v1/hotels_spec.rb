@@ -32,11 +32,11 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated' } }
+        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated', key: 'upload/test', file_url: 'https://example/aws/s3',  } }
         patch v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body).to include(name: 'hotel 777', content: 'hotel has been updated')
+        expect(response_body[:attributes]).to include(name: 'hotel 777', content: 'hotel has been updated')
       end
 
       it '自分が投稿していないホテルの編集ができないこと' do

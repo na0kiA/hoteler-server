@@ -1,4 +1,5 @@
 require 'rails_helper'
+# TODO: メソッドのテストが未完成
 
 RSpec.describe ReviewForm, type: :model do
   describe 'models/review_form.rb #validation' do
@@ -65,7 +66,7 @@ RSpec.describe ReviewForm, type: :model do
         params = { title: 'よかったです', content: '部屋が綺麗', five_star_rate: 5 }
         review_form = described_class.new(attributes: params, hotel_id: accepted_hotel.id, user_id: user.id)
         allow(review_form).to receive(:default_attributes)
-        expect(review_form.title).to eq("")
+        expect(review_form.title).to eq("よかったです")
       end
   end
 
