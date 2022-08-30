@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_22_123208) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_30_065153) do
   create_table "helpfulnesses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id", null: false
     t.bigint "user_id", null: false
@@ -39,17 +39,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_22_123208) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_hotels_on_user_id"
-  end
-
-  create_table "images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "hotel_s3_key"
-    t.string "user_s3_key"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.bigint "hotel_id"
-    t.index ["hotel_id"], name: "index_images_on_hotel_id"
-    t.index ["user_id"], name: "index_images_on_user_id"
   end
 
   create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -93,10 +82,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_22_123208) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at", precision: nil
-    t.bigint "image_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["image_id"], name: "index_users_on_image_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
@@ -106,9 +93,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_22_123208) do
   add_foreign_key "helpfulnesses", "users"
   add_foreign_key "hotel_images", "hotels"
   add_foreign_key "hotels", "users"
-  add_foreign_key "images", "hotels"
-  add_foreign_key "images", "users"
   add_foreign_key "reviews", "hotels"
   add_foreign_key "reviews", "users"
-  add_foreign_key "users", "images"
 end
