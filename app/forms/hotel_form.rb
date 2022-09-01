@@ -21,7 +21,6 @@ class HotelForm
   def initialize(user_id:, attributes: nil, hotel: nil)
     attributes ||= default_attributes
     @hotel = hotel || Hotel.new(user_id:)
-    # @hotel_images = hotel_images || HotelImage.new(hotel_id: hotel.id)
 
     super(attributes)
   end
