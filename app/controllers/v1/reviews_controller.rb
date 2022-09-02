@@ -33,6 +33,7 @@ module V1
     # end
 
     def update
+      # binding.break
       review_form = ReviewForm.new(attributes: update_params, review: @review, user_id: @review.user_id, hotel_id: @review.hotel_id)
       if review_form.save && @review.user_id == current_v1_user.id
         render json: review_form, status: :ok
@@ -52,13 +53,13 @@ module V1
 
     private
 
-    # http://localhost:3001/v1/reviews/46
     def review_params
-      params.require(:review).permit(:title, :content, :five_star_rate).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
+      params.require(:review).permit(:title, :content, :five_star_rate, :file_url, :key).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
     end
 
+    # reviewのupdateのrouting(v1/reviews/:id)にホテルのidが含まれていないため専用のupdate_paramsを用意
     def update_params
-      params.require(:review).permit(:title, :content, :five_star_rate)
+      params.require(:review).permit(:title, :content, :five_star_rate, :key, :file_url).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
     end
 
     def set_review
