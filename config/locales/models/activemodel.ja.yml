@@ -24,3 +24,4 @@ ja:
         not_a_number: "%{attribute}が文字列になっています。"
         too_long: "%{attribute}は1から5までの整数しか付けられません。"
         in: "%{attribute}が不正な値です。"
+        inclusion: "%{attribute}は1から5の整数のみです。"
