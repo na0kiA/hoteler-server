@@ -2,7 +2,6 @@ module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
     before_action :set_hotel, only: %i[show update destroy]
-    before_action :set_hotel_images, only: %i[show update destroy]
 
     def index
       render json: Hotel.accepted
@@ -51,16 +50,8 @@ module V1
       params.require(:hotel).permit(:name, :content, :key, :file_url).merge(user_id: current_v1_user.id)
     end
 
-    # def hotel_images_params
-    #   params.require(:hotel).permit(:key, :file_url).merge(user_id: current_v1_user.id)
-    # end
-
     def set_hotel
       @hotel = Hotel.find(params[:id])
-    end
-
-    def set_hotel_images
-      @hotel_images = HotelImage.find_by(hotel_id: params[:id])
     end
   end
 end
