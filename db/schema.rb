@@ -50,8 +50,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_03_104618) do
 
   create_table "review_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id"
-    t.string "key", default: "", null: false
-    t.string "file_url", default: "", null: false
+    t.string "key", default: ""
+    t.string "file_url", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["review_id"], name: "index_review_images_on_review_id"
