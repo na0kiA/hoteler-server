@@ -2,7 +2,9 @@ class ReviewForm
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  attr_accessor :five_star_rate
+  # attr_accessor :five_star_rate
+
+  # attr_reader :review, :review_images
 
   attribute :title, :string
   attribute :content, :string
@@ -13,7 +15,7 @@ class ReviewForm
   attribute :user_id, :integer
 
   with_options presence: true do
-    validates :five_star_rate, numericality: { in: 1..5 }, length: { maximum: 1 }
+    validates :five_star_rate, inclusion: { in: [1, 2, 3, 4, 5] }
     with_options invalid_words: true do
       validates :title, length: { minimum: 2, maximum: 30 }
       validates :content, length: { minimum: 5, maximum: 1000 }
@@ -34,7 +36,8 @@ class ReviewForm
 
     ActiveRecord::Base.transaction do
       review.update!(title:, content:, five_star_rate:)
-      review.review_images.update!(key:, file_url:)
+      review_images = ReviewImage.find_or_create_by!(review_id: review.id)
+      review_images.update!(key:, file_url:)
     end
   rescue ActiveRecord::RecordInvalid
     false
@@ -42,15 +45,15 @@ class ReviewForm
 
   private
 
-  attr_reader :review
+  attr_reader :review, :review_images
 
   def default_attributes
     {
       title: review.title,
       content: review.content,
       five_star_rate: review.five_star_rate,
-      key: hotel.hotel_images.pluck(:key),
-      file_url: hotel.hotel_images.pluck(:file_url),
+      key: review.review_images.pluck(:key),
+      file_url: review.review_images.pluck(:file_url),
       hotel_id: review.hotel_id,
       user_id: review.user_id
     }

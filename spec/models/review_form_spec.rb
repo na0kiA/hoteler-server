@@ -30,7 +30,7 @@ RSpec.describe ReviewForm, type: :model do
         expect(review_form).to be_invalid
         expect(review_form.errors.messages[:title]).to eq ["タイトルを入力してください。", "タイトルは2文字以上入力してください。"]
         expect(review_form.errors.messages[:content]).to eq ["内容を入力してください。", "内容は5文字以上入力してください。"]
-        expect(review_form.errors.messages[:five_star_rate]).to eq ["5つ星を入力してください。", "5つ星が文字列になっています。"]
+        expect(review_form.errors.messages[:five_star_rate]).to eq ["5つ星を入力してください。", "5つ星は1から5の整数のみです。"]
       end
 
       it 'titleが51文字、contentが1001文字入力できないこと' do
@@ -40,12 +40,11 @@ RSpec.describe ReviewForm, type: :model do
         expect(review_form).to be_invalid
       end
 
-      it 'five_star_rateに小数点がつくと失敗すること' do
+      it 'five_star_rateに小数点がつくと丸められること' do
         bad_five_star_rate = {title: 'このホテル', content: 'よかったです', five_star_rate: 4.9}
         review_form = described_class.new(attributes: bad_five_star_rate, user_id: user.id, hotel_id: accepted_hotel.id)
         review_form.valid?
-        expect(review_form).to be_invalid
-        expect(review_form.errors.messages[:five_star_rate]).to eq ['5つ星は1から5までの整数しか付けられません。']
+        expect(review_form).to be_truthy
       end
 
       it 'five_star_rateが0のとき失敗すること' do
@@ -53,7 +52,7 @@ RSpec.describe ReviewForm, type: :model do
         review_form = described_class.new(attributes: bad_five_star_rate, user_id: user.id, hotel_id: accepted_hotel.id)
         review_form.valid?
         expect(review_form).to be_invalid
-        expect(review_form.errors.messages[:five_star_rate]).to eq ['5つ星が不正な値です。']
+        expect(review_form.errors.messages[:five_star_rate]).to eq ["5つ星は1から5の整数のみです。"]
       end
     end
   end
@@ -80,6 +79,14 @@ RSpec.describe ReviewForm, type: :model do
         params = { title: 'よかったです', content: '部屋が綺麗', five_star_rate: 5 }
         review_form = described_class.new(attributes: params, hotel_id: accepted_hotel.id, user_id: user.id)
         expect { review_form.save }.to change(Review, :count).by(1)
+      end
+
+      it '画像をつけるとreview_imagesも更新されること' do
+        added_images_params = { title: 'よかったです', content: '部屋が綺麗', five_star_rate: 5, key: 'upload/test', file_url: 'https://example/aws/s3'}
+        review_form = described_class.new(attributes: added_images_params, hotel_id: accepted_hotel.id, user_id: user.id)
+        pp review_form
+        expect { review_form.save }.to change(Review, :count).by(1)
+        # expect { review_form.save }.to change(ReviewImage, :count).by(1)
       end
     end
 
