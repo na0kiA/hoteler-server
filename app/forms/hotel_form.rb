@@ -12,8 +12,8 @@ class HotelForm
     with_options invalid_words: true do
       validates :name, length: { maximum: 50 }
       validates :content, length: { minimum: 10, maximum: 2000 }
-      validates :key, length: { minimum: 10 }
     end
+    validates :key, length: { minimum: 10 }
     validates :file_url, length: { minimum: 10 }
     validates :user_id
   end
@@ -24,13 +24,18 @@ class HotelForm
 
     super(attributes)
   end
-
+  
   def save
     return if invalid?
-
+    
     ActiveRecord::Base.transaction do
       hotel.update!(name:, content:)
-      hotel.hotel_images.update!(key:, file_url:)
+      
+      binding.break
+      # pick_a_value_from_array(key)
+      key.each { |val| val }
+      HotelImage.find_or_create_by(hotel_id: hotel.id, key:, file_url:)
+      # hotel_images.create!(key:, file_url:)
     end
   rescue ActiveRecord::RecordInvalid
     false
@@ -49,4 +54,8 @@ class HotelForm
       user_id: hotel.user_id
     }
   end
+
+  # def pick_a_value_from_array(key)
+  #   key.each { |val| p val }
+  # end
 end
