@@ -26,9 +26,9 @@ module V1
     end
 
     def update
-      hotel_form = HotelForm.new(attributes: hotel_params, hotel: @hotel, user_id: @hotel.user_id)
+      hotel_form = HotelForm.new(attributes: hotel_params, hotel: @hotel, user_id: @hotel.user_id, hotel_images: @hotel.hotel_images)
       if @hotel.present? && @hotel.user.id == current_v1_user.id
-        hotel_form.save
+        hotel_form.update
         render json: hotel_form, status: :ok
       else
         render json: hotel_form.errors, status: :bad_request
@@ -47,11 +47,19 @@ module V1
     private
 
     def hotel_params
-      params.require(:hotel).permit(:name, :content, :key, :file_url).merge(user_id: current_v1_user.id)
+      params.require(:hotel).permit(:name, :content, :file_url, key: []).merge(user_id: current_v1_user.id)
     end
 
     def set_hotel
       @hotel = Hotel.find(params[:id])
     end
+
+    # def set_hotel_images
+    #   @hotel_images = HotelImage.find_by(hotel_id: params[:id])
+    # end
+
+    # def json_parse(params)
+    #   JSON.parse(params).deep_symbolize_keys
+    # end
   end
 end
