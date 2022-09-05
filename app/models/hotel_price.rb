@@ -1,5 +1,6 @@
 class HotelPrice
   attr_reader :price
+
   def initialize(price)
     @price = typed_cost(price)
   end
@@ -13,7 +14,8 @@ class HotelPrice
 
   Cost = Struct.new(:room, :service)
   def typed_cost(price)
-    price.map { |cost|
-      Cost.new(cost[0], cost[1])}
+    price.map do |cost|
+      Cost.new(cost[0], cost[1])
+    end
   end
 end
