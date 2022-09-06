@@ -17,8 +17,8 @@ module V1
     end
 
     def create
-      hotel_form = HotelForm.new(attributes: hotel_params, user_id: current_v1_user.id)
-      if hotel_form.save
+      hotel_form = HotelForm.new(hotel_params)
+      if hotel_form.valid? && Hotel.save(hotel_form.params)
         render json: hotel_form, status: :ok
       else
         render json: hotel_form.errors, status: :bad_request
@@ -26,9 +26,8 @@ module V1
     end
 
     def update
-      hotel_form = HotelForm.new(attributes: hotel_params, hotel: @hotel, user_id: @hotel.user_id, hotel_images: @hotel.hotel_images)
-      if @hotel.present? && @hotel.user.id == current_v1_user.id
-        hotel_form.update
+      hotel_form = HotelForm.new(hotel_params)
+      if Hotel.update(hotel_form.params, @hotel) && @hotel.present? && hotel_form.valid? && @hotel.user.id == current_v1_user.id
         render json: hotel_form, status: :ok
       else
         render json: hotel_form.errors, status: :bad_request
@@ -53,13 +52,5 @@ module V1
     def set_hotel
       @hotel = Hotel.find(params[:id])
     end
-
-    # def set_hotel_images
-    #   @hotel_images = HotelImage.find_by(hotel_id: params[:id])
-    # end
-
-    # def json_parse(params)
-    #   JSON.parse(params).deep_symbolize_keys
-    # end
   end
 end
