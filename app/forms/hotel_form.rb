@@ -2,6 +2,10 @@ class HotelForm
   include ActiveModel::Model
   include ActiveModel::Attributes
 
+  define_model_callbacks :create
+
+  before_create ImageDestroyCallbacks
+
   attr_reader :hotel, :hotel_images
 
   attribute :name, :string
@@ -20,9 +24,9 @@ class HotelForm
     validates :user_id
   end
 
-  def initialize(user_id:, attributes:, hotel: nil, hotel_images: nil)
+  def initialize(user_id:, attributes:, hotel: nil)
     @hotel = hotel || Hotel.new(user_id:)
-    @hotel_images = hotel_images || HotelImage.new(hotel_id: @hotel.id)
+    # @hotel_images = hotel_images || HotelImage.new(hotel_id: @hotel.id)
     super(attributes)
   end
 
@@ -31,9 +35,14 @@ class HotelForm
 
     ActiveRecord::Base.transaction do
       hotel.update!(name: name, content: content)
-      hotel_images.update!(hotel_id: hotel.id, key:, file_url:)
+      # HotelImage.update!(hotel_id: hotel.id, key:, file_url:)
+      JSON.parse(key).each do |val|
+        run_callbacks(:create) do
+          hotel.hotel_images.create(hotel_id: hotel.id, key: val, file_url: "file_url#{val}")
+        end
+      end
       # JSON.parse(key).each do |val|
-        # HotelImage.find_or_create_by(hotel_id: hotel.id, key: val, file_url:)
+      #   HotelImage.find_or_create_by(hotel_id: hotel.id, key: val)
       # end
     end
   rescue ActiveRecord::RecordInvalid
