@@ -22,40 +22,21 @@ class ReviewForm
     end
   end
 
-  def initialize(user_id:, hotel_id:, attributes: nil, review: nil)
-    attributes ||= default_attributes
-    @review = review || Review.new(user_id:, hotel_id:)
-
-    # Active Modelのinitializeを引数attributesで呼び出している
-    # 結果として書き込みメソッドを用いてtitleなどを書き込んでいる
-    super(attributes)
-  end
-
-  def save
+  def save(params)
     return if invalid?
 
     ActiveRecord::Base.transaction do
-      review.update!(title:, content:, five_star_rate:)
-      review_images = ReviewImage.find_or_create_by!(review_id: review.id)
-      review_images.update!(key:, file_url:)
+      review = Review.new(name: params[:name], content: params[:content], user_id: params[:user_id])
+      JSON.parse(params[:key]).each do |val|
+        review.review_images.build(key: val, file_url: params[:file_url])
+      end
+      review.save!
     end
   rescue ActiveRecord::RecordInvalid
     false
   end
 
-  private
-
-  attr_reader :review, :review_images
-
-  def default_attributes
-    {
-      title: review.title,
-      content: review.content,
-      five_star_rate: review.five_star_rate,
-      key: review.review_images.pluck(:key),
-      file_url: review.review_images.pluck(:file_url),
-      hotel_id: review.hotel_id,
-      user_id: review.user_id
-    }
+  def params
+    attributes.deep_symbolize_keys
   end
 end

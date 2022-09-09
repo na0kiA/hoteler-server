@@ -81,7 +81,6 @@ RSpec.describe ReviewForm, type: :model do
       it '画像をつけるとreview_imagesも更新されること' do
         added_images_params = { title: 'よかったです', content: '部屋が綺麗', five_star_rate: 5, key: 'upload/test', file_url: 'https://example/aws/s3' }
         review_form = described_class.new(attributes: added_images_params, hotel_id: accepted_hotel.id, user_id: user.id)
-        pp review_form
         expect { review_form.save }.to change(Review, :count).by(1)
         # expect { review_form.save }.to change(ReviewImage, :count).by(1)
       end

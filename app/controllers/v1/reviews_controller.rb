@@ -19,8 +19,9 @@ module V1
     end
 
     def create
-      review_form = ReviewForm.new(attributes: review_params, user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
-      if review_form.save
+      # review_form = ReviewForm.new(attributes: review_params, user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
+      review_form = ReviewForm.new(review_params)
+      if review_form.save(review_form.params)
         render json: review_form
       else
         render json: review_form.errors, status: :bad_request
@@ -33,8 +34,10 @@ module V1
     # end
 
     def update
-      review_form = ReviewForm.new(attributes: update_params, review: @review, user_id: @review.user_id, hotel_id: @review.hotel_id)
-      if review_form.save && @review.user_id == current_v1_user.id
+      # review_form = ReviewForm.new(attributes: update_params, review: @review, user_id: @review.user_id, hotel_id: @review.hotel_id)
+      review_form = ReviewForm.new(review_params)
+      if review_form.valid? && @review.present? && @review.user_id == current_v1_user.id
+        ReviewEdit.new(review_form.params).update
         render json: review_form, status: :ok
       else
         render json: review_form.errors, status: :bad_request

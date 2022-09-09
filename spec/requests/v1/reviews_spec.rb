@@ -85,11 +85,9 @@ RSpec.describe 'V1::Reviews', type: :request do
       end
 
       it '200を返すこと' do
-        # TODOreview_imagesも取得できるようにする
+        # TODO review_imagesも取得できるようにする
         get v1_hotel_reviews_path(hotel_id: accepted_hotel.id)
         expect(response.status).to eq(200)
-
-        p symbolized_body(response)
         expect(symbolized_body(response)[:attributes][:key]).to eq('upload/test')
       end
     end
