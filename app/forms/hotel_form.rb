@@ -18,6 +18,20 @@ class HotelForm
     validates :user_id
   end
 
+  def save(params)
+    return if invalid?
+
+    ActiveRecord::Base.transaction do
+      hotel = Hotel.new(name: params[:name], content: params[:content], user_id: params[:user_id])
+      JSON.parse(params[:key]).each do |val|
+        hotel.hotel_images.build(key: val, file_url: params[:file_url])
+      end
+      hotel.save!
+    end
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
   def params
     attributes.deep_symbolize_keys
   end
