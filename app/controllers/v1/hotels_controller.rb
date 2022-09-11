@@ -18,7 +18,7 @@ module V1
 
     def create
       hotel_form = HotelForm.new(hotel_params)
-      if hotel_form.valid? && hotel_form.save(hotel_form.params)
+      if hotel_form.save(hotel_form.params)
         render json: hotel_form, status: :ok
       else
         render json: hotel_form.errors, status: :bad_request
@@ -27,7 +27,7 @@ module V1
 
     def update
       hotel_form = HotelForm.new(hotel_params)
-      if hotel_form.valid? && @hotel.present? && @hotel.user.id == current_v1_user.id
+      if hotel_form.valid? && authenticated?
         HotelProfile.new(params: hotel_form.params, set_hotel: @hotel).update
         render json: hotel_form, status: :ok
       else
@@ -36,7 +36,7 @@ module V1
     end
 
     def destroy
-      if @hotel.present? && @hotel.user.id == current_v1_user.id
+      if authenticated?
         @hotel.destroy
         render json: @hotel, status: :ok
       else
@@ -45,6 +45,10 @@ module V1
     end
 
     private
+
+    def authenticated?
+      @hotel.present? && @hotel.user.id == current_v1_user.id
+    end
 
     def hotel_params
       params.require(:hotel).permit(:name, :content, :file_url, key: []).merge(user_id: current_v1_user.id)
