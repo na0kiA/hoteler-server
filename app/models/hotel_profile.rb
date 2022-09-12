@@ -1,9 +1,10 @@
 class HotelProfile
-  attr_reader :params, :set_hotel
+  attr_reader :params, :set_hotel, :key
 
   def initialize(params:, set_hotel:)
     @params = params
     @set_hotel = set_hotel
+    @key = JSON.parse(params[:key])
     freeze
   end
 
@@ -23,12 +24,8 @@ class HotelProfile
     Hotel.update!(set_hotel.id, name: params[:name], content: params[:content])
   end
 
-  def parse_json
-    JSON.parse(params)
-  end
-
   def difference_key_array
-    set_hotel.hotel_images.pluck(:key).difference(JSON.parse(params[:key]))
+    set_hotel.hotel_images.pluck(:key).difference(key)
   end
 
   def remove_unnecessary_key
@@ -36,7 +33,7 @@ class HotelProfile
   end
 
   def find_or_create_key
-    JSON.parse(params[:key]).each do |val|
+    key.each do |val|
       set_hotel.hotel_images.find_or_create_by!(key: val, file_url: params[:file_url])
     end
   end
