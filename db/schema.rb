@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_03_104618) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_12_103535) do
   create_table "helpfulnesses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id", null: false
     t.bigint "user_id", null: false
@@ -23,12 +23,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_03_104618) do
 
   create_table "hotel_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id"
-    t.string "key", null: false
-    t.string "file_url", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "key", default: "", null: false
     t.index ["hotel_id"], name: "index_hotel_images_on_hotel_id"
-    t.index ["key", "file_url"], name: "index_hotel_images_on_key_and_file_url", unique: true
   end
 
   create_table "hotels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -51,7 +49,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_03_104618) do
   create_table "review_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id"
     t.string "key", default: ""
-    t.string "file_url", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["review_id"], name: "index_review_images_on_review_id"
