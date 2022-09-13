@@ -5,7 +5,6 @@ class HotelForm
   attribute :name, :string
   attribute :content, :string
   attribute :key, :string
-  attribute :file_url, :string
   attribute :user_id, :integer
 
   with_options presence: true do
@@ -14,17 +13,16 @@ class HotelForm
       validates :content, length: { minimum: 10, maximum: 2000 }
     end
     validates :key, length: { minimum: 10 }
-    validates :file_url, length: { minimum: 10 }
     validates :user_id
   end
-
+  
   def save(params)
     return if invalid?
 
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name: params[:name], content: params[:content], user_id: params[:user_id])
       JSON.parse(params[:key]).each do |val|
-        hotel.hotel_images.build(key: val, file_url: params[:file_url])
+        hotel.hotel_images.build(key: val)
       end
       hotel.save!
     end

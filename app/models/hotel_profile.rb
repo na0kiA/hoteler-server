@@ -27,14 +27,14 @@ class HotelProfile
   def difference_key_array
     set_hotel.hotel_images.pluck(:key).difference(key)
   end
+  
+  def find_or_create_key
+    key.each do |val|
+      set_hotel.hotel_images.find_or_create_by!(key: val)
+    end
+  end
 
   def remove_unnecessary_key
     set_hotel.hotel_images.where(key: difference_key_array).delete_all
-  end
-
-  def find_or_create_key
-    key.each do |val|
-      set_hotel.hotel_images.find_or_create_by!(key: val, file_url: params[:file_url])
-    end
   end
 end
