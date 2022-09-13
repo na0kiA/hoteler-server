@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe HotelProfile, type: :model do
-  describe 'models/hotel_form.rb #update' do
+  describe 'models/hotel_profile.rb #update' do
     let_it_be(:user) { create(:user) }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: user.id) }
 
