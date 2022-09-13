@@ -40,28 +40,14 @@ RSpec.describe HotelForm, type: :model do
 
   describe 'models/hotel_form.rb #save' do
 
-    def params
-      attributes.deep_symbolize_keys
-    end
-
     let_it_be(:user) { create(:user) }
 
     context '正常に保存ができる場合' do
       it 'paramsの値が正常で保存できること' do
         json_params = {"name"=>"神戸北野", "content"=>"最高峰のラグジュアリーホテルをお届けします", "key"=>["key1213", "key4561"], "user_id"=>user.id} 
-
         hotel_form = HotelForm.new(json_params)
-        expect(hotel_form.save(hotel_form.params)).to be true
-
-        params = hotel_form.params
-
-        hotel = Hotel.new(name: params[:name], content: params[:content], user_id: params[:user_id])
-        images = JSON.parse(params[:key]).each do |val|
-          hotel.hotel_images.build(key: val)
-        end
-        expect(hotel.name).to eq(params[:name])
-        expect(images).to eq(["key1213", "key4561"])
-        expect{hotel.save!}.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2)
+        expect(hotel_form.save).to be true
+        expect{hotel_form.save}.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2)
       end
     end
 

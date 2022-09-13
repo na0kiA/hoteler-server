@@ -15,13 +15,13 @@ class HotelForm
     validates :key, length: { minimum: 10 }
     validates :user_id
   end
-  
-  def save(params)
+
+  def save
     return if invalid?
 
     ActiveRecord::Base.transaction do
-      hotel = Hotel.new(name: params[:name], content: params[:content], user_id: params[:user_id])
-      JSON.parse(params[:key]).each do |val|
+      hotel = Hotel.new(name:, content:, user_id:)
+      JSON.parse(key).each do |val|
         hotel.hotel_images.build(key: val)
       end
       hotel.save!
