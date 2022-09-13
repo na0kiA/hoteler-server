@@ -2,15 +2,10 @@ class ReviewForm
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  # attr_accessor :five_star_rate
-
-  # attr_reader :review, :review_images
-
   attribute :title, :string
   attribute :content, :string
   attribute :five_star_rate, :integer
   attribute :key, :string
-  attribute :file_url, :string
   attribute :hotel_id, :integer
   attribute :user_id, :integer
 
@@ -22,13 +17,15 @@ class ReviewForm
     end
   end
 
-  def save(params)
+  def save
     return if invalid?
 
     ActiveRecord::Base.transaction do
-      review = Review.new(name: params[:name], content: params[:content], user_id: params[:user_id])
-      JSON.parse(params[:key]).each do |val|
-        review.review_images.build(key: val, file_url: params[:file_url])
+      review = Review.new(title:, content:, hotel_id:, user_id:)
+      if key.present?
+        JSON.parse(key).each do |val|
+          review.review_images.build(key: val)
+        end
       end
       review.save!
     end
