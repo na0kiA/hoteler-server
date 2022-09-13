@@ -14,7 +14,7 @@ module V1
       if review.present?
         render json: review
       else
-        render json: review.errors, status: :not_found
+        record_not_found
       end
     end
 
@@ -28,9 +28,9 @@ module V1
     end
 
     def update
-      review_form = ReviewForm.new(review_params)
-      if review_form.valid? && @review.present? && @review.user_id == current_v1_user.id
-        ReviewEdit.new(review_form.params).update
+      review_form = ReviewForm.new(update_params)
+      if review_form.valid? && authenticate?
+        ReviewEdit.new(params: review_form.params, set_review: @review).update
         render json: review_form, status: :ok
       else
         render json: review_form.errors, status: :bad_request
@@ -38,7 +38,7 @@ module V1
     end
 
     def destroy
-      if @review.present? && @review.user.id == current_v1_user.id
+      if authenticate?
         @review.destroy
         render json: @review, status: :ok
       else
@@ -48,13 +48,17 @@ module V1
 
     private
 
+    def authenticate?
+      @review.present? && @review.user_id == current_v1_user.id
+    end
+
     def review_params
       params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
     end
 
     # reviewのupdateのrouting(v1/reviews/:id)にホテルのidが含まれていないため専用のupdate_paramsを用意
     def update_params
-      params.require(:review).permit(:title, :content, :five_star_rate, :key).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
+      params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
     end
 
     def set_review
