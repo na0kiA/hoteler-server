@@ -7,7 +7,7 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしている場合' do
       it 'ホテルの投稿ができること' do
-        params = { hotel: { name: 'hotelName', content: 'Kobe Kitanosaka is location', key: ['upload/test'], file_url: 'https://example/aws/s3' } }
+        params = { hotel: { name: 'hotelName', content: 'Kobe Kitanosaka is location', key: ['upload/test'] } }
         expect do
           post v1_hotels_path, params:, headers: auth_tokens
         end.to change(Hotel.all, :count).by(1)
@@ -17,10 +17,19 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしていない場合' do
       it 'ホテルの投稿ができないこと' do
-        params = { hotel: { name: 'hotelName', content: 'hotelContent', key: ['upload/test'], file_url: 'https://example/aws/s3' } }
+        params = { hotel: { name: 'hotelName', content: 'hotelContent', key: ['upload/test'] } }
         post v1_hotels_path, params: params, headers: nil
         expect(response).to have_http_status(:unauthorized)
         expect(response.message).to include('Unauthorized')
+      end
+    end
+
+    context 'ホテルの投稿ができない場合' do
+      it '400を返すこと' do
+        params = { hotel: { name: '', content: 'hotelContent', key: ['upload/test'] } }
+        post v1_hotels_path, params: params, headers: auth_tokens
+        expect(response).to have_http_status(:bad_request)
+        expect(response.message).to include('Bad Request')
       end
     end
   end
@@ -32,7 +41,7 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated', key: ['upload/test','upload/test2'], file_url: 'https://example/aws/s3' } }
+        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated', key: ['upload/test','upload/test2'] } }
         patch v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
@@ -42,7 +51,7 @@ RSpec.describe 'V1::Hotels', type: :request do
       it '自分が投稿していないホテルの編集ができないこと' do
         user = create(:user)
         hotel = create(:accepted_hotel, user_id: user.id)
-        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated!', key: ['upload/test','upload/test2'], file_url: 'https://example/aws/s3' } } 
+        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated!', key: ['upload/test','upload/test2'] } } 
         patch v1_hotel_path(hotel.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body).not_to include(name: 'hotel 7777', content: 'hotel has been updated!')
@@ -139,6 +148,14 @@ RSpec.describe 'V1::Hotels', type: :request do
       it 'ホテル詳細を取得できないこと' do
         get v1_hotel_path(hidden_hotel.id)
         expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context '存在しないホテルを取得しようとした場合' do
+      it '404 NOT FOUND を返すこと' do
+        get v1_hotel_path(10**5)
+        expect(response).to have_http_status(:not_found)
+        expect(response.message).to eq("Not Found")
       end
     end
   end
