@@ -1,5 +1,4 @@
 require 'rails_helper'
-# TODO: メソッドのテストが未完成
 
 RSpec.describe ReviewForm, type: :model do
   describe 'models/review_form.rb #validation' do
@@ -55,41 +54,54 @@ RSpec.describe ReviewForm, type: :model do
     end
   end
 
-  describe 'models/review_form.rb #default_attributes' do
-    let_it_be(:user) { create(:user) }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: user.id) }
-
-    it '値が正常なこと' do
-      params = { title: 'よかったです', content: '部屋が綺麗', five_star_rate: 5 }
-      review_form = described_class.new(attributes: params, hotel_id: accepted_hotel.id, user_id: user.id)
-      allow(review_form).to receive(:default_attributes)
-      expect(review_form.title).to eq('よかったです')
-    end
-  end
-
   describe 'models/review_form.rb #save' do
+    
     let_it_be(:user) { create(:user) }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: user.id) }
+
+    def params
+      attributes.deep_symbolize_keys
+    end
 
     context '正常に保存ができる場合' do
-      it 'paramsの値が正常なこと' do
-        params = { title: 'よかったです', content: '部屋が綺麗', five_star_rate: 5 }
-        review_form = described_class.new(attributes: params, hotel_id: accepted_hotel.id, user_id: user.id)
+      it '口コミに画像がなくても保存できること' do
+        not_image_params = {
+          "title" => "よかったです",
+          "content" => "コノホテルはよかったです",
+          "five_star_rate" => 3,
+          "hotel_id" => accepted_hotel.id,
+          "user_id" => user.id
+        }
+        review_form = described_class.new(not_image_params)
+        expect(review_form.save).to be true
         expect { review_form.save }.to change(Review, :count).by(1)
       end
 
-      it '画像をつけるとreview_imagesも更新されること' do
-        added_images_params = { title: 'よかったです', content: '部屋が綺麗', five_star_rate: 5, key: 'upload/test', file_url: 'https://example/aws/s3' }
-        review_form = described_class.new(attributes: added_images_params, hotel_id: accepted_hotel.id, user_id: user.id)
-        expect { review_form.save }.to change(Review, :count).by(1)
-        # expect { review_form.save }.to change(ReviewImage, :count).by(1)
+      it '画像をつけるとReviewImageも更新されること' do
+        include_image_params = {
+          "title" => "よかったです",
+          "content" => "コノホテルはよかったです",
+          "five_star_rate" => 3,
+          "key" => ["randum/secure/key", "key19982"],
+          "hotel_id" => accepted_hotel.id,
+          "user_id" => user.id
+        }
+        review_form = described_class.new(include_image_params)
+        expect(review_form.save).to be true
+        expect { review_form.save }.to change(Review, :count).by(1).and change(ReviewImage, :count).by(2)
       end
     end
 
-    context '保存ができない場合' do
-      it '更新する値が不正なこと' do
-        params = { title: '', content: '', five_star_rate: 1 }
-        review_form = described_class.new(attributes: params, hotel_id: accepted_hotel.id, user_id: user.id)
+    context '値が不正な場合' do
+      it 'returnで終了してnilを返すこと' do
+        invalid_params = {
+          "title" => "",
+          "content" => "コノホテルはよかったです",
+          "five_star_rate" => 3,
+          "hotel_id" => accepted_hotel.id,
+          "user_id" => user.id
+        }
+        review_form = described_class.new(invalid_params)
         expect(review_form.save).to be_nil
       end
     end
