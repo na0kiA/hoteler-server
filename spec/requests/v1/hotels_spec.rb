@@ -41,7 +41,7 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated', key: ['upload/test','upload/test2'] } }
+        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated', key: ['upload/test', 'upload/test2'] } }
         patch v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
@@ -51,7 +51,7 @@ RSpec.describe 'V1::Hotels', type: :request do
       it '自分が投稿していないホテルの編集ができないこと' do
         user = create(:user)
         hotel = create(:accepted_hotel, user_id: user.id)
-        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated!', key: ['upload/test','upload/test2'] } } 
+        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated!', key: ['upload/test', 'upload/test2'] } }
         patch v1_hotel_path(hotel.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body).not_to include(name: 'hotel 7777', content: 'hotel has been updated!')
@@ -155,7 +155,7 @@ RSpec.describe 'V1::Hotels', type: :request do
       it '404 NOT FOUND を返すこと' do
         get v1_hotel_path(10**5)
         expect(response).to have_http_status(:not_found)
-        expect(response.message).to eq("Not Found")
+        expect(response.message).to eq('Not Found')
       end
     end
   end

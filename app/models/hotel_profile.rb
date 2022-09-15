@@ -27,7 +27,7 @@ class HotelProfile
   def difference_key_array
     set_hotel.hotel_images.pluck(:key).difference(key)
   end
-  
+
   def find_or_create_key
     key.each do |val|
       set_hotel.hotel_images.find_or_create_by!(key: val)

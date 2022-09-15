@@ -7,13 +7,13 @@ RSpec.describe HotelForm, type: :model do
 
     context '入力値が正常な場合' do
       it 'nameとcontentとhotel_imagesがあれば正常なこと' do
-        params = { name: 'Hotel Kobe', content: 'このホテルは北野坂で最近できたホテルで..', key: ['upload/test','upload/test2'], user_id: user.id }
+        params = { name: 'Hotel Kobe', content: 'このホテルは北野坂で最近できたホテルで..', key: ['upload/test', 'upload/test2'], user_id: user.id }
         hotel_form = described_class.new(attributes: params, user_id: user.id)
         expect(hotel_form).to be_valid
       end
 
       it 'nameが50文字、contentが2000文字入力できること' do
-        max_length_params = { name: 'Hotel' * 10, content: 'Hotel' * 400, key: ['upload/test','upload/test2'], user_id: user.id }
+        max_length_params = { name: 'Hotel' * 10, content: 'Hotel' * 400, key: ['upload/test', 'upload/test2'], user_id: user.id }
         hotel_form = described_class.new(attributes: max_length_params, user_id: user.id)
         expect(hotel_form).to be_valid
       end
@@ -21,7 +21,7 @@ RSpec.describe HotelForm, type: :model do
 
     context '入力値が異常な場合' do
       it 'nameとcontentが無ければエラーを返すこと' do
-        nil_params = { name: '', content: '', key: ['upload/test','upload/test2'], user_id: user.id }
+        nil_params = { name: '', content: '', key: ['upload/test', 'upload/test2'], user_id: user.id }
         hotel_form = described_class.new(attributes: nil_params, user_id: user.id)
         hotel_form.valid?
         expect(hotel_form).to be_invalid
@@ -30,7 +30,7 @@ RSpec.describe HotelForm, type: :model do
       end
 
       it 'nameが51文字、contentが2001文字入力できないこと' do
-        too_length_params = { name: "#{'Hotel' * 10}1", content: "#{'Hotel' * 400}1", key: ['upload/test','upload/test2'], user_id: user.id }
+        too_length_params = { name: "#{'Hotel' * 10}1", content: "#{'Hotel' * 400}1", key: ['upload/test', 'upload/test2'], user_id: user.id }
         hotel_form = described_class.new(attributes: too_length_params, user_id: user.id)
         hotel_form.valid?
         expect(hotel_form).to be_invalid
@@ -39,15 +39,14 @@ RSpec.describe HotelForm, type: :model do
   end
 
   describe 'models/hotel_form.rb #save' do
-
     let_it_be(:user) { create(:user) }
 
     context '正常に保存ができる場合' do
       it 'paramsの値が正常で保存できること' do
-        json_params = {"name"=>"神戸北野", "content"=>"最高峰のラグジュアリーホテルをお届けします", "key"=>["key1213", "key4561"], "user_id"=>user.id} 
-        hotel_form = HotelForm.new(json_params)
+        json_params = { 'name' => '神戸北野', 'content' => '最高峰のラグジュアリーホテルをお届けします', 'key' => %w[key1213 key4561], 'user_id' => user.id }
+        hotel_form = described_class.new(json_params)
         expect(hotel_form.save).to be true
-        expect{hotel_form.save}.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2)
+        expect { hotel_form.save }.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2)
       end
     end
 

@@ -55,7 +55,6 @@ RSpec.describe ReviewForm, type: :model do
   end
 
   describe 'models/review_form.rb #save' do
-    
     let_it_be(:user) { create(:user) }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: user.id) }
 
@@ -66,11 +65,11 @@ RSpec.describe ReviewForm, type: :model do
     context '正常に保存ができる場合' do
       it '口コミに画像がなくても保存できること' do
         not_image_params = {
-          "title" => "よかったです",
-          "content" => "コノホテルはよかったです",
-          "five_star_rate" => 3,
-          "hotel_id" => accepted_hotel.id,
-          "user_id" => user.id
+          'title' => 'よかったです',
+          'content' => 'コノホテルはよかったです',
+          'five_star_rate' => 3,
+          'hotel_id' => accepted_hotel.id,
+          'user_id' => user.id
         }
         review_form = described_class.new(not_image_params)
         expect(review_form.save).to be true
@@ -79,12 +78,12 @@ RSpec.describe ReviewForm, type: :model do
 
       it '画像をつけるとReviewImageも更新されること' do
         include_image_params = {
-          "title" => "よかったです",
-          "content" => "コノホテルはよかったです",
-          "five_star_rate" => 3,
-          "key" => ["randum/secure/key", "key19982"],
-          "hotel_id" => accepted_hotel.id,
-          "user_id" => user.id
+          'title' => 'よかったです',
+          'content' => 'コノホテルはよかったです',
+          'five_star_rate' => 3,
+          'key' => ['randum/secure/key', 'key19982'],
+          'hotel_id' => accepted_hotel.id,
+          'user_id' => user.id
         }
         review_form = described_class.new(include_image_params)
         expect(review_form.save).to be true
@@ -95,11 +94,11 @@ RSpec.describe ReviewForm, type: :model do
     context '値が不正な場合' do
       it 'returnで終了してnilを返すこと' do
         invalid_params = {
-          "title" => "",
-          "content" => "コノホテルはよかったです",
-          "five_star_rate" => 3,
-          "hotel_id" => accepted_hotel.id,
-          "user_id" => user.id
+          'title' => '',
+          'content' => 'コノホテルはよかったです',
+          'five_star_rate' => 3,
+          'hotel_id' => accepted_hotel.id,
+          'user_id' => user.id
         }
         review_form = described_class.new(invalid_params)
         expect(review_form.save).to be_nil

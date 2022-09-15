@@ -7,17 +7,16 @@ class ReviewEdit
     @title = params.fetch(:title)
     @content = params.fetch(:content)
     # @key = params[:key]&.parse_key
-    if params[:key].present?
-      @key = JSON.parse(params[:key])
-    else
-      @key = []
-    end
+    @key = if params[:key].present?
+             JSON.parse(params[:key])
+           else
+             []
+           end
     freeze
   end
 
-
   def update
-  return if title.blank? || content.blank?
+    return if title.blank? || content.blank?
 
     ActiveRecord::Base.transaction do
       update_review
