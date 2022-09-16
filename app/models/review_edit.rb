@@ -1,11 +1,11 @@
 class ReviewEdit
-  attr_reader :params, :set_review, :key, :title, :content
+  attr_reader :set_review, :key, :title, :content
 
   def initialize(params:, set_review:)
-    @params = params
     @set_review = set_review
     @title = params.fetch(:title)
     @content = params.fetch(:content)
+    @five_star_rate = params.fetch(:five_star_rate)
     # @key = params[:key]&.parse_key
     @key = if params[:key].present?
              JSON.parse(params[:key])
@@ -30,7 +30,7 @@ class ReviewEdit
   private
 
   def update_review
-    Review.update!(set_review.id, title: params[:title], content: params[:content])
+    Review.update!(set_review.id, title:, content:, five_star_rate:)
   end
 
   def extract_unnecessary_key

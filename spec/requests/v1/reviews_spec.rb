@@ -216,7 +216,7 @@ RSpec.describe 'V1::Reviews', type: :request do
       it '400を返すこと' do
         patch v1_user_review_path(difference_review.id), params: params, headers: auth_tokens
 
-        expect(symbolized_body(response)[:attributes][:title]).not_to eq('追記：ホテルの対応について')
+        expect(symbolized_body(response)).not_to include('追記：ホテルの対応について')
         expect(response.status).to eq(400)
       end
     end

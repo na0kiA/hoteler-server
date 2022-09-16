@@ -21,7 +21,7 @@ class ReviewForm
     return if invalid?
 
     ActiveRecord::Base.transaction do
-      review = Review.new(title:, content:, hotel_id:, user_id:)
+      review = Review.new(title:, content:, five_star_rate:, hotel_id:, user_id:)
       if key.present?
         JSON.parse(key).each do |val|
           review.review_images.build(key: val)
