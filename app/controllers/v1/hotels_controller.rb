@@ -1,7 +1,7 @@
 module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
-    before_action :hotel_id, only: %i[show update destroy]
+    before_action :set_hotel, only: %i[show update destroy]
 
     def index
       render json: Hotel.accepted
@@ -18,7 +18,7 @@ module V1
 
     def create
       hotel_form = HotelForm.new(hotel_params)
-      if hotel_form.valid? && hotel_form.save(hotel_params)
+      if hotel_form.save
         render json: hotel_form, status: :ok
       else
         render json: hotel_form.errors, status: :bad_request
@@ -26,16 +26,17 @@ module V1
     end
 
     def update
-      if @hotel.present? && @hotel.user.id == current_v1_user.id
-        @hotel.update(hotel_params)
-        render json: @hotel, status: :ok
+      hotel_form = HotelForm.new(hotel_params)
+      if hotel_form.valid? && authenticated?
+        HotelProfile.new(params: hotel_form.params, set_hotel: @hotel).update
+        render json: hotel_form, status: :ok
       else
-        render json: @hotel.errors, status: :bad_request
+        render json: hotel_form.errors, status: :bad_request
       end
     end
 
     def destroy
-      if @hotel.present? && @hotel.user.id == current_v1_user.id
+      if authenticated?
         @hotel.destroy
         render json: @hotel, status: :ok
       else
@@ -45,11 +46,15 @@ module V1
 
     private
 
-    def hotel_params
-      params.require(:hotel).permit(:name, :content, :key, :file_url).merge(user_id: current_v1_user.id)
+    def authenticated?
+      @hotel.present? && @hotel.user.id == current_v1_user.id
     end
 
-    def hotel_id
+    def hotel_params
+      params.require(:hotel).permit(:name, :content, key: []).merge(user_id: current_v1_user.id)
+    end
+
+    def set_hotel
       @hotel = Hotel.find(params[:id])
     end
   end

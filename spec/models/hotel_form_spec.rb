@@ -1,4 +1,5 @@
 require 'rails_helper'
+# TODO: saveメソッドのテストが未完成
 
 RSpec.describe HotelForm, type: :model do
   describe 'models/hotel_form.rb #validation' do
@@ -6,52 +7,56 @@ RSpec.describe HotelForm, type: :model do
 
     context '入力値が正常な場合' do
       it 'nameとcontentとhotel_imagesがあれば正常なこと' do
-        hotel = described_class.new(name: 'hotelName', content: 'hotelContent', key: 'upload/test', file_url: 'https://example/aws/s3', user_id: user.id)
-        expect(hotel).to be_valid
+        params = { name: 'Hotel Kobe', content: 'このホテルは北野坂で最近できたホテルで..', key: ['upload/test', 'upload/test2'], user_id: user.id }
+        hotel_form = described_class.new(attributes: params, user_id: user.id)
+        expect(hotel_form).to be_valid
       end
 
       it 'nameが50文字、contentが2000文字入力できること' do
-        hotel = described_class.new(name: 'Hotel' * 10, content: 'Hotel' * 400, key: 'upload/test', file_url: 'https://example/aws/s3', user_id: user.id)
-        expect(hotel).to be_valid
+        max_length_params = { name: 'Hotel' * 10, content: 'Hotel' * 400, key: ['upload/test', 'upload/test2'], user_id: user.id }
+        hotel_form = described_class.new(attributes: max_length_params, user_id: user.id)
+        expect(hotel_form).to be_valid
       end
     end
 
     context '入力値が異常な場合' do
       it 'nameとcontentが無ければエラーを返すこと' do
-        hotel = described_class.new(name: nil, content: nil, user_id: user.id)
-        hotel.valid?
-        expect(hotel).to be_invalid
-        expect(hotel.errors.messages[:name]).to eq ['ホテル名を入力してください。']
-        expect(hotel.errors.messages[:content]).to eq ['内容を入力してください。', '内容は10文字以上入力してください。']
+        nil_params = { name: '', content: '', key: ['upload/test', 'upload/test2'], user_id: user.id }
+        hotel_form = described_class.new(attributes: nil_params, user_id: user.id)
+        hotel_form.valid?
+        expect(hotel_form).to be_invalid
+        expect(hotel_form.errors.messages[:name]).to eq ['ホテル名を入力してください。']
+        expect(hotel_form.errors.messages[:content]).to eq ['内容を入力してください。', '内容は10文字以上入力してください。']
       end
 
       it 'nameが51文字、contentが2001文字入力できないこと' do
-        hotel = described_class.new(name: "#{'Hotel' * 10}1", content: "#{'Hotel' * 400}1", user_id: user.id)
-        expect(hotel).to be_invalid
+        too_length_params = { name: "#{'Hotel' * 10}1", content: "#{'Hotel' * 400}1", key: ['upload/test', 'upload/test2'], user_id: user.id }
+        hotel_form = described_class.new(attributes: too_length_params, user_id: user.id)
+        hotel_form.valid?
+        expect(hotel_form).to be_invalid
       end
     end
   end
 
   describe 'models/hotel_form.rb #save' do
     let_it_be(:user) { create(:user) }
-    let_it_be(:params) { { name: 'hotelName', content: 'hotelContent', key: 'upload/test', file_url: 'https://example/aws/s3', user_id: user.id } }
-    let_it_be(:invalid_images_params) { { name: 'hotelName', content: 'hotelContent', key: '', file_url: '', user_id: user.id } }
 
     context '正常に保存ができる場合' do
-      it 'paramsの値が正常なこと' do
-        hotel_form = described_class.new(params)
-        expect { hotel_form.save(params) }.to change(Hotel, :count).by(1)
+      it 'paramsの値が正常で保存できること' do
+        json_params = { 'name' => '神戸北野', 'content' => '最高峰のラグジュアリーホテルをお届けします', 'key' => %w[key1213 key4561], 'user_id' => user.id }
+        hotel_form = described_class.new(json_params)
+        expect(hotel_form.save).to be true
+        expect { hotel_form.save }.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2)
       end
     end
 
-    context '保存ができない場合' do
-      it 'RecordInvalidでHotel.create!に失敗すること' do
-        expect { Hotel.create!(name: '', content: '', user_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
-      end
+    # context '値が不正な場合' do
+    #   it "false返ること" do
+    #     # json_params = {"name"=>"神戸北野", "content"=>"最高峰のラグジュアリーホテルをお届けします", "key"=>["key1213", "key4561"], "user_id"=>user.id}
+    #     params = {:name=>"", :content=>"最高峰のラグジュアリーホテルをお届けします", key: "[\"key1213\", \"key4561\"]", :user_id =>user.id}
+    #     expect{}.to be false
 
-      it 'RecordInvalidでhotel_images.create!に失敗すること' do
-        expect { HotelImage.create!(key: '', file_url: '', hotel_id: 0) }.to raise_error(ActiveRecord::RecordInvalid)
-      end
-    end
+    #   end
+    # end
   end
 end

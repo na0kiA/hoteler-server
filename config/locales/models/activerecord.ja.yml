@@ -4,6 +4,7 @@ ja:
       review:
         title: "タイトル"
         content: "内容"
+        five_star_rate: "5つ星"
       hotel_form:
         name: "ホテル名"
         content: "内容"

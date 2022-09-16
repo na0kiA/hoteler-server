@@ -1,9 +1,10 @@
 ja:  
   activemodel:
     attributes:
-      review:
+      review_form:
         title: "タイトル"
         content: "内容"
+        five_star_rate: "5つ星"
       hotel_form:
         name: "ホテル名"
         content: "内容"
@@ -17,6 +18,10 @@ ja:
         invalid: "%{attribute}が正しくありません。"
         blank: "%{attribute}を入力してください。"
         too_short: "%{attribute}は%{count}文字以上入力してください。"
-        contain_blacklist_words: "%{attribute}に暴力的もしくは卑猥なワードが含まれています"
-        contain_same_words: "%{attribute}に同じ文字列が羅列しています"
-        contain_invalid_regex: "%{attribute}に無効な記号もしくはURLが含まれています"
+        contain_blacklist_words: "%{attribute}に暴力的もしくは卑猥なワードが含まれています。"
+        contain_same_words: "%{attribute}に同じ文字列が羅列しています。"
+        contain_invalid_regex: "%{attribute}に無効な記号もしくはURLが含まれています。"
+        not_a_number: "%{attribute}が文字列になっています。"
+        too_long: "%{attribute}は1から5までの整数しか付けられません。"
+        in: "%{attribute}が不正な値です。"
+        inclusion: "%{attribute}は1から5の整数のみです。"

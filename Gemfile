@@ -20,6 +20,7 @@ gem 'rails', '7.0.3.1'
   gem 'activesupport', rails_version
   gem 'railties', rails_version
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bcrypt'
 gem 'bootsnap'
 gem 'importmap-rails'
