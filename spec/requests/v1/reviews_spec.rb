@@ -13,7 +13,7 @@ RSpec.describe 'V1::Reviews', type: :request do
     context 'ログインしていて口コミの投稿ができる場合' do
       it '200を返すこと' do
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
-        
+
         expect(response.status).to eq(200)
         expect(symbolized_body(response).length).to eq(3)
         expect(symbolized_body(response)[:attributes]).to include(title: '綺麗でした', content: '10月に改装したので綺麗でした')
@@ -41,7 +41,7 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context '未承認のホテルへの口コミ投稿をする場合' do
-      it '404 NOT FOUNDを返すこと' do
+      it '404を返すこと' do
         post v1_hotel_reviews_path(hotel_id: hotel.id), params: params, headers: auth_tokens
 
         expect(symbolized_body(response)).not_to include(title: '綺麗でした')
@@ -100,7 +100,7 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context 'ホテルそのものが存在しない場合' do
-      it '404 NOT FOUNDを返すこと' do
+      it '404を返すこと' do
         unknow_hotel = create(:accepted_hotel, user_id: client_user.id)
         delete v1_hotel_path(unknow_hotel.id), headers: auth_tokens
         get v1_hotel_reviews_path(hotel_id: unknow_hotel.id)
@@ -253,7 +253,7 @@ RSpec.describe 'V1::Reviews', type: :request do
         delete v1_hotel_path(accepted_hotel.id), headers: auth_tokens
       end
 
-      it 'NOT FOUNDを返すこと' do
+      it '404を返すこと' do
         get v1_user_review_path(review.id)
 
         expect(symbolized_body(response).length).to eq(1)
@@ -267,7 +267,7 @@ RSpec.describe 'V1::Reviews', type: :request do
         delete v1_user_review_path(review.id), headers: auth_tokens
       end
 
-      it '404 NOT FOUNDを返すこと' do
+      it '404を返すこと' do
         get v1_user_review_path(review.id)
 
         expect(symbolized_body(response).length).to eq(1)
@@ -276,7 +276,7 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context '口コミが存在しない場合' do
-      it '404 NOT FOUNDを返すこと' do
+      it 'NOT FOUNDを返すこと' do
         get v1_user_review_path(10**5)
 
         expect(response).to have_http_status(:not_found)
