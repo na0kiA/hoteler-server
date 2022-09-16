@@ -14,12 +14,12 @@ module V1
       if review.present?
         render json: review
       else
-        render json: review.errors, status: :not_found
+        record_not_found
       end
     end
 
     def create
-      review_form = ReviewForm.new(attributes: review_params, user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
+      review_form = ReviewForm.new(review_params)
       if review_form.save
         render json: review_form
       else
@@ -27,14 +27,10 @@ module V1
       end
     end
 
-    # def edit
-    #   @review_form = ReviewForm.new(review: @review)
-    #   render json: @review_form
-    # end
-
     def update
-      review_form = ReviewForm.new(attributes: update_params, review: @review, user_id: @review.user_id, hotel_id: @review.hotel_id)
-      if review_form.save && @review.user_id == current_v1_user.id
+      review_form = ReviewForm.new(update_params)
+      if review_form.valid? && authenticate?
+        ReviewEdit.new(params: review_form.params, set_review: @review).update
         render json: review_form, status: :ok
       else
         render json: review_form.errors, status: :bad_request
@@ -42,7 +38,7 @@ module V1
     end
 
     def destroy
-      if @review.present? && @review.user.id == current_v1_user.id
+      if authenticate?
         @review.destroy
         render json: @review, status: :ok
       else
@@ -52,13 +48,17 @@ module V1
 
     private
 
+    def authenticate?
+      @review.present? && @review.user_id == current_v1_user.id
+    end
+
     def review_params
-      params.require(:review).permit(:title, :content, :five_star_rate, :file_url, :key).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
+      params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
     end
 
     # reviewのupdateのrouting(v1/reviews/:id)にホテルのidが含まれていないため専用のupdate_paramsを用意
     def update_params
-      params.require(:review).permit(:title, :content, :five_star_rate, :key, :file_url).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
+      params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
     end
 
     def set_review

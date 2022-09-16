@@ -2,16 +2,9 @@ class HotelForm
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  define_model_callbacks :create
-
-  before_create ImageDestroyCallbacks
-
-  attr_reader :hotel, :hotel_images
-
   attribute :name, :string
   attribute :content, :string
   attribute :key, :string
-  attribute :file_url, :string
   attribute :user_id, :integer
 
   with_options presence: true do
@@ -20,45 +13,24 @@ class HotelForm
       validates :content, length: { minimum: 10, maximum: 2000 }
     end
     validates :key, length: { minimum: 10 }
-    validates :file_url, length: { minimum: 10 }
     validates :user_id
-  end
-
-  def initialize(user_id:, attributes:, hotel: nil)
-    @hotel = hotel || Hotel.new(user_id:)
-    # @hotel_images = hotel_images || HotelImage.new(hotel_id: @hotel.id)
-    super(attributes)
   end
 
   def save
     return if invalid?
 
     ActiveRecord::Base.transaction do
-      hotel.update!(name: name, content: content)
-      # HotelImage.update!(hotel_id: hotel.id, key:, file_url:)
+      hotel = Hotel.new(name:, content:, user_id:)
       JSON.parse(key).each do |val|
-        run_callbacks(:create) do
-          hotel.hotel_images.create(hotel_id: hotel.id, key: val, file_url: "file_url#{val}")
-        end
+        hotel.hotel_images.build(key: val)
       end
-      # JSON.parse(key).each do |val|
-      #   HotelImage.find_or_create_by(hotel_id: hotel.id, key: val)
-      # end
+      hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
     false
   end
 
-  def update
-    return if invalid?
-
-    ActiveRecord::Base.transaction do
-      hotel.update!(name:, content:)
-      JSON.parse(key).each do |val|
-        hotel_images.update!(hotel_id: hotel.id, key: val, file_url:)
-      end
-    end
-  rescue ActiveRecord::RecordInvalid
-    false
+  def params
+    attributes.deep_symbolize_keys
   end
 end

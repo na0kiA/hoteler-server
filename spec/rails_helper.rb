@@ -8,7 +8,14 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 
 require 'rspec/rails'
 require 'test_prof/recipes/rspec/let_it_be'
-SimpleCov.start
+SimpleCov.start do
+  enable_coverage :branch
+
+  add_group 'Models', 'app/models'
+  add_group 'Forms', 'app/forms'
+  add_group 'Controllers (api)', 'app/controllers/v1'
+  add_group 'Helpers', 'app/helpers'
+end
 require 'devise'
 
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
