@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_12_103535) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_16_191515) do
   create_table "helpfulnesses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id", null: false
     t.bigint "user_id", null: false
@@ -36,6 +36,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_12_103535) do
     t.boolean "accepted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "reviews_count", default: 0, null: false
+    t.decimal "average_rating", precision: 2, scale: 1, default: "0.0", null: false
     t.index ["user_id"], name: "index_hotels_on_user_id"
   end
 
