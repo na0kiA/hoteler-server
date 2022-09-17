@@ -28,6 +28,7 @@ class ReviewForm
         end
       end
       review.save!
+      review.hotel.update!(reviews_count: Review.where(hotel_id:).count)
     end
   rescue ActiveRecord::RecordInvalid
     false
