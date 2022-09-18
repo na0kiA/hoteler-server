@@ -21,7 +21,7 @@ RSpec.describe ReviewEdit, type: :model do
         }
         review_form = ReviewForm.new(params)
         review_edit = described_class.new(params: review_form.params, set_review: review)
-        expect(review_edit.update).to eq([])
+        expect(review_edit.update).to be_truthy
       end
 
       it 'paramsが更新されていること' do
@@ -36,7 +36,7 @@ RSpec.describe ReviewEdit, type: :model do
         review_edit.instance_variable_get(:@params)
         expect(params[:title]).to eq('よかったです')
         expect(review_edit.send(:extract_unnecessary_key)).to eq([])
-        expect(review_edit.update).to eq([])
+        expect(review_edit.update).to be_truthy
       end
 
       it '画像をつけるとReviewImageも更新されること' do
@@ -52,14 +52,29 @@ RSpec.describe ReviewEdit, type: :model do
         review_edit = described_class.new(params: review_form.params, set_review: review)
         expect { review_edit.update }.to change(ReviewImage, :count).by(2)
       end
+
+      it 'Hotelのrating_averageが更新されること' do
+        params = {
+          'title' => 'よかったです',
+          'content' => 'コノホテルはよかったです',
+          'five_star_rate' => 3,
+          'hotel_id' => accepted_hotel.id,
+          'user_id' => user.id
+        }
+        review_form = ReviewForm.new(params)
+        review_edit = described_class.new(params: review_form.params, set_review: review)
+        review_edit.update
+        expect(Hotel.where(id: accepted_hotel.id).pluck(:average_rating)).to eq([0.3e1])
+      end
     end
 
     context '値が不正な場合' do
       it 'returnで終了してnilを返すこと' do
         invalid_params = {
           'title' => '',
-          'content' => '',
+          'content' => 'コノホテルはよかったです',
           'five_star_rate' => 3,
+          'key' => ['randum/secure/key', 'key19982'],
           'hotel_id' => accepted_hotel.id,
           'user_id' => user.id
         }

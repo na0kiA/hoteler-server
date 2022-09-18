@@ -22,8 +22,8 @@ class ReviewEdit
       update_review
       remove_unnecessary_key
       find_or_create_key
+      update_average_rating
     end
-    update_average_rating
   rescue ActiveRecord::RecordInvalid
     false
   end
@@ -54,7 +54,8 @@ class ReviewEdit
   end
 
   def update_average_rating
-    set_review.hotel.update!(average_rating: average)
+    # set_review.hotel.update!(average_rating: average)
+    Hotel.update!(hotel_id, average_rating: average)
     p Hotel.where(id: hotel_id).pluck(:average_rating)
   end
 end
