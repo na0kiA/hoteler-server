@@ -1,4 +1,5 @@
 class ReviewEdit
+
   attr_reader :set_review, :five_star_rate, :key, :title, :content, :hotel_id
 
   def initialize(params:, set_review:)
@@ -22,7 +23,6 @@ class ReviewEdit
       update_review
       remove_unnecessary_key
       find_or_create_key
-      update_average_rating
     end
   rescue ActiveRecord::RecordInvalid
     false
@@ -46,16 +46,5 @@ class ReviewEdit
     key.each do |val|
       set_review.review_images.find_or_create_by!(key: val)
     end
-  end
-
-  def average
-    Review.where(hotel_id:).average(:five_star_rate).round(1)
-    p Review.where(hotel_id:).average(:five_star_rate).round(1)
-  end
-
-  def update_average_rating
-    # set_review.hotel.update!(average_rating: average)
-    Hotel.update!(hotel_id, average_rating: average)
-    p Hotel.where(id: hotel_id).pluck(:average_rating)
   end
 end

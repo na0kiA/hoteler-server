@@ -39,6 +39,7 @@ module V1
 
     def destroy
       if authenticate?
+        Review.update_zero_rating(set_review: @review)
         @review.destroy
         render json: @review, status: :ok
       else
