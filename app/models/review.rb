@@ -5,16 +5,9 @@ class Review < ApplicationRecord
   has_many :helpfulnesses, dependent: :destroy
 
   after_commit :update_reviews_count_and_rating, on: [:create, :update]
-
-  # scope :average_rating, -> { where(hotel_id:).average(:five_star_rate).round(1)}
-  # scope :of_hotel, -> { where(hotel_id:).count}
-
+  
   def self.update_zero_rating(set_review:)
-    if set_review.id == Review.where(hotel_id: set_review.hotel_id).last
-      Hotel.update!(set_review.hotel_id, reviews_count: 0, average_rating: 0)
-    else
-      return
-    end
+    Hotel.update!(set_review.hotel_id, reviews_count: 0, average_rating: 0) if set_review.id == Review.where(hotel_id: set_review.hotel_id).last.id
   end
 
   private
