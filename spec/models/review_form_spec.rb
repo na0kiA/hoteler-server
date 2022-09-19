@@ -89,6 +89,19 @@ RSpec.describe ReviewForm, type: :model do
         expect(review_form.save).to be true
         expect { review_form.save }.to change(Review, :count).by(1).and change(ReviewImage, :count).by(2)
       end
+
+      it 'Hotelのreview_countが1増えること' do
+        params = {
+          'title' => 'よかったです',
+          'content' => 'コノホテルはよかったです',
+          'five_star_rate' => 3,
+          'hotel_id' => accepted_hotel.id,
+          'user_id' => user.id
+        }
+        review_form = described_class.new(params)
+        expect(review_form.save).to be true
+        expect { review_form.save }.to change { Hotel.pluck(:reviews_count) }.from([1]).to([2])
+      end
     end
 
     context '値が不正な場合' do

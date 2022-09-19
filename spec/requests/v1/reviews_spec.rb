@@ -74,9 +74,10 @@ RSpec.describe 'V1::Reviews', type: :request do
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
 
-    context '口コミ自体が存在するホテルに書かれている場合' do
-      it 'okを返すこと' do
-        create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)
+    context '口コミ一覧を正常に取得できる場合' do
+      let_it_be(:review) { create(:review, hotel_id: accepted_hotel.id, user_id: client_user.id) }
+
+      it '200を返すこと' do
         get v1_hotel_reviews_path(hotel_id: accepted_hotel.id)
 
         expect(response.status).to eq(200)
@@ -104,8 +105,19 @@ RSpec.describe 'V1::Reviews', type: :request do
         unknow_hotel = create(:accepted_hotel, user_id: client_user.id)
         delete v1_hotel_path(unknow_hotel.id), headers: auth_tokens
         get v1_hotel_reviews_path(hotel_id: unknow_hotel.id)
-        expect(symbolized_body(response).length).to eq(1)
 
+        expect(symbolized_body(response).length).to eq(1)
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context '承認されていないホテルの場合' do
+      let_it_be(:unknow_hotel) { create(:hotel, user_id: client_user.id) }
+
+      it '404を返すこと' do
+        get v1_hotel_reviews_path(hotel_id: unknow_hotel.id)
+        expect(symbolized_body(response).length).to eq(1)
+        expect(response.message).to eq("Not Found")
         expect(response.status).to eq(404)
       end
     end
