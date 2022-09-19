@@ -1,9 +1,8 @@
 name: reviewdog
-# on: [pull_request]
-on: [push]
+on: [pull_request]
 permissions:
   contents: read
-  push: write
+  pull_request: write
 jobs:
   rubocop:
     name: runner /rubocop
