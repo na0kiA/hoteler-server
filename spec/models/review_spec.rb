@@ -8,8 +8,8 @@ RSpec.describe Review, type: :model do
 
     context '口コミ数が0になった場合' do
       it 'ホテルの評価数と評価率が0になること' do
-        expect { Review.update_zero_rating(set_review: review) }.to change { Hotel.where(id: review.hotel_id).pluck(:reviews_count) }.from([1]).to([0])
-        expect(Review.update_zero_rating(set_review: review).average_rating).to eq(0.0)
+        expect { described_class.update_zero_rating(set_review: review) }.to change { Hotel.where(id: review.hotel_id).pluck(:reviews_count) }.from([1]).to([0])
+        expect(described_class.update_zero_rating(set_review: review).average_rating).to eq(0.0)
       end
     end
 
@@ -17,7 +17,7 @@ RSpec.describe Review, type: :model do
       let_it_be(:last_review) { create(:review, hotel_id: accepted_hotel.id, user_id: user.id) }
 
       it 'nilを返すこと' do
-        expect(Review.update_zero_rating(set_review: review)).to be_nil
+        expect(described_class.update_zero_rating(set_review: review)).to be_nil
       end
     end
   end

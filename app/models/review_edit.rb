@@ -1,13 +1,11 @@
 class ReviewEdit
-
-  attr_reader :set_review, :five_star_rate, :key, :title, :content, :hotel_id
+  attr_reader :set_review, :five_star_rate, :key, :title, :content
 
   def initialize(params:, set_review:)
     @set_review = set_review
     @title = params.fetch(:title)
     @content = params.fetch(:content)
     @five_star_rate = params.fetch(:five_star_rate)
-    @hotel_id = params.fetch(:hotel_id)
     @key = if params[:key].present?
              JSON.parse(params[:key])
            else

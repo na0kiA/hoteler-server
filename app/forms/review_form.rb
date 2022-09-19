@@ -28,10 +28,6 @@ class ReviewForm
         end
       end
       review.save!
-
-      # Hotel.update!(hotel_id, reviews_count: Review.where(hotel_id:).count, average_rating: Review.where(hotel_id:).average(:five_star_rate).round(1))
-      # p Review.where(hotel_id:).average(:five_star_rate).round(1)
-      # Hotel.update!(hotel_id, average_rating: Review.where(hotel_id:).average(:five_star_rate).round(1))
     end
   rescue ActiveRecord::RecordInvalid
     false

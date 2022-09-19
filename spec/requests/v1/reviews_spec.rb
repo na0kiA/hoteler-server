@@ -117,7 +117,7 @@ RSpec.describe 'V1::Reviews', type: :request do
       it '404を返すこと' do
         get v1_hotel_reviews_path(hotel_id: unknow_hotel.id)
         expect(symbolized_body(response).length).to eq(1)
-        expect(response.message).to eq("Not Found")
+        expect(response.message).to eq('Not Found')
         expect(response.status).to eq(404)
       end
     end
@@ -208,7 +208,7 @@ RSpec.describe 'V1::Reviews', type: :request do
       params = { review: { title: '画像を追加しました', content: '画像を追加しました。よかったです', five_star_rate: 2, key: ['upload/test'] } }
 
       before do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: auth_tokens
       end
 
       it '200を返すこと' do
@@ -222,8 +222,8 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context '自分が投稿していない口コミの編集ができない場合' do
-      let_it_be(:difference_user) {create(:user)}
-      let_it_be(:difference_review) {create(:review, user_id: difference_user.id, hotel_id: accepted_hotel.id)}
+      let_it_be(:difference_user) { create(:user) }
+      let_it_be(:difference_review) { create(:review, user_id: difference_user.id, hotel_id: accepted_hotel.id) }
 
       it '400を返すこと' do
         patch v1_user_review_path(difference_review.id), params: params, headers: auth_tokens
@@ -247,7 +247,7 @@ RSpec.describe 'V1::Reviews', type: :request do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
-    let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)}
+    let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
 
     context '口コミが書かれている場合' do
       it '200を返すこと' do
@@ -260,7 +260,6 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context '口コミを書いたホテルが存在しない場合' do
-
       before do
         delete v1_hotel_path(accepted_hotel.id), headers: auth_tokens
       end
@@ -274,7 +273,6 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context '口コミを消去している場合' do
-
       before do
         delete v1_user_review_path(review.id), headers: auth_tokens
       end
