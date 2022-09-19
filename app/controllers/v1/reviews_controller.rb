@@ -4,9 +4,11 @@ module V1
     before_action :set_review, only: %i[show destroy update]
 
     def index
-      return record_not_found if accepted_hotel_params.blank?
-
-      render json: Review.all
+      if accepted_hotel_params.present?
+        render json: Review.all
+      else
+        render json: { error: e.message }.to_json, status: :not_found
+      end
     end
 
     def show
@@ -14,7 +16,7 @@ module V1
       if review.present?
         render json: review
       else
-        record_not_found
+        render json: { error: e.message }.to_json, status: :not_found
       end
     end
 
