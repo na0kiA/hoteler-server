@@ -28,7 +28,7 @@ module V1
     def update
       hotel_form = HotelForm.new(hotel_params)
       if hotel_form.valid? && authenticated?
-        HotelProfile.new(params: hotel_form.params, set_hotel: @hotel).update
+        HotelProfile.new(params: hotel_form.to_deep_symbol, set_hotel: @hotel).update
         render json: hotel_form, status: :ok
       else
         render json: hotel_form.errors, status: :bad_request

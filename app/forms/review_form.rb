@@ -33,7 +33,7 @@ class ReviewForm
     false
   end
 
-  def params
+  def to_deep_symbol
     attributes.deep_symbolize_keys
   end
 end

@@ -32,7 +32,7 @@ module V1
     def update
       review_form = ReviewForm.new(update_params)
       if review_form.valid? && authenticate?
-        ReviewEdit.new(params: review_form.params, set_review: @review).update
+        ReviewEdit.new(params: review_form.to_deep_symbol, set_review: @review).update
         render json: review_form, status: :ok
       else
         render json: review_form.errors, status: :bad_request
