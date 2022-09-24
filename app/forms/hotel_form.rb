@@ -46,20 +46,11 @@ class HotelForm
   private
 
   def build_daily_rate(hotel:)
-    if rest.starts_with?("月曜から木曜")
-      hotel.hotel_daily_rates.build(rest:, day: :monday_through_thursday)
-    elsif rest.starts_with?("金曜")
-      hotel.hotel_daily_rates.build(rest:, day: :friday)
-    elsif rest.starts_with?("土曜")
-      hotel.hotel_daily_rates.build(rest:, day: :saturday)
-    elsif rest.starts_with?("日曜")
-      hotel.hotel_daily_rates.build(rest:, day: :sunday)
-    elsif rest.starts_with?("特別期間")
-      hotel.hotel_daily_rates.build(rest:, day: :special_day)
-    end
-  end
-
-  def create_rest
-    hotel
+    rates = hotel.hotel_daily_rates.build(rest:)
+    rates.monday_through_thursday! if rest.starts_with?("月曜から木曜")
+    rates.friday! if rest.starts_with?("金曜")
+    rates.saturday! if rest.starts_with?("土曜")
+    rates.sunday! if rest.starts_with?("日曜")
+    rates.special_day! if rest.starts_with?("特別期間")
   end
 end
