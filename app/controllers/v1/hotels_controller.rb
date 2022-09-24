@@ -51,7 +51,7 @@ module V1
     end
 
     def hotel_params
-      params.require(:hotel).permit(:name, :content, key: []).merge(user_id: current_v1_user.id)
+      params.require(:hotel).permit(:name, :content, :rest, key: []).merge(user_id: current_v1_user.id)
     end
 
     def set_hotel

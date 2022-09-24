@@ -50,13 +50,5 @@ RSpec.describe HotelForm, type: :model do
       end
     end
 
-    # context '値が不正な場合' do
-    #   it "false返ること" do
-    #     # json_params = {"name"=>"神戸北野", "content"=>"最高峰のラグジュアリーホテルをお届けします", "key"=>["key1213", "key4561"], "user_id"=>user.id}
-    #     params = {:name=>"", :content=>"最高峰のラグジュアリーホテルをお届けします", key: "[\"key1213\", \"key4561\"]", :user_id =>user.id}
-    #     expect{}.to be false
-
-    #   end
-    # end
   end
 end
