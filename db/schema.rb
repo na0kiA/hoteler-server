@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_16_191515) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_23_210736) do
   create_table "helpfulnesses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id", null: false
     t.bigint "user_id", null: false
@@ -19,6 +19,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_16_191515) do
     t.index ["review_id", "user_id"], name: "index_helpfulnesses_on_review_id_and_user_id", unique: true
     t.index ["review_id"], name: "index_helpfulnesses_on_review_id"
     t.index ["user_id"], name: "index_helpfulnesses_on_user_id"
+  end
+
+  create_table "hotel_daily_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "hotel_id", null: false
+    t.integer "day", default: 0
+    t.string "rest", default: ""
+    t.integer "lodging_rate"
+    t.time "first_lodging_time"
+    t.time "last_lodging_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hotel_id"], name: "index_hotel_daily_rates_on_hotel_id"
   end
 
   create_table "hotel_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -99,6 +111,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_16_191515) do
 
   add_foreign_key "helpfulnesses", "reviews"
   add_foreign_key "helpfulnesses", "users"
+  add_foreign_key "hotel_daily_rates", "hotels"
   add_foreign_key "hotel_images", "hotels"
   add_foreign_key "hotels", "users"
   add_foreign_key "review_images", "reviews"
