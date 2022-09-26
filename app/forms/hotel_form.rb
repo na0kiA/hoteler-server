@@ -9,10 +9,11 @@ class HotelForm
 
   attribute :day, :integer
   attribute :rest, :string
+  attribute :day_of_week, :string
 
-  # attribute :lodging_rate, :integer
-  # attribute :first_lodging_time, :time
-  # attribute :last_lodging_time, :time
+  attribute :lodging_rate, :integer
+  attribute :first_lodging_time, :time
+  attribute :last_lodging_time, :time
 
 
   with_options presence: true do
@@ -32,7 +33,7 @@ class HotelForm
       JSON.parse(key).each do |val|
         hotel.hotel_images.build(key: val)
       end
-      build_daily_rate(hotel:)
+      build_daily_rates(hotel:)
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -45,12 +46,30 @@ class HotelForm
 
   private
 
-  def build_daily_rate(hotel:)
-    rates = hotel.hotel_daily_rates.build(rest:)
-    rates.monday_through_thursday! if rest.starts_with?("月曜から木曜")
-    rates.friday! if rest.starts_with?("金曜")
-    rates.saturday! if rest.starts_with?("土曜")
-    rates.sunday! if rest.starts_with?("日曜")
-    rates.special_day! if rest.starts_with?("特別期間")
+  def build_daily_rates(hotel:)
+    rates = hotel.hotel_daily_rates.build(rest:, lodging_rate:, first_lodging_time:, last_lodging_time:)
+
+    switch_enum_of_day(rates:)
+  end
+
+
+  def switch_enum_of_day(rates:)
+    rates.monday_through_thursday! if day_of_week.starts_with?("月曜から木曜")
+    rates.friday! if day_of_week.starts_with?("金曜")
+    rates.saturday! if day_of_week.starts_with?("土曜")
+    rates.sunday! if day_of_week.starts_with?("日曜")
+    rates.special_day! if day_of_week.starts_with?("特別期間")
+  end
+
+  def pick_lodging_hours(first_lodging_time:, last_lodging_time:)
+    p (I18n.l first_lodging_time, format: :hours).to_i
+    p (I18n.l last_lodging_time, format: :hours).to_i
+  end
+
+  def stay_night_time?(now = Time.current)
+    first = (I18n.l first_lodging_time, format: :hours).to_i
+    last = (I18n.l last_lodging_time, format: :hours).to_i
+
+    [*first..23, *0..last].include?(now)
   end
 end
