@@ -8,7 +8,7 @@ class HotelForm
   attribute :user_id, :integer
 
   attribute :day, :string
-  attribute :rates_for_the_day
+  attribute :daily_rates
 
   with_options presence: true do
     with_options invalid_words: true do
@@ -24,10 +24,9 @@ class HotelForm
 
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
-      p hotel.days.build(:day)
-      JSON.parse(key).each do |val|
-        hotel.hotel_images.build(key: val)
-      end
+      build_hotel_images(hotel:)
+      build_today_rest_rate(today: build_day(hotel:))
+
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -40,29 +39,37 @@ class HotelForm
 
   private
 
-
-  def build_daily_rest_rates(day:)
-    day_of_week = hotel.days.build(day:)
-    day_of_week.rest_rates.build()
+  def build_hotel_images(hotel:)
+    JSON.parse(key).each do |val|
+      hotel.hotel_images.build(key: val)
+    end
   end
 
-  # def switch_enum_of_day(rates:)
-  #   rates.monday_through_thursday! if day_of_week.starts_with?('月曜から木曜')
-  #   rates.friday! if day_of_week.starts_with?('金曜')
-  #   rates.saturday! if day_of_week.starts_with?('土曜')
-  #   rates.sunday! if day_of_week.starts_with?('日曜')
-  #   rates.special_day! if day_of_week.starts_with?('特別期間')
+  def build_day(hotel:)
+    hotel.days.build(day: daily_rates[:day])
+  end
+
+  def build_today_rest_rate(today:)
+    today.rest_rates.build(plan: rest[:plan], rate: rest[:rate], first_time: rest[:first_time], last_time: rest[:last_time])
+  end
+
+  # def build_today_stay_rate(today:)
+  #   today.stay_rates.build(plan: stay[:plan], rate: stay[:rate], first_time: stay[:first_time], last_time: stay[:last_time])
   # end
 
-  # def pick_lodging_hours(first_lodging_time:, last_lodging_time:)
-  #   Rails.logger.debug (I18n.l first_lodging_time, format: :hours).to_i
-  #   Rails.logger.debug (I18n.l last_lodging_time, format: :hours).to_i
+  # def build_today_service_time_rate(today:)
+  #   today.rest_rates.build(plan: service_time[:plan], rate: service_time[:rate], first_time: service_time[:first_time], last_time: service_time[:last_time])
   # end
 
-  # def stay_night_time?(now = Time.current)
-  #   first = (I18n.l first_lodging_time, format: :hours).to_i
-  #   last = (I18n.l last_lodging_time, format: :hours).to_i
+  def rest
+    daily_rates.fetch(:rest_rates)
+  end
 
-  #   [*first..23, *0..last].include?(now)
+  # def stay
+  #   daily_rates.fetch(:stay_rates)
+  # end
+
+  # def service_time
+  #   daily_rates.fetch(:service_time_rates)
   # end
 end

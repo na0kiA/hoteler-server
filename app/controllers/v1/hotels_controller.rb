@@ -53,7 +53,7 @@ module V1
     def hotel_params
       params.require(:hotel).permit(
         :name, :content,
-        rates_for_the_day: [
+        daily_rates: [
           :day,
           { rest_rates: [:plan, :rate, :first_time, :last_time] },
           { stay_rates: [:plan, :rate, :first_time, :last_time] }
