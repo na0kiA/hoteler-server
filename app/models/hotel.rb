@@ -3,6 +3,6 @@ class Hotel < ApplicationRecord
 
   belongs_to :user
   has_many :hotel_images, dependent: :destroy
-  has_many :hotel_daily_rates, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_many :days, dependent: :destroy
 end

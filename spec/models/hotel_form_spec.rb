@@ -49,6 +49,5 @@ RSpec.describe HotelForm, type: :model do
         expect { hotel_form.save }.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2)
       end
     end
-
   end
 end
