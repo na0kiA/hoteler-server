@@ -6,11 +6,7 @@ class ReviewEdit
     @title = params.fetch(:title)
     @content = params.fetch(:content)
     @five_star_rate = params.fetch(:five_star_rate)
-    @key = if params[:key].present?
-             JSON.parse(params[:key])
-           else
-             []
-           end
+    @key = params[:key].present? ? JSON.parse(params[:key]) : []
     freeze
   end
 
