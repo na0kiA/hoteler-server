@@ -9,13 +9,22 @@ ja:
         name: "ホテル名"
         content: "内容"
         key: "画像ファイル"
-        file_url: "画像ファイル"
+        plan: "料金プラン"
+        rate: "価格"
+        first_time: "サービス開始時刻"
+        last_time: "サービス終了時刻"
       hotel_image:
         key: "画像ファイル"
-        file_url: "画像ファイル"
       hotel:
         name: "ホテル名"
         content: "内容"
+      day:
+        day: "曜日"
+      rest_rate:
+        plan: "料金プラン"
+        rate: "価格"
+        first_time: "サービス開始時刻"
+        last_time: "サービス終了時刻"
     errors:
       messages:
         record_invalid: "%{errors}が正しくありません。"
