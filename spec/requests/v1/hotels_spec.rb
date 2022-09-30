@@ -7,7 +7,9 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしている場合' do
       it 'ホテルの投稿ができること' do
-        params = { hotel: { name: 'hotelName', content: 'Kobe Kitanosaka is location', key: ['upload/test'] } }
+        params = { hotel: { name: 'hotelName', content: 'Kobe Kitanosaka is location', key: ['upload/test'],
+                            daily_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } } } }
+
         expect do
           post v1_hotels_path, params:, headers: auth_tokens
         end.to change(Hotel.all, :count).by(1)
@@ -41,11 +43,13 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated', key: ['upload/test', 'upload/test2'] } }
-        patch v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
+        edited_params = { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: ['upload/test'],
+          daily_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } }} }
+
+        patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:attributes]).to include(name: 'hotel 777', content: 'hotel has been updated')
+        expect(response_body[:attributes]).to include(name: 'ホテルレジャー', content: 'ホテルの名前が変わりました')
       end
 
       it '自分が投稿していないホテルの編集ができないこと' do
