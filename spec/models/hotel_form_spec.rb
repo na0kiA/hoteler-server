@@ -43,10 +43,12 @@ RSpec.describe HotelForm, type: :model do
 
     context '正常に保存ができる場合' do
       it 'paramsの値が正常で保存できること' do
-        json_params = { 'name' => '神戸北野', 'content' => '最高峰のラグジュアリーホテルをお届けします', 'key' => %w[key1213 key4561], 'user_id' => user.id }
+        json_params = { name:  "神戸北野", content:  "最高峰のラグジュアリーホテルをお届けします", key: ["key1998","key1998"], daily_rates: { day: "金曜", rest_rates: { plan: "休憩90分", rate: 3980, first_time: "6:00", last_time: "24:00" }}, user_id: user.id }
+
         hotel_form = described_class.new(json_params)
+
         expect(hotel_form.save).to be true
-        expect { hotel_form.save }.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2)
+        expect { hotel_form.save }.to change(Hotel, :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(1).and change(RestRate, :count).by(1)
       end
     end
   end

@@ -26,7 +26,6 @@ class HotelForm
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
       build_today_rest_rate(today: build_day(hotel:))
-
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -53,23 +52,7 @@ class HotelForm
     today.rest_rates.build(plan: rest[:plan], rate: rest[:rate], first_time: rest[:first_time], last_time: rest[:last_time])
   end
 
-  # def build_today_stay_rate(today:)
-  #   today.stay_rates.build(plan: stay[:plan], rate: stay[:rate], first_time: stay[:first_time], last_time: stay[:last_time])
-  # end
-
-  # def build_today_service_time_rate(today:)
-  #   today.rest_rates.build(plan: service_time[:plan], rate: service_time[:rate], first_time: service_time[:first_time], last_time: service_time[:last_time])
-  # end
-
   def rest
     daily_rates.fetch(:rest_rates)
   end
-
-  # def stay
-  #   daily_rates.fetch(:stay_rates)
-  # end
-
-  # def service_time
-  #   daily_rates.fetch(:service_time_rates)
-  # end
 end
