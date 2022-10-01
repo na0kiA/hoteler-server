@@ -55,9 +55,7 @@ module V1
         :name, :content,
         daily_rates: [
           :day,
-          { rest_rates: [:plan, :rate, :first_time, :last_time] },
-          { stay_rates: [:plan, :rate, :first_time, :last_time] }
-        ],
+          { rest_rates: [:plan, :rate, :first_time, :last_time] }],
         key: []
       ).merge(user_id: current_v1_user.id)
     end
