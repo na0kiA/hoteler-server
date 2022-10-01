@@ -48,19 +48,22 @@ class HotelProfile
   end
 
   def update_day
-    set_hotel.days.update!(pick_day_id, day:)
+    Day.update!(set_day_ids, day:, hotel_id: set_hotel.id)
   end
 
-  def pick_day_id
-    set_hotel.days.where(day:).pick(:id)
+  # TODO 複数個のdayを取得する必要がある
+  def set_day_ids
+    set_hotel.days.pick(:id)
+    # set_hotel.days.all.pluck(:id).slice(0)
   end
 
-  # TODO:updated_atが更新されてしまう
+  # TODO FIX_ME: updated_atが更新されてしまう
   def update_daily_rest_rates
-    update_day.rest_rates.update!(pick_rest_rate_id, plan:, rate:, first_time:, last_time:)
+    RestRate.update!(pick_rest_rate.id, plan:, rate:, first_time:, last_time:, day_id: set_day_ids)
   end
 
-  def pick_rest_rate_id
-    update_day.rest_rates.where(plan:).pick(:id)
+  def pick_rest_rate
+    # update_day.rest_rates.pick(:id)
+    RestRate.find_by(day_id: set_day_ids)
   end
 end
