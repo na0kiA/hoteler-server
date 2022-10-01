@@ -40,13 +40,16 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
-
+    let_it_be(:day) { create(:day, hotel_id: accepted_hotel.id)}
+    let_it_be(:rest_rate) { create(:rest_rate, day_id: day.id)}
+    
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
         edited_params = { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: ['upload/test'],
           daily_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } }} }
 
         patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
+
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body[:attributes]).to include(name: 'ホテルレジャー', content: 'ホテルの名前が変わりました')
