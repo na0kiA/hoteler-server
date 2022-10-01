@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewSerializer < ActiveModel::Serializer
   attributes :id, :title, :content, :five_star_rate, :created_at, :updated_at
 

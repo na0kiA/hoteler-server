@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ReviewEdit, type: :model do
@@ -60,7 +62,7 @@ RSpec.describe ReviewEdit, type: :model do
         review_form = ReviewForm.new(params)
         review_edit = described_class.new(params: review_form.to_deep_symbol, set_review: review)
         review_edit.update
-        expect(Hotel.where(id: accepted_hotel.id).pluck(:average_rating)).to eq([0.3e1])
+        expect(Hotel.where(id: accepted_hotel.id).pick(:average_rating).to_i).to eq(3)
       end
     end
 

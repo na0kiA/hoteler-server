@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module V1
   class HotelsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
@@ -46,22 +48,23 @@ module V1
 
     private
 
-    def authenticated?
-      @hotel.present? && @hotel.user.id == current_v1_user.id
-    end
+      def authenticated?
+        @hotel.present? && @hotel.user.id == current_v1_user.id
+      end
 
-    def hotel_params
-      params.require(:hotel).permit(
-        :name, :content,
-        daily_rates: [
-          :day,
-          { rest_rates: [:plan, :rate, :first_time, :last_time] }],
-        key: []
-      ).merge(user_id: current_v1_user.id)
-    end
+      def hotel_params
+        params.require(:hotel).permit(
+          :name, :content,
+          daily_rates: [
+            :day,
+            { rest_rates: %i[plan rate first_time last_time] }
+          ],
+          key: []
+        ).merge(user_id: current_v1_user.id)
+      end
 
-    def set_hotel
-      @hotel = Hotel.find(params[:id])
-    end
+      def set_hotel
+        @hotel = Hotel.find(params[:id])
+      end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   resources :posts, only: :index
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
@@ -13,7 +15,7 @@ Rails.application.routes.draw do
     end
 
     scope '/reviews/:review_id' do
-      resource :helpfulnesses, only: [:create, :destroy]
+      resource :helpfulnesses, only: %i[create destroy]
       # post 'helpfulness', to: 'helpfulnesses#create'
       # delete 'helpfulness/:id', to: 'helpfulnesses#destroy'
     end

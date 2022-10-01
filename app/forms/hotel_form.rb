@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HotelForm
   include ActiveModel::Model
   include ActiveModel::Attributes
@@ -38,21 +40,21 @@ class HotelForm
 
   private
 
-  def build_hotel_images(hotel:)
-    JSON.parse(key).each do |val|
-      hotel.hotel_images.build(key: val)
+    def build_hotel_images(hotel:)
+      JSON.parse(key).each do |val|
+        hotel.hotel_images.build(key: val)
+      end
     end
-  end
 
-  def build_day(hotel:)
-    hotel.days.build(day: daily_rates[:day])
-  end
+    def build_day(hotel:)
+      hotel.days.build(day: daily_rates[:day])
+    end
 
-  def build_today_rest_rate(today:)
-    today.rest_rates.build(plan: rest[:plan], rate: rest[:rate], first_time: rest[:first_time], last_time: rest[:last_time])
-  end
+    def build_today_rest_rate(today:)
+      today.rest_rates.build(plan: rest[:plan], rate: rest[:rate], first_time: rest[:first_time], last_time: rest[:last_time])
+    end
 
-  def rest
-    daily_rates.fetch(:rest_rates)
-  end
+    def rest
+      daily_rates.fetch(:rest_rates)
+    end
 end

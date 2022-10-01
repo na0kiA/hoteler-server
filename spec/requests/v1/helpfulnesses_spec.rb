@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'V1::Helpfulnesses', type: :request do
@@ -59,7 +61,7 @@ RSpec.describe 'V1::Helpfulnesses', type: :request do
       end
     end
 
-    context 'ログインをしていない場合' do
+    context 'ログインをしていなのに削除しようとした場合' do
       let_it_be(:helpfulness) { Helpfulness.create(user_id: client_user.id, review_id: review.id) }
       it '401が帰ってくること' do
         delete v1_helpfulnesses_path(review_id: review.id), headers: nil
@@ -74,16 +76,6 @@ RSpec.describe 'V1::Helpfulnesses', type: :request do
         delete v1_helpfulnesses_path(review_id: 0), headers: auth_tokens
         expect(response.status).to eq(400)
         expect(JSON.parse(response.body)['errors']['title']).to include('「参考になった」を取り消せません')
-      end
-    end
-
-    context 'ログインをしていない場合' do
-      let_it_be(:helpfulness) { Helpfulness.create(user_id: client_user.id, review_id: review.id) }
-
-      it '401が帰ってくること' do
-        delete v1_helpfulnesses_path(review_id: review.id), headers: nil
-        expect(response.status).to eq(401)
-        expect(response.message).to include('Unauthorized')
       end
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
@@ -82,4 +84,3 @@ Rails.application.configure do
   config.hosts << ENV.fetch('NGROK_HOST')
   # config.hosts << '127.0.0.1'
 end
-

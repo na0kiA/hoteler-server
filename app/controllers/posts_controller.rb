@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostsController < ApiController
   before_action :authenticate_v1_user!, except: %i[index]
   def index

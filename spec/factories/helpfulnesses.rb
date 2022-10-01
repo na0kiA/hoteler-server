@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :helpfulness do
     # sequence(:user_id) { |n| n }

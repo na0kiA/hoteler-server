@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # このspecではitに期待値のみをコメント
 # 所感 : 期待値のみをitに記述するより文脈を記述した方が分かりやすい
 require 'rails_helper'
