@@ -2,8 +2,6 @@
 
 FactoryBot.define do
   factory :hotel_image do
-    hotel_id { 'MyString' }
-    key { 'MyString' }
-    file_url { 'MyString' }
+    sequence(:key) { 'aws/s3/keys/1998' }
   end
 end
