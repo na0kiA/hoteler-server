@@ -117,14 +117,25 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    let_it_be(:hotel_image) { create(:hotel_image, hotel_id: accepted_hotel.id) }
+    let_it_be(:day) { create(:day, hotel_id: accepted_hotel.id) }
+    let_it_be(:rest_rate) { create(:rest_rate, day_id: day.id) }
 
     context 'ホテルが承認されている場合' do
+
       it 'ホテル一覧を取得できること' do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
         expect(response_body[0][:accepted]).to be true
         expect(response_body.length).to eq 1
+      end
+
+      it '各ホテルのプランと料金とサービス営業時間を取得できること' do
+        get v1_hotels_path
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(:success)
+        expect(response_body).to include('休憩90分')
       end
     end
 
