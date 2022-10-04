@@ -6,7 +6,9 @@ module V1
     before_action :set_hotel, only: %i[show update destroy]
 
     def index
-      render json: Hotel.accepted
+      # Hotel.return_day_of_week
+      render json: RestRate.new.now_rest_rate
+      # render json: Hotel.accepted
     end
 
     def show
@@ -58,6 +60,7 @@ module V1
           daily_rates: [
             :day,
             { rest_rates: %i[plan rate first_time last_time] }
+            # { rest_rates: [plan: [], rate: [], first_time: [], last_time: []] }
           ],
           key: []
         ).merge(user_id: current_v1_user.id)

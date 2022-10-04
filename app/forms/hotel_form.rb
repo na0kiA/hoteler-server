@@ -46,6 +46,14 @@ class HotelForm
       end
     end
 
+    # {"plan"=>["休憩90分", "深夜休憩60分"], "rate"=>[3980, 4980], "first_time"=>["6:00", "0:00"], "last_time"=>["24:00", "5:00"]}
+
+    # [{"plan"=>"休憩90分", "rate"=>3980, "first_time"=>"6:00", "last_time"=>"24:00"}, {"plan"=>"深夜休憩90分", "rate"=>3980, "first_time"=>"6:00", "last_time"=>"24:00"}]
+
+    def build_today_rest_rates(today:)
+      today.rest_rates.build(plan: rest[:plan][0], rate: rest[:rate][0], first_time: rest[:first_time][0], last_time: rest[:last_time][0])
+    end
+
     def build_day(hotel:)
       hotel.days.build(day: daily_rates[:day])
     end
