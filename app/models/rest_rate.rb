@@ -13,47 +13,51 @@ class RestRate < ApplicationRecord
   DAYS = ['日曜', '月曜', '火曜', '水曜', '木曜', "金
     曜", '土曜'].freeze
 
-    # [*first..23, *0..last].include?(now)
-
+    # rest_ratesにbool値をつけるかどうか
+    # enumを追加するかどうか
+    #営業時間内のrest_ratesの中からplanが最安のものを表示する
   # 今の曜日と時間から、ホテルの休憩で一番安いプランと料金を返す
+  # 営業時間外(nil)の場合は"営業時間外です"をJSONで表示する
   def now_rest_rate
-    if now_include_first_rest_time? && now_include_last_rest_time?
-      RestRate.where(id: today_rest_rate_list).pluck(:plan)
-      RestRate.where(id: today_rest_rate_list).pluck(:rate)
-    end
+    # during_business_hours
+    outside_business_hours
   end
 
-    private
+  def during_business_hours
+    RestRate.where(id: rest_time_array.select{|num| num.to_s =~ /^[0-9]+$/})
+  end
 
-    def now_include_first_rest_time?(now = convert_hour(time: Time.current))
-      first_rest_time_array.map do |first_time|
-        [*first_time..23].include?(now)
-      end
-    end
+  def outside_business_hours
+    RestRate.where(id: rest_time_array.reject{|num| num.to_s =~ /^[0-9]+$/})
+  end
 
-    def now_include_last_rest_time?(now = convert_hour(time: Time.current))
-      last_rest_time_array.map do |last_time|
-        [*0..last_time].include?(now)
-      end
-    end
+  private
 
     def rest_time_array
-      today_rest_rate_list.pluck(:first_time, :last_time, :id).map do |time|
-        first_time_array = convert_hour(time: time[0])
-        last_time_array = convert_hour(time: time[1])
-      end
-    end
-    
-    def convert_hour(time:)
-        (I18n.l time, format: :hours).to_i
+      today_rest_rate_list.pluck(:first_time, :last_time, :id).map { |val| return_ids_or_nil(first_time: val[0], last_time: val[1], ids: val[2]) }
     end
 
-    def today_rest_rate_list(today = Time.zone.today.wday)
-      day_ids = if DAYS[today].start_with?('月曜', '火曜', '水曜', '木曜')
-                  Day.where(day: '月曜から木曜').pluck(:id)
-                else
-                  Day.where(day: DAYS[today]).pluck(:id)
-                end
-      RestRate.where(day_id: day_ids)
+    def return_ids_or_nil(first_time:, last_time:, ids:)
+      now_business_hour?(first_time: convert_hour(time: first_time), last_time: convert_hour(time: last_time)) ? ids : "#{ids}は営業時間外です"
+    end
+
+    def now_business_hour?(first_time:, last_time:)
+      [*first_time..23, *0..last_time].include?(convert_hour(time: Time.current))
+    end
+
+    def convert_hour(time:)
+      (I18n.l time, format: :hours).to_i
+    end
+
+    # def today_rest_rate_list(today = Time.zone.today.wday)
+    #   day_ids = if DAYS[today].start_with?('月曜', '火曜', '水曜', '木曜')
+    #               Day.where(day: '月曜から木曜').pluck(:id)
+    #             else
+    #               Day.where(day: DAYS[today]).pluck(:id)
+    #             end
+    #   RestRate.where(day_id: day_ids)
+    # end
+    def today_rest_rate_list
+      RestRate.includes(:day).where(day_id: Day.where(day: "金曜"))
     end
 end
