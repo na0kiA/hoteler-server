@@ -20,7 +20,6 @@ class RestRate < ApplicationRecord
   def now_rest_rate
     during_business_hours
     # outside_business_hours
-    # binding.break
   end
 
   def during_business_hours
@@ -35,20 +34,29 @@ class RestRate < ApplicationRecord
   private
 
     def can_take_rest_array
-      today_rest_rate_list.pluck(:first_time, :last_time, :id).map { |val| can_take_a_rest_or_not(first_time: val[0], last_time: val[1], ids: val[2]) }
+      today_rest_rate_list.pluck(:first_time, :last_time, :id, :plan).map do |val|
+         if val[3].include?("深夜休憩")
+          can_take_a_midnight_rest_or_not(first_time: val[0], last_time: val[1], ids: val[2])
+        else
+          can_take_a_rest_or_not(first_time: val[0], last_time: val[1], ids: val[2]) 
+        end
+      end
     end
 
     def can_take_a_rest_or_not(first_time:, last_time:, ids:)
       at_now_includes_rest_time?(first_time: convert_at_hour(time: first_time), last_time: convert_at_hour(time: last_time)) ? ids : "#{ids}は営業時間外です"
     end
 
+    def can_take_a_midnight_rest_or_not(first_time:, last_time:, ids:)
+      at_now_includes_midnight_rest_time?(first_time: convert_at_hour(time: first_time), last_time: convert_at_hour(time: last_time)) ? ids : "#{ids}は営業時間外です" 
+    end
+
     def at_now_includes_rest_time?(first_time:, last_time:)
-      binding.break
-      if today_rest_rate_list.pluck(:plan).map { |val| val.include?("深夜休憩") }
-        [*first_time..last_time].include?(convert_at_hour(time: Time.current))
-      else
-        [*first_time..23, *0..last_time].include?(convert_at_hour(time: Time.current))
-      end
+      [*first_time..23, *0..last_time].include?(convert_at_hour(time: Time.current))
+    end
+
+    def at_now_includes_midnight_rest_time?(first_time:, last_time:)
+      [*first_time..last_time].include?(convert_at_hour(time: Time.current)) 
     end
 
     def convert_at_hour(time:)
