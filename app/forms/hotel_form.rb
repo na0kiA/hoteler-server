@@ -27,7 +27,7 @@ class HotelForm
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
-      build_today_rest_rate(today: build_day(hotel:))
+      build_today_rest_rates(today: build_day(hotel:))
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -52,6 +52,10 @@ class HotelForm
 
     def build_today_rest_rates(today:)
       today.rest_rates.build(plan: rest[:plan][0], rate: rest[:rate][0], first_time: rest[:first_time][0], last_time: rest[:last_time][0])
+    end
+
+    def build_today_rest_rates2(today:)
+      today.rest_rates.build(plan: rest[:plan][1], rate: rest[:rate][1], first_time: rest[:first_time][1], last_time: rest[:last_time][1])
     end
 
     def build_day(hotel:)
