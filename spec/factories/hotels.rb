@@ -10,5 +10,6 @@ FactoryBot.define do
     sequence(:accepted) { true }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
+    association :user
   end
 end

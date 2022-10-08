@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  factory :day do
+    day { '月曜から木曜' }
+  end
   factory :weekdays, class: 'Day' do
     day { '月曜から木曜' }
   end
@@ -18,5 +21,6 @@ FactoryBot.define do
   end
   factory :special_weeks, class: 'Day' do
     day { '特別期間' }
+    association :hotel, factory: :accepted_hotel
   end
 end
