@@ -122,7 +122,6 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:rest_rate) { create(:rest_rate, day_id: day.id) }
 
     context 'ホテルが承認されている場合' do
-
       it 'ホテル一覧を取得できること' do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
