@@ -73,5 +73,22 @@ RSpec.describe RestRate, type: :model do
       end
     end
 
+    context '今日が特別期間の6時00分の場合' do
+      let_it_be(:special_week_rest_rate) { create(:special_week_rest_rate)}
+
+      before do
+        travel_to Time.zone.local(2022, 12, 25, 6, 0, 0)
+      end
+
+      it '特別料金が表示されること' do
+        expect(RestRate.new.now_rest_rate[0][:plan]).to eq('休憩90分')
+        expect(RestRate.new.now_rest_rate[0][:rate]).to eq(5980)
+      end
+
+      it '通常の休憩料金が表示されないこと' do
+        expect(RestRate.new.now_rest_rate[0][:rate]).not_to eq(3980)
+      end
+    end
+
   end
 end
