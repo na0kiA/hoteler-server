@@ -10,7 +10,7 @@ RSpec.describe 'V1::Hotels', type: :request do
     context 'ログインしている場合' do
       it 'ホテルの投稿ができること' do
         params = { hotel: { name: 'hotelName', content: 'Kobe Kitanosaka is location', key: ['upload/test'],
-                            daily_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } } } }
+                            friday_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } } } }
 
         expect do
           post v1_hotels_path, params:, headers: auth_tokens
@@ -48,7 +48,7 @@ RSpec.describe 'V1::Hotels', type: :request do
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
         edited_params = { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: ['upload/test'],
-                                   daily_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } } } }
+                                   friday_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } } } }
 
         patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
 
@@ -126,16 +126,16 @@ RSpec.describe 'V1::Hotels', type: :request do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[0][:accepted]).to be true
+        expect(response_body[0][:reviews_count]).to eq(0)
         expect(response_body.length).to eq 1
       end
 
-      it '各ホテルのプランと料金とサービス営業時間を取得できること' do
-        get v1_hotels_path
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status(:success)
-        expect(response_body).to include('休憩90分')
-      end
+      # it '各ホテルのプランと料金とサービス営業時間を取得できること' do
+      #   get v1_hotels_path
+      #   response_body = JSON.parse(response.body, symbolize_names: true)
+      #   expect(response).to have_http_status(:success)
+      #   expect(response_body).to include('休憩90分')
+      # end
     end
 
     context 'ホテルが承認されていない場合' do
@@ -158,8 +158,10 @@ RSpec.describe 'V1::Hotels', type: :request do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[:accepted]).to be true
-        expect(response_body.length).to eq 9
+        p response
+        p response_body
+        expect(response_body[:name]).to include('hotel')
+        expect(response_body.length).to eq 7
       end
 
       it '口コミの評価率と評価数が取得できること' do

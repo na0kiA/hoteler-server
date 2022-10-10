@@ -9,8 +9,10 @@ class HotelForm
   attribute :key, :string
   attribute :user_id, :integer
 
+  attribute :friday_rates
   attribute :day, :string
-  attribute :daily_rates
+
+  attribute :special_periods
 
   with_options presence: true do
     with_options invalid_words: true do
@@ -27,7 +29,7 @@ class HotelForm
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
-      build_today_rest_rates(today: build_day(hotel:))
+      build_friday_rest_rates(today: build_friday(hotel:))
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -46,27 +48,19 @@ class HotelForm
       end
     end
 
-    # {"plan"=>["休憩90分", "深夜休憩60分"], "rate"=>[3980, 4980], "first_time"=>["6:00", "0:00"], "last_time"=>["24:00", "5:00"]}
-
-    # [{"plan"=>"休憩90分", "rate"=>3980, "first_time"=>"6:00", "last_time"=>"24:00"}, {"plan"=>"深夜休憩90分", "rate"=>3980, "first_time"=>"6:00", "last_time"=>"24:00"}]
-
-    def build_today_rest_rates(today:)
-      today.rest_rates.build(plan: rest[:plan][0], rate: rest[:rate][0], first_time: rest[:first_time][0], last_time: rest[:last_time][0])
+    def build_friday_rest_rates(today:)
+      today.rest_rates.build(plan: friday_rest[:plan][0], rate: friday_rest[:rate][0], first_time: friday_rest[:first_time][0], last_time: friday_rest[:last_time][0])
     end
 
-    def build_today_rest_rates2(today:)
-      today.rest_rates.build(plan: rest[:plan][1], rate: rest[:rate][1], first_time: rest[:first_time][1], last_time: rest[:last_time][1])
+    def build_friday(hotel:)
+      hotel.days.build(day: friday_rates[:day])
     end
 
-    def build_day(hotel:)
-      hotel.days.build(day: daily_rates[:day])
+    def build_friday_rest_rate(today:)
+      today.rest_rates.build(plan: friday_rest[:plan], rate: friday_rest[:rate], first_time: friday_rest[:first_time], last_time: friday_rest[:last_time])
     end
 
-    def build_today_rest_rate(today:)
-      today.rest_rates.build(plan: rest[:plan], rate: rest[:rate], first_time: rest[:first_time], last_time: rest[:last_time])
-    end
-
-    def rest
-      daily_rates.fetch(:rest_rates)
+    def friday_rest
+      friday_rates.fetch(:rest_rates)
     end
 end

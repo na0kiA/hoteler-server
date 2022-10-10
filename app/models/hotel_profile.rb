@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class HotelProfile
-  attr_reader :params, :set_hotel, :key, :day, :daily_rates, :today_rest_rate, :plan, :rate, :first_time, :last_time
+  attr_reader :params, :set_hotel, :key, :day, :friday_rates, :today_rest_rate, :plan, :rate, :first_time, :last_time
 
   def initialize(params:, set_hotel:)
     @params = params
     @set_hotel = set_hotel
     @key = JSON.parse(params[:key])
-    @daily_rates = params.fetch(:daily_rates)
-    @day = daily_rates.fetch(:day)
-    @today_rest_rate = daily_rates.fetch(:rest_rates)
+    @friday_rates = params.fetch(:friday_rates)
+    @day = friday_rates.fetch(:day)
+    @today_rest_rate = friday_rates.fetch(:rest_rates)
     @plan = today_rest_rate.fetch(:plan)
     @rate = today_rest_rate.fetch(:rate)
     @first_time = today_rest_rate.fetch(:first_time)
@@ -23,7 +23,7 @@ class HotelProfile
       find_or_create_key
       remove_unnecessary_key
       update_day
-      update_daily_rest_rates
+      update_friday_rest_rates
     end
   rescue ActiveRecord::RecordInvalid
     false
@@ -60,7 +60,7 @@ class HotelProfile
     end
 
   # TODO: FIX_ME: updated_atが更新されてしまう
-    def update_daily_rest_rates
+    def update_friday_rest_rates
       RestRate.update!(pick_rest_rate.id, plan:, rate:, first_time:, last_time:, day_id: set_day_ids)
     end
 
