@@ -7,12 +7,12 @@ module V1
 
     def index
       # Hotel.return_day_of_week
-      render json: RestRate.new.now_rest_rate
-      # render json: Hotel.accepted
+      # render json: RestRate.new.now_rest_rate
+      render json: Hotel.accepted
     end
 
     def show
-      accepted_hotel = Hotel.accepted.find_by(id: @hotel)
+      accepted_hotel = Hotel.accepted.find_by(id: @hotel.id)
       if accepted_hotel.present?
         render json: accepted_hotel
       else
@@ -54,16 +54,9 @@ module V1
         @hotel.present? && @hotel.user.id == current_v1_user.id
       end
 
+
       def hotel_params
-        params.require(:hotel).permit(
-          :name, :content,
-          daily_rates: [
-            :day,
-            { rest_rates: %i[plan rate first_time last_time] }
-            # { rest_rates: [plan: [], rate: [], first_time: [], last_time: []] }
-          ],
-          key: []
-        ).merge(user_id: current_v1_user.id)
+        params.require(:hotel).permit(:name, :content, key: []).merge(user_id: current_v1_user.id)
       end
 
       def set_hotel
