@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_26_172636) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_10_081633) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
@@ -87,6 +87,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_172636) do
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
+  create_table "special_periods", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "day_id", null: false
+    t.integer "period", default: 0, null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day_id"], name: "index_special_periods_on_day_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
@@ -125,4 +135,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_172636) do
   add_foreign_key "review_images", "reviews"
   add_foreign_key "reviews", "hotels"
   add_foreign_key "reviews", "users"
+  add_foreign_key "special_periods", "days"
 end
