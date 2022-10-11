@@ -64,8 +64,8 @@ RSpec.describe HotelForm, type: :model do
           name: '神戸北野',
           content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
           user_id: user.id,
-          friday_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } },
-          special_rates: { day: '特別期間', rest_rates: { plan: '休憩90分', rate: 5980, first_time: '6:00', last_time: '24:00' }, special_periods: { period: 2, start_date: '12月25日', end_date: '1月8日' } }
+          friday: {day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } },
+          saturday: {rest_rates: { plan: '休憩90分', rate: 5980, first_time: '6:00', last_time: '24:00' } },
         }
 
         hotel_form = described_class.new(json_params)
