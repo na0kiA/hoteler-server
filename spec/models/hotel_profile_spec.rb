@@ -12,11 +12,11 @@ RSpec.describe HotelProfile, type: :model do
     context '正常に更新ができる場合' do
       it 'paramsの値が更新されること' do
         params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: '["key1998"]', user_id: user.id,
-                   daily_rates: { day: '月曜から木曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '0:00' } } }
+                   friday_rates: { day: '月曜から木曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '0:00' } } }
 
         hotel_profile = described_class.new(params:, set_hotel: accepted_hotel)
         expect(hotel_profile.send(:update_hotel)[:name]).to eq('神戸北野')
-        expect(hotel_profile.send(:update_daily_rest_rates)[:plan]).to eq('休憩90分')
+        expect(hotel_profile.send(:update_friday_rest_rates)[:plan]).to eq('休憩90分')
         expect(hotel_profile.update[:rate]).to eq(3980)
       end
     end
@@ -24,7 +24,7 @@ RSpec.describe HotelProfile, type: :model do
     context '正常に更新ができない場合' do
       it 'paramsの値が不正でrollbackされること' do
         params = { name: '', content: '', key: '[""]', user_id: user.id,
-                   daily_rates: { day: '', rest_rates: { plan: '', rate: '', first_time: '', last_time: '' } } }
+                   friday_rates: { day: '', rest_rates: { plan: '', rate: '', first_time: '', last_time: '' } } }
 
         hotel_profile = described_class.new(params:, set_hotel: accepted_hotel)
         expect(hotel_profile.update).to be(false)
