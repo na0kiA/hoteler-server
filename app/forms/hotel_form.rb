@@ -8,6 +8,8 @@ class HotelForm
   attribute :content, :string
   attribute :key, :string
   attribute :user_id, :integer
+  attribute :friday
+  attribute :saturday
 
   attribute :friday_rates
   attribute :day, :string
@@ -25,6 +27,8 @@ class HotelForm
 
   def save
     return if invalid?
+    p friday
+    p saturday
 
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
