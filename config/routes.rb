@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  root to: 'home#index'
   resources :posts, only: :index
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
@@ -16,8 +17,6 @@ Rails.application.routes.draw do
 
     scope '/reviews/:review_id' do
       resource :helpfulnesses, only: %i[create destroy]
-      # post 'helpfulness', to: 'helpfulnesses#create'
-      # delete 'helpfulness/:id', to: 'helpfulnesses#destroy'
     end
 
     get 'images', to: 'images#signed_url'
