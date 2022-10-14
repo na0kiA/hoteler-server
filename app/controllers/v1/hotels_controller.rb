@@ -55,45 +55,15 @@ module V1
       end
 
       def hotel_params
-        params.require(:hotel).permit(:name, :content, key: []).merge(user_id: current_v1_user.id)
-        top_page_params
+        params.require(:hotel).permit(:name, :content, daily_rates: [today_rate, {special_periods: %i[period start_date end_date]}], key: []).merge(user_id: current_v1_user.id)
       end
 
-      def top_page_params
-        friday_rate_params
-        monday_through_thursday_rate_params
-        saturday_rate_params
-        sunday_rate_params
-        holiday_rate_params
-        special_period_rate_params
+      def fee_params
+        { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time] }
       end
 
-      def friday_rate_params
-        params.require(:hotel).permit(:day, friday: {rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time]})
-      end
-
-      # def friday_rate_params
-      #   params.require(:hotel).permit(friday: { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time]})
-      # end
-
-      def monday_through_thursday_rate_params
-        params.require(:hotel).permit(monday_through_thursday: { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time]})
-      end
-
-      def saturday_rate_params
-        params.require(:hotel).permit(saturday: { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time]})
-      end
-
-      def sunday_rate_params
-        params.require(:hotel).permit(sunday: { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time]})
-      end
-
-      def holiday_rate_params
-        params.require(:hotel).permit(holiday: { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time]})
-      end
-
-      def special_period_rate_params
-        params.require(:hotel).permit(special_rate: { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time], special_periods: %i[period start_date end_date]})
+      def today_rate(fee = fee_params)
+        {friday: fee, monday_through_thursday: fee, saturday: fee, sunday: fee, holiday: fee, special_day: fee}
       end
 
       def set_hotel

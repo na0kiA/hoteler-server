@@ -8,11 +8,16 @@ class HotelForm
   attribute :content, :string
   attribute :key, :string
   attribute :user_id, :integer
+
+  attribute :monday_through_thursday
   attribute :friday
   attribute :saturday
+  attribute :sunday
+  attribute :holiday
+  attribute :special_day
+  attribute :special_periods
 
-  attribute :friday_rates
-  attribute :day, :string
+  # attribute :daily_rates
 
   attribute :special_periods
 
@@ -25,15 +30,18 @@ class HotelForm
     validates :user_id
   end
 
+  DAY_OF_WEEK = [friday: '金曜', monday_through_thursday: '月曜から木曜', saturday: '土曜', sunday: '日曜', holiday: '祝日', special_period: '特別期間'].freeze
+
   def save
     return if invalid?
-    p friday
-    p saturday
+    p attributes[:daily_rates]
 
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
-      build_friday_rest_rates(today: build_friday(hotel:))
+      # build_friday_rest_rates(day_of_week: build_day_of_week(hotel:, today:))
+      p today_rest_rates
+      today(hotel:)
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -52,19 +60,37 @@ class HotelForm
       end
     end
 
-    def build_friday_rest_rates(today:)
-      today.rest_rates.build(plan: friday_rest[:plan][0], rate: friday_rest[:rate][0], first_time: friday_rest[:first_time][0], last_time: friday_rest[:last_time][0])
+    # def build_today_rest_rates(day_of_week:)
+    #   day_of_week.rest_rates.build(plan: friday_rest[:plan], rate: friday_rest[:rate], first_time: friday_rest[:first_time], last_time: friday_rest[:last_time])
+    # end
+
+    def build_today_rest_rates(day_of_week:)
+      day_of_week.rest_rates.build(plan: today_rest_rates[:plan], rate: today_rest_rates[:rate], first_time: today_rest_rates[:first_time], last_time: today_rest_rates[:last_time])
     end
 
-    def build_friday(hotel:)
-      hotel.days.build(day: friday_rates[:day])
+    # def build_friday(hotel:)
+    #   hotel.days.build(day: '金曜')
+    # end
+
+    def build_day_of_week(hotel:, today:)
+      hotel.days.build(day: today)
     end
 
-    def build_friday_rest_rate(today:)
-      today.rest_rates.build(plan: friday_rest[:plan], rate: friday_rest[:rate], first_time: friday_rest[:first_time], last_time: friday_rest[:last_time])
+    def today(hotel:)
+      DAY_OF_WEEK.each do |day|
+        build_today_rest_rates(day_of_week: build_day_of_week(hotel:, today: day))
+      end
     end
 
-    def friday_rest
-      friday_rates.fetch(:rest_rates)
+    # def friday_rest
+    #   friday.fetch(:rest_rates)
+    # end
+
+    def today_rest_rates
+      daily_rates.each do |day|
+        day.fetch(:rest_rates)
+      end
     end
+
+    
 end

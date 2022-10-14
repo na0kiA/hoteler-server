@@ -46,7 +46,7 @@ RSpec.describe HotelForm, type: :model do
     context '正常に保存ができる場合' do
       it 'paramsの値が正常で保存できること' do
         json_params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
-                        friday_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } }, user_id: user.id }
+                        friday: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } }, user_id: user.id }
 
         hotel_form = described_class.new(json_params)
 
@@ -64,8 +64,8 @@ RSpec.describe HotelForm, type: :model do
           name: '神戸北野',
           content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
           user_id: user.id,
-          friday: {day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } },
-          saturday: {rest_rates: { plan: '休憩90分', rate: 5980, first_time: '6:00', last_time: '24:00' } },
+          friday: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } },
+          saturday: { rest_rates: { plan: '休憩90分', rate: 5980, first_time: '6:00', last_time: '24:00' } }
         }
 
         hotel_form = described_class.new(json_params)
@@ -81,7 +81,7 @@ RSpec.describe HotelForm, type: :model do
     context '正常に保存ができない場合' do
       it 'paramsの値が異常でnilが返ること' do
         invalid_params = { name: '', content: '', key: ['', ''],
-                           friday_rates: { day: '', rest_rates: { plan: '', rate: '', first_time: '', last_time: '24:00' } }, user_id: user.id }
+                           friday: { day: '', rest_rates: { plan: '', rate: '', first_time: '', last_time: '24:00' } }, user_id: user.id }
 
         hotel_form = described_class.new(invalid_params)
 
@@ -91,7 +91,7 @@ RSpec.describe HotelForm, type: :model do
 
       it 'rollbackされること' do
         rollback_params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
-                            friday_rates: { day: '金曜', rest_rates: { plan: '', rate: 3980, first_time: '6:00', last_time: '24:00' } }, user_id: user.id }
+                            friday: { day: '金曜', rest_rates: { plan: '', rate: 3980, first_time: '6:00', last_time: '24:00' } }, user_id: user.id }
 
         hotel_form = described_class.new(rollback_params)
 
@@ -107,9 +107,9 @@ RSpec.describe HotelForm, type: :model do
     context '正常にjson_paramsをシンボルに変換できる場合' do
       it 'シンボルを返すこと' do
         json_params = { 'name' => '神戸三宮', 'content' => '2017年にリニューアルオープンしました', 'user_id' => user.id, 'key' => ['key1998'],
-                        'friday_rates' => { 'day' => '土曜', 'rest_rates' => { 'plan' => '休憩90分', 'rate' => 4980, 'last_time' => '00:00', 'first_time' => '06:00' } } }
+                        'friday' => { 'day' => '土曜', 'rest_rates' => { 'plan' => '休憩90分', 'rate' => 4980, 'last_time' => '00:00', 'first_time' => '06:00' } } }
         hotel_form = described_class.new(json_params)
-        expect(hotel_form.to_deep_symbol[:friday_rates][:day]).to eq('土曜')
+        expect(hotel_form.to_deep_symbol[:friday][:day]).to eq('土曜')
       end
     end
   end
