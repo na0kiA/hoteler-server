@@ -3,4 +3,5 @@
 class Day < ApplicationRecord
   belongs_to :hotel
   has_many :rest_rates, dependent: :destroy
+  has_many :special_periods, dependent: :destroy
 end

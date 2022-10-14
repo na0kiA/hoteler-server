@@ -6,8 +6,6 @@ module V1
     before_action :set_hotel, only: %i[show update destroy]
 
     def index
-      # Hotel.return_day_of_week
-      # render json: RestRate.new.now_rest_rate
       render json: Hotel.accepted
     end
 
@@ -54,16 +52,24 @@ module V1
         @hotel.present? && @hotel.user.id == current_v1_user.id
       end
 
+      # def hotel_params
+      #   params.require(:hotel).permit(:name, :content, daily_rates: today_rate, special_periods: { period: [], start_date: [], end_date: [] }, key: []).merge(user_id: current_v1_user.id)
+      # end
+
       def hotel_params
-        params.require(:hotel).permit(:name, :content, daily_rates: [today_rate, {special_periods: %i[period start_date end_date]}], key: []).merge(user_id: current_v1_user.id)
+        params.require(:hotel).permit(:name, :content, daily_rates: today_rate_params, special_periods: special_period_params, key: []).merge(user_id: current_v1_user.id)
+      end
+
+      def special_period_params
+        { obon: %i[period start_date end_date], golden_week: %i[period start_date end_date], the_new_years_holiday: %i[period start_date end_date] }
       end
 
       def fee_params
         { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time] }
       end
 
-      def today_rate(fee = fee_params)
-        {friday: fee, monday_through_thursday: fee, saturday: fee, sunday: fee, holiday: fee, special_day: fee}
+      def today_rate_params(fee = fee_params)
+        { friday: fee, monday_through_thursday: fee, saturday: fee, sunday: fee, holiday: fee, special_days: fee }
       end
 
       def set_hotel

@@ -9,17 +9,7 @@ class HotelForm
   attribute :key, :string
   attribute :user_id, :integer
 
-  attribute :monday_through_thursday
-  attribute :friday
-  attribute :saturday
-  attribute :sunday
-  attribute :holiday
-  attribute :special_day
-  attribute :special_periods
-
-  # attribute :daily_rates
-
-  attribute :special_periods
+  attribute :daily_rates, :daily_rate_array, default: []
 
   with_options presence: true do
     with_options invalid_words: true do
@@ -30,18 +20,18 @@ class HotelForm
     validates :user_id
   end
 
-  DAY_OF_WEEK = [friday: '金曜', monday_through_thursday: '月曜から木曜', saturday: '土曜', sunday: '日曜', holiday: '祝日', special_period: '特別期間'].freeze
+  DAY_OF_WEEK = [monday_through_thursday: '月曜から木曜', friday: '金曜', saturday: '土曜', sunday: '日曜', holiday: '祝日'].freeze
 
   def save
     return if invalid?
-    p attributes[:daily_rates]
+
+    Rails.logger.debug daily_rates.first
 
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
-      # build_friday_rest_rates(day_of_week: build_day_of_week(hotel:, today:))
-      p today_rest_rates
-      today(hotel:)
+      build_rest_rates_of_all_days(hotel:)
+      build_special_periods(special_day: build_hotel_days(hotel:, today: '特別期間'))
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -60,37 +50,57 @@ class HotelForm
       end
     end
 
-    # def build_today_rest_rates(day_of_week:)
-    #   day_of_week.rest_rates.build(plan: friday_rest[:plan], rate: friday_rest[:rate], first_time: friday_rest[:first_time], last_time: friday_rest[:last_time])
-    # end
-
-    def build_today_rest_rates(day_of_week:)
-      day_of_week.rest_rates.build(plan: today_rest_rates[:plan], rate: today_rest_rates[:rate], first_time: today_rest_rates[:first_time], last_time: today_rest_rates[:last_time])
+    # 各曜日ごとに休憩料金をbuild
+    def build_rest_rates_of_all_days(hotel:)
+      DAY_OF_WEEK.each do |day|
+        build_friday_rest_rates(day_of_week: build_hotel_days(hotel:, today: day))
+      end
     end
 
-    # def build_friday(hotel:)
-    #   hotel.days.build(day: '金曜')
-    # end
+    # 休憩料金を
+    def build_today_rest_rates(day_of_week:)
+      day_of_week.rest_rates.build(plan: friday_rates[0][:plan], rate: friday_rates[0][:rate], first_time: friday_rates[0][:first_time], last_time: friday_rates[0][:last_time])
+    end
 
-    def build_day_of_week(hotel:, today:)
+    def build_hotel_days(hotel:, today:)
       hotel.days.build(day: today)
     end
 
-    def today(hotel:)
-      DAY_OF_WEEK.each do |day|
-        build_today_rest_rates(day_of_week: build_day_of_week(hotel:, today: day))
-      end
+    def rates
+     # daily_rates.dig(:friday, :rest_rates)
+      daily_rates.fetch(:saturday)
+      daily_rates.fetch(:sunday)
+      daily_rates.fetch(:holiday)
     end
 
-    # def friday_rest
-    #   friday.fetch(:rest_rates)
+    # def monday_through_thursday_rates
+    #   daily_rates.fetch(:monday_through_thursday)
     # end
 
-    def today_rest_rates
-      daily_rates.each do |day|
-        day.fetch(:rest_rates)
-      end
+    def friday_rates
+      daily_rates.fetch(:friday)
     end
 
-    
+    # def saturday_rates
+    #   daily_rates.fetch(:saturday)
+    # end
+
+    # def sunday_rates
+    #   daily_rates.fetch(:sunday)
+    # end
+
+    # def holiday_rates
+    #   daily_rates.fetch(:holiday)
+    # end
+
+    def special_period_rates
+      special_periods.fetch(:obon)
+      special_periods.fetch(:golden_week)
+      special_periods.fetch(:the_new_years_holiday)
+    end
+
+    def build_special_periods(special_day:)
+      # {:obon=>[{:period=>1, :start_date=>"8月9日", :end_date=>"8月15日"}], :golden_week=>[{:period=>0, :start_date=>"5月2日", :end_date=>"5月10日"}], :the_new_years_holiday=>[{:period=>2, :start_date=>"12月25日", :end_date=>"1月4日"}]}
+      special_day.special_periods.build(period: special_period_rates[:period], start_date: special_period_rates[:start_date], end_date: special_period_rates[:end_date])
+    end
 end

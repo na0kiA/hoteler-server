@@ -43,10 +43,22 @@ RSpec.describe HotelForm, type: :model do
   describe 'models/hotel_form.rb #save' do
     let_it_be(:user) { create(:user) }
 
+    def fee_params
+      { rest_rates: [plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '1:00'], stay_rates: [plan: '宿泊1部', rate: 6980, first_time: '6:00', last_time: '11:00'] }
+    end
+
+    def today_rate_params(fee = fee_params)
+      { friday: fee, monday_through_thursday: fee, saturday: fee, sunday: fee, holiday: fee, special_days: fee }
+    end
+
+    def special_period_params
+      { obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }, golden_week: { period: 0, start_date: '2022-05-02', end_date: '2022-05-01' },
+        the_new_years_holiday: { period: 2, start_date: '2022-12-25', end_date: '2023-01-04' } }
+    end
+
     context '正常に保存ができる場合' do
       it 'paramsの値が正常で保存できること' do
-        json_params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
-                        friday: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } }, user_id: user.id }
+        json_params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: today_rate_params, special_periods: special_period_params, user_id: user.id }
 
         hotel_form = described_class.new(json_params)
 
@@ -54,18 +66,18 @@ RSpec.describe HotelForm, type: :model do
         expect {
           hotel_form.save
         }.to change(Hotel,
-                    :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(1).and change(RestRate, :count).by(1)
+                    :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(6).and change(RestRate, :count).by(6)
       end
     end
 
     context '特別期間の料金と日程を設定する場合' do
-      it 'special_peripdsテーブルにparamsを登録できること' do
+      it 'special_periodsテーブルにparamsを登録できること' do
         json_params = {
           name: '神戸北野',
           content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
           user_id: user.id,
-          friday: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } },
-          saturday: { rest_rates: { plan: '休憩90分', rate: 5980, first_time: '6:00', last_time: '24:00' } }
+          daily_rates: today_rate_params,
+          special_periods: special_period_params
         }
 
         hotel_form = described_class.new(json_params)
@@ -73,15 +85,14 @@ RSpec.describe HotelForm, type: :model do
         expect(hotel_form.save).to be true
         expect {
           hotel_form.save
-        }.to change(Hotel,
-                    :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(1).and change(RestRate, :count).by(1)
+        }.to change(SpecialPeriod, :count).by(1)
       end
     end
 
     context '正常に保存ができない場合' do
       it 'paramsの値が異常でnilが返ること' do
         invalid_params = { name: '', content: '', key: ['', ''],
-                           friday: { day: '', rest_rates: { plan: '', rate: '', first_time: '', last_time: '24:00' } }, user_id: user.id }
+                           daily_rates: { friday: { rest_rates: { plan: '', rate: '', first_time: '', last_time: '24:00' } } }, user_id: user.id }
 
         hotel_form = described_class.new(invalid_params)
 
@@ -90,8 +101,8 @@ RSpec.describe HotelForm, type: :model do
       end
 
       it 'rollbackされること' do
-        rollback_params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
-                            friday: { day: '金曜', rest_rates: { plan: '', rate: 3980, first_time: '6:00', last_time: '24:00' } }, user_id: user.id }
+        rollback_params = { name: '神戸北野坂', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
+                            daily_rates: '', user_id: user.id }
 
         hotel_form = described_class.new(rollback_params)
 
@@ -107,9 +118,9 @@ RSpec.describe HotelForm, type: :model do
     context '正常にjson_paramsをシンボルに変換できる場合' do
       it 'シンボルを返すこと' do
         json_params = { 'name' => '神戸三宮', 'content' => '2017年にリニューアルオープンしました', 'user_id' => user.id, 'key' => ['key1998'],
-                        'friday' => { 'day' => '土曜', 'rest_rates' => { 'plan' => '休憩90分', 'rate' => 4980, 'last_time' => '00:00', 'first_time' => '06:00' } } }
+                        'daily_rates' => { 'friday' => { 'rest_rates' => { 'plan' => '休憩90分', 'rate' => 4980, 'last_time' => '00:00', 'first_time' => '06:00' } } } }
         hotel_form = described_class.new(json_params)
-        expect(hotel_form.to_deep_symbol[:friday][:day]).to eq('土曜')
+        expect(hotel_form.to_deep_symbol[:daily_rates][:friday][:rest_rates][:plan]).to eq('休憩90分')
       end
     end
   end
