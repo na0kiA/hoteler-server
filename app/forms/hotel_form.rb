@@ -21,19 +21,24 @@ class HotelForm
     validates :user_id
   end
 
-  DAY_OF_WEEK = [monday_through_thursday: '月曜から木曜', friday: '金曜', saturday: '土曜', sunday: '日曜', holiday: '祝日'].freeze
+  DAY_OF_WEEK = %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間].freeze
 
   def save
     return if invalid?
-    p normal_period_rates
-    p special_period_rates
 
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
 
-      build_rest_rates_of_normal_days(hotel:)
-      build_special_periods(special_day: build_hotel_days(hotel:, today: '特別期間'))
+      # DAY_OF_WEEK.map do |day_of_week|
+        extracy_all_rest_rate_array.map do |val|
+          days = hotel.days.build(day: %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間])
+          3.times { |num|
+            days.rest_rates.build(plan:  val[num][:plan], rate: val[num][:rate], first_time: val[num][:first_time], last_time: val[num][:last_time])
+          }
+        end
+      # end
+
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -46,42 +51,40 @@ class HotelForm
 
   private
 
+    # 各曜日の休憩料金の数を算出する
+   # counting_rest_rate = [3, 3, 3, 3, 3, 3, 3]
+    def counting_rest_rate
+      normal_period_rates.map do |num|
+        num[:rest_rates].size
+      end
+    end
+
+    # 全ての休憩料金を配列で出力する
+    # [[{:plan=>"休憩90分", :rate=>3580, :first_time=>"6:00", :last_time=>"24:00"}, {:plan=>"休憩60分", :rate=>2580, :first_time=>"6:00", :last_time=>"19:00"}, {:plan=>"深夜休憩90分", :rate=>3580, :first_time=>"0:00", :last_time=>"5:00"}]...]
+    def extracy_all_rest_rate_array
+      normal_period_rates.pluck(:rest_rates)
+    end
+
+    def build_all_rest_rate(day:)
+      extracy_all_rest_rate_array.map do |val|
+        3.times { |num|
+        day.rest_rates.build(plan:  val[num][:plan], rate: val[num][:rate], first_time: val[num][:first_time], last_time: val[num][:last_time])
+        }
+      end
+    end
+
+
+
     def build_hotel_images(hotel:)
       JSON.parse(key).each do |val|
         hotel.hotel_images.build(key: val)
       end
     end
 
-    # 各曜日ごとに休憩料金をbuild
-    def build_rest_rates_of_normal_days(hotel:)
-      DAY_OF_WEEK.each do |day|
-        build_today_rest_rates(day_of_week: build_hotel_days(hotel:, today: day))
-      end
-    end
-
-    def build_today_rest_rates(day_of_week:)
-      day_of_week.rest_rates.build(plan: normal_period_rates[0][:plan], rate: normal_period_rates[0][:rate], first_time: normal_period_rates[0][:first_time], last_time: normal_period_rates[0][:last_time])
-    end
-
-    def build_hotel_days(hotel:, today:)
-      hotel.days.build(day: today)
-    end
-
-    def build_rest_rates
-      normal_period_rates.map do |each_rates|
-        each_rates
-      end
-    end
-
     def normal_period_rates
-      # [{:rest_rates=>[{:plan=>"休憩90分", :rate=>3980, :first_time=>"6:00", :last_time=>"1:00"}], :stay_rates=>[{:plan=>"宿泊1部", :rate=>6980, :first_time=>"6:00", :last_time=>"11:00"}]},
-      #  {:rest_rates=>[{:plan=>"休憩90分", :rate=>3980, :first_time=>"6:00", :last_time=>"1:00"}], :stay_rates=>[{:plan=>"宿泊1部", :rate=>6980, :first_time=>"6:00", :last_time=>"11:00"}]}, 
-      #  {:rest_rates=>[{:plan=>"休憩90分", :rate=>3980, :first_time=>"6:00", :last_time=>"1:00"}], :stay_rates=>[{:plan=>"宿泊1部", :rate=>6980, :first_time=>"6:00", :last_time=>"11:00"}]},
-      #   {:rest_rates=>[{:plan=>"休憩90分", :rate=>3980, :first_time=>"6:00", :last_time=>"1:00"}], :stay_rates=>[{:plan=>"宿泊1部", :rate=>6980, :first_time=>"6:00", :last_time=>"11:00"}]}, 
-      #   {:rest_rates=>[{:plan=>"休憩90分", :rate=>3980, :first_time=>"6:00", :last_time=>"1:00"}], :stay_rates=>[{:plan=>"宿泊1部", :rate=>6980, :first_time=>"6:00", :last_time=>"11:00"}]}]
-      daily_rates.values_at(:monday_through_thursday, :friday, :saturday, :sunday, :holiday)
+      daily_rates.values_at(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
     end
-    
+
     def special_period_rates
       special_periods.values_at(:obon, :golden_week, :the_new_years_holiday)
     end
