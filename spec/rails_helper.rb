@@ -41,5 +41,6 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include CustomValidatorHelper, type: :model
   config.include RequestSpecHelper
+  config.include HotelFormSpecHelper
   config.include ActiveSupport::Testing::TimeHelpers
 end
