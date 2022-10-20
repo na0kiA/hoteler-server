@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module HotelFormSpecHelper
-
   def daily_rate_params
-    {monday_through_thursday:, friday:, saturday:, sunday:, holiday:, day_before_a_holiday:, special_days: }
+    { monday_through_thursday:, friday:, saturday:, sunday:, holiday:, day_before_a_holiday:, special_days: }
   end
 
   def monday_through_thursday
@@ -84,13 +83,13 @@ module HotelFormSpecHelper
 
   def special_days
     { rest_rates: [
-      { plan: '休憩90分', rate: 4980, first_time: '6:00', last_time: '24:00' },
-      { plan: '休憩60分', rate: 3980, first_time: '6:00', last_time: '19:00' },
-      { plan: '深夜休憩90分', rate: 4980, first_time: '0:00', last_time: '5:00' }
+      { plan: '休憩90分', rate: 6980, first_time: '6:00', last_time: '24:00' },
+      { plan: '休憩60分', rate: 5980, first_time: '6:00', last_time: '19:00' },
+      { plan: '深夜休憩90分', rate: 5980, first_time: '0:00', last_time: '5:00' }
     ],
       start_rates: [
-        { plan: '宿泊1部', rate: 5980, first_time: '20:00', last_time: '11:00' },
-        { plan: '宿泊2部', rate: 7980, first_time: '22:00', last_time: '15:00' }
+        { plan: '宿泊1部', rate: 13_980, first_time: '20:00', last_time: '11:00' },
+        { plan: '宿泊2部', rate: 14_980, first_time: '22:00', last_time: '15:00' }
       ] }
   end
 

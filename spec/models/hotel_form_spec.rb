@@ -50,7 +50,7 @@ RSpec.describe HotelForm, type: :model do
         expect {
           described_class.new(json_params).save
         }.to change(Hotel,
-                    :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(7).and change(RestRate, :count).by(21)
+                    :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(7).and change(RestRate, :count).by(21).and change(SpecialPeriod, :count).by(3)
       end
     end
 
