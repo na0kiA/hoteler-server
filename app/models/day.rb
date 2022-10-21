@@ -5,5 +5,5 @@ class Day < ApplicationRecord
   has_many :rest_rates, dependent: :destroy
   has_many :special_periods, dependent: :destroy
 
-  validates :day, presence: true, length: { minimum: 10 }
+  validates :day, presence: true, length: { maximum: 10 }
 end
