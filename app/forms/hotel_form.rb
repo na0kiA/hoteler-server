@@ -29,8 +29,8 @@ class HotelForm
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
-      build_all_rest_rate(hotel:)
-      build_special_periods(hotel:)
+      each_rest_rate_quantity
+      build_all_rest_rate(days: build_all_day(hotel:))
 
       hotel.save!
     end
@@ -43,27 +43,47 @@ class HotelForm
   end
 
   private
-  
-      def build_hotel_images(hotel:)
-        JSON.parse(key).each do |val|
-          hotel.hotel_images.build(key: val)
-        end
+
+    def build_hotel_images(hotel:)
+      JSON.parse(key).each do |val|
+        hotel.hotel_images.build(key: val)
       end
+    end
 
     def build_all_day(hotel:)
-      hotel.days.build(day: %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間])
+      hotel.days.build([{ day: '月曜から木曜' }, { day: '金曜' }, { day: '土曜' }, { day: '日曜' }, { day: '祝日' }, { day: '祝前日' }, { day: '特別期間' }])
     end
 
-    def build_all_rest_rate(hotel:)
-      extracy_all_rest_rate_array.map do |val|
-        days = build_all_day(hotel:)
-        val.size.times do |num|
-          days.rest_rates.build(plan: val[num][:plan], rate: val[num][:rate], first_time: val[num][:first_time], last_time: val[num][:last_time])
-        end
+    def each_rest_rate_quantity
+      arr = []
+      extract_all_rest_rate_array.map do |every_day|
+        every_day.map { |val| arr << val}
+      end
+      arr
+    end
+
+    def build_all_rest_rate(days:)
+      extract_all_rest_rate_array.map do |val|
+        3.times { |num|
+          days.map do |day|
+            day.rest_rates.build(plan: val[num][:plan], rate: val[num][:rate], first_time: val[num][:first_time], last_time: val[num][:last_time])
+          end
+          }
       end
     end
 
-    def extracy_all_rest_rate_array
+    # def build_all_rest_rate(days:)
+    #   extract_all_rest_rate_array.map do |val|
+    #     each_rest_rate_quantity.map do |num|
+    #       days.map do |day|
+    #         p day
+    #         day.rest_rates.build(plan: val[num][:plan], rate: val[num][:rate], first_time: val[num][:first_time], last_time: val[num][:last_time])
+    #       end
+    #     end
+    #   end
+    # end
+
+    def extract_all_rest_rate_array
       normal_period_rates.pluck(:rest_rates)
     end
 
@@ -71,16 +91,14 @@ class HotelForm
       daily_rates.values_at(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
     end
 
-    def special_period_rates
+    def special_day_array
       special_periods.values_at(:obon, :golden_week, :the_new_years_holiday)
     end
 
-    # [{:period=>1, :start_date=>"2022-08-08", :end_date=>"2022-08-15"}, {:period=>0, :start_date=>"2022-05-02", :end_date=>"2022-05-01"}, {:period=>2, :start_date=>"2022-12-25", :end_date=>"2023-01-04"}]
-
     def build_special_periods(hotel:)
-      special_period_rates.map do |val|
+      special_day_array.map do |val|
         special_day = hotel.days.build(day: '特別期間')
-          special_day.special_periods.build(period: val[:period], start_date: val[:start_date], end_date: val[:end_date])
+        special_day.special_periods.build(period: val[:period], start_date: val[:start_date], end_date: val[:end_date])
       end
     end
 end
