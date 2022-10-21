@@ -42,43 +42,47 @@ RSpec.describe HotelForm, type: :model do
 
   describe 'models/hotel_form.rb #save' do
     let_it_be(:user) { create(:user) }
-    # let_it_be(:json_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: user.id } }
+    let_it_be(:json_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: user.id } }
     
     context '全ての値が保存できる場合' do
-      it 'Hotelが1個、HotelImageが2個、Dayが7個、RestRateが21個更新されること' do
-        json_params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: user.id }
 
-        expect(described_class.new(json_params).save).to be_truthy
+      it 'Hotelが1個、HotelImageが2個、Dayが7個、RestRateが21個更新されること' do
+        hotel_form = described_class.new(json_params)
+        expect(hotel_form.save).to be_truthy
         expect {
-          described_class.new(json_params).save
+          hotel_form.save
         }.to change(Hotel,
                     :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(7).and change(RestRate, :count).by(21)
       end
 
-      # it '特別期間の料金が保存されていること' do
-        # described_class.new(json_params).save
-        # expect(Day.pluck(:day)).to eq("s")
-      # end
+      it '特別期間の料金が3つ保存されていること' do
+        described_class.new(json_params).save
+        expect(RestRate.where(day_id: Day.where(day: '特別期間')).length).to eq(3)
+      end
     end
 
-    # context '特別期間の料金と日程を設定する場合' do
-    #   it 'special_periodsテーブルにparamsを登録できること' do
-    #     json_params = {
-    #       name: '神戸北野',
-    #       content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
-    #       user_id: user.id,
-    #       daily_rates: today_rate_params,
-    #       special_periods: special_period_params
-    #     }
+    context '特別期間の料金と日程を設定する場合' do
+      it '特別期間を3つ登録できること' do
+        hotel_form = described_class.new(json_params)
+        expect(hotel_form.save).to be_truthy
+        expect {
+          hotel_form.save
+        }.to change(SpecialPeriod, :count).by(3)
+      end
 
-    #     hotel_form = described_class.new(json_params)
+      it '登録した特別期間3つとも、同じday_idを持つこと' do
+        described_class.new(json_params).save
+        special_period_day_ids = SpecialPeriod.eager_load(:day).pluck(:day_id)
+        day_id = SpecialPeriod.eager_load(:day).pick(:day_id)
+        expect(special_period_day_ids).to eq([day_id, day_id, day_id])
+      end
 
-    #     expect(hotel_form.save).to be true
-    #     expect {
-    #       hotel_form.save
-    #     }.to change(SpecialPeriod, :count).by(1)
-    #   end
-    # end
+      it 'GWとお盆と年末年始の特別期間が登録されていること' do
+        described_class.new(json_params).save
+        special_period_date = SpecialPeriod.eager_load(:day).pluck(:period)
+        expect(special_period_date).to eq("s")
+      end
+    end
 
     context '正常に保存ができない場合' do
       it 'paramsの値が異常でnilが返ること' do
