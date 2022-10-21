@@ -21,17 +21,21 @@ class HotelForm
     validates :user_id
   end
 
-  DAY_OF_WEEK = %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間].freeze
-
   def save
     return if invalid?
 
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
-      each_rest_rate_quantity
-      build_all_rest_rate(days: build_all_day(hotel:))
 
+      build_monday_through_thursday_rest_rates(day: hotel.days.build(day: '月曜から木曜'))
+      build_friday_rest_rates(day: hotel.days.build(day: '金曜'))
+      build_saturday_rest_rates(day: hotel.days.build(day: '土曜'))
+      build_sunday_rest_rates(day: hotel.days.build(day: '日曜'))
+      build_holiday_rest_rates(day: hotel.days.build(day: '祝日'))
+      build_day_before_a_holiday_rest_rates(day: hotel.days.build(day: '祝前日'))
+      build_special_day_rest_rates(day: hotel.days.build(day: '特別期間'))
+      # binding.break
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -50,44 +54,85 @@ class HotelForm
       end
     end
 
-    def build_all_day(hotel:)
-      hotel.days.build([{ day: '月曜から木曜' }, { day: '金曜' }, { day: '土曜' }, { day: '日曜' }, { day: '祝日' }, { day: '祝前日' }, { day: '特別期間' }])
-    end
-
-    def each_rest_rate_quantity
-      arr = []
-      extract_all_rest_rate_array.map do |every_day|
-        every_day.map { |val| arr << val}
-      end
-      arr
-    end
-
-    def build_all_rest_rate(days:)
-      extract_all_rest_rate_array.map do |val|
-        3.times { |num|
-          days.map do |day|
-            day.rest_rates.build(plan: val[num][:plan], rate: val[num][:rate], first_time: val[num][:first_time], last_time: val[num][:last_time])
-          end
-          }
+    def build_monday_through_thursday_rest_rates(day:)
+      monday_through_thursday_rest_rate.size.times do |val|
+        day.rest_rates.build(plan: monday_through_thursday_rest_rate[val][:plan], rate: monday_through_thursday_rest_rate[val][:rate], first_time: monday_through_thursday_rest_rate[val][:first_time],
+                             last_time: monday_through_thursday_rest_rate[val][:last_time])
       end
     end
 
-    # def build_all_rest_rate(days:)
-    #   extract_all_rest_rate_array.map do |val|
-    #     each_rest_rate_quantity.map do |num|
-    #       days.map do |day|
-    #         p day
-    #         day.rest_rates.build(plan: val[num][:plan], rate: val[num][:rate], first_time: val[num][:first_time], last_time: val[num][:last_time])
-    #       end
-    #     end
-    #   end
-    # end
+    def build_friday_rest_rates(day:)
+      friday_rest_rate.size.times do |val|
+        day.rest_rates.build(plan: friday_rest_rate[val][:plan], rate: friday_rest_rate[val][:rate], first_time: friday_rest_rate[val][:first_time], last_time: friday_rest_rate[val][:last_time])
+      end
+    end
+
+    def build_saturday_rest_rates(day:)
+      saturday_rest_rate.size.times do |val|
+        day.rest_rates.build(plan: saturday_rest_rate[val][:plan], rate: saturday_rest_rate[val][:rate], first_time: saturday_rest_rate[val][:first_time],
+                             last_time: saturday_rest_rate[val][:last_time])
+      end
+    end
+
+    def build_sunday_rest_rates(day:)
+      sunday_rest_rate.size.times do |val|
+        day.rest_rates.build(plan: sunday_rest_rate[val][:plan], rate: sunday_rest_rate[val][:rate], first_time: sunday_rest_rate[val][:first_time], last_time: sunday_rest_rate[val][:last_time])
+      end
+    end
+
+    def build_holiday_rest_rates(day:)
+      holiday_rest_rate.size.times do |val|
+        day.rest_rates.build(plan: holiday_rest_rate[val][:plan], rate: holiday_rest_rate[val][:rate], first_time: holiday_rest_rate[val][:first_time], last_time: holiday_rest_rate[val][:last_time])
+      end
+    end
+
+    def build_day_before_a_holiday_rest_rates(day:)
+      day_before_a_holiday_rest_rate.size.times do |val|
+        day.rest_rates.build(plan: day_before_a_holiday_rest_rate[val][:plan], rate: day_before_a_holiday_rest_rate[val][:rate], first_time: day_before_a_holiday_rest_rate[val][:first_time],
+                             last_time: day_before_a_holiday_rest_rate[val][:last_time])
+      end
+    end
+
+    def build_special_day_rest_rates(day:)
+      special_day_rest_rate.size.times do |val|
+        day.rest_rates.build(plan: special_day_rest_rate[val][:plan], rate: special_day_rest_rate[val][:rate], first_time: special_day_rest_rate[val][:first_time],
+                             last_time: special_day_rest_rate[val][:last_time])
+      end
+    end
+
+    def monday_through_thursday_rest_rate
+      daily_rates.dig(:monday_through_thursday, :rest_rates)
+    end
+
+    def friday_rest_rate
+      daily_rates.dig(:friday, :rest_rates)
+    end
+
+    def saturday_rest_rate
+      daily_rates.dig(:saturday, :rest_rates)
+    end
+
+    def sunday_rest_rate
+      daily_rates.dig(:sunday, :rest_rates)
+    end
+
+    def holiday_rest_rate
+      daily_rates.dig(:holiday, :rest_rates)
+    end
+
+    def day_before_a_holiday_rest_rate
+      daily_rates.dig(:day_before_a_holiday, :rest_rates)
+    end
+
+    def special_day_rest_rate
+      daily_rates.dig(:special_days, :rest_rates)
+    end
 
     def extract_all_rest_rate_array
-      normal_period_rates.pluck(:rest_rates)
+      normal_period_array.pluck(:rest_rates)
     end
 
-    def normal_period_rates
+    def normal_period_array
       daily_rates.values_at(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
     end
 

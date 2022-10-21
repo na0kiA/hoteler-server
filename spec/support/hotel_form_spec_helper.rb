@@ -37,7 +37,7 @@ module HotelFormSpecHelper
       { plan: '休憩60分', rate: 3980, first_time: '6:00', last_time: '19:00' },
       { plan: '深夜休憩90分', rate: 4980, first_time: '0:00', last_time: '5:00' }
     ],
-      start_rates: [
+      stay_rates: [
         { plan: '宿泊1部', rate: 5980, first_time: '20:00', last_time: '11:00' },
         { plan: '宿泊2部', rate: 7980, first_time: '22:00', last_time: '15:00' }
       ] }
@@ -75,7 +75,7 @@ module HotelFormSpecHelper
       { plan: '休憩60分', rate: 3980, first_time: '6:00', last_time: '19:00' },
       { plan: '深夜休憩90分', rate: 4980, first_time: '0:00', last_time: '5:00' }
     ],
-      start_rates: [
+      stay_rates: [
         { plan: '宿泊1部', rate: 5980, first_time: '20:00', last_time: '11:00' },
         { plan: '宿泊2部', rate: 7980, first_time: '22:00', last_time: '15:00' }
       ] }
@@ -87,7 +87,7 @@ module HotelFormSpecHelper
       { plan: '休憩60分', rate: 5980, first_time: '6:00', last_time: '19:00' },
       { plan: '深夜休憩90分', rate: 5980, first_time: '0:00', last_time: '5:00' }
     ],
-      start_rates: [
+      stay_rates: [
         { plan: '宿泊1部', rate: 13_980, first_time: '20:00', last_time: '11:00' },
         { plan: '宿泊2部', rate: 14_980, first_time: '22:00', last_time: '15:00' }
       ] }

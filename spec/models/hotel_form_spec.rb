@@ -42,16 +42,23 @@ RSpec.describe HotelForm, type: :model do
 
   describe 'models/hotel_form.rb #save' do
     let_it_be(:user) { create(:user) }
-
+    # let_it_be(:json_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: user.id } }
+    
     context '全ての値が保存できる場合' do
       it 'Hotelが1個、HotelImageが2個、Dayが7個、RestRateが21個更新されること' do
         json_params = { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: user.id }
 
+        expect(described_class.new(json_params).save).to be_truthy
         expect {
           described_class.new(json_params).save
         }.to change(Hotel,
-                    :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(7).and change(RestRate, :count).by(21).and change(SpecialPeriod, :count).by(3)
+                    :count).by(1).and change(HotelImage, :count).by(2).and change(Day, :count).by(7).and change(RestRate, :count).by(21)
       end
+
+      # it '特別期間の料金が保存されていること' do
+        # described_class.new(json_params).save
+        # expect(Day.pluck(:day)).to eq("s")
+      # end
     end
 
     # context '特別期間の料金と日程を設定する場合' do
