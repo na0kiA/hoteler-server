@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HashParser
   attr_accessor :nodes
 
@@ -8,11 +10,12 @@ class HashParser
   end
 
   def recursive_parse(parent)
-    if parent.is_a?(Array)
+    case parent
+    when Array
       parent.each_with_index do |index, key|
         add_node(key, index)
       end
-    elsif parent.is_a?(Hash)
+    when Hash
       parent.each do |key, val|
         add_node(key, val)
       end
@@ -23,8 +26,8 @@ class HashParser
   def add_node(key, val)
     @key_path << key
     node = {
-      key: key,
-      val: val,
+      key:,
+      val:,
       key_path: @key_path.clone
     }
     @nodes << node

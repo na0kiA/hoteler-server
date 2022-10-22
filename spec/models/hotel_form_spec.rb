@@ -42,12 +42,11 @@ RSpec.describe HotelForm, type: :model do
 
   describe 'models/hotel_form.rb #save' do
     let_it_be(:user) { create(:user) }
-    let_it_be(:json_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: user.id } }
-    
-    context '全ての値が保存できる場合' do
+    let_it_be(:hotel_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: user.id } }
 
+    context '全ての値が保存できる場合' do
       it 'Hotelが1個、HotelImageが2個、Dayが7個、RestRateが21個更新されること' do
-        hotel_form = described_class.new(json_params)
+        hotel_form = described_class.new(hotel_params)
         expect(hotel_form.save).to be_truthy
         expect {
           hotel_form.save
@@ -56,14 +55,14 @@ RSpec.describe HotelForm, type: :model do
       end
 
       it '特別期間の料金が3つ保存されていること' do
-        described_class.new(json_params).save
+        described_class.new(hotel_params).save
         expect(RestRate.where(day_id: Day.where(day: '特別期間')).length).to eq(3)
       end
     end
 
     context '特別期間の料金と日程を設定する場合' do
       it '特別期間を3つ登録できること' do
-        hotel_form = described_class.new(json_params)
+        hotel_form = described_class.new(hotel_params)
         expect(hotel_form.save).to be_truthy
         expect {
           hotel_form.save
@@ -71,16 +70,30 @@ RSpec.describe HotelForm, type: :model do
       end
 
       it '登録した特別期間3つとも、同じday_idを持つこと' do
-        described_class.new(json_params).save
+        described_class.new(hotel_params).save
         special_period_day_ids = SpecialPeriod.eager_load(:day).pluck(:day_id)
         day_id = SpecialPeriod.eager_load(:day).pick(:day_id)
         expect(special_period_day_ids).to eq([day_id, day_id, day_id])
       end
 
       it 'GWとお盆と年末年始の特別期間が登録されていること' do
-        described_class.new(json_params).save
+        described_class.new(hotel_params).save
         special_period_date = SpecialPeriod.eager_load(:day).pluck(:period)
-        expect(special_period_date).to eq("s")
+        expect(special_period_date).to eq(%w[obon golden_week the_new_years_holiday])
+      end
+    end
+
+    context '特別期間の料金を設定しない場合' do
+      let_it_be(:test)  {{ obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }, golden_week: { period: 0, start_date: '2022-05-02', end_date: '2022-05-01' }, the_new_years_holiday: { period: 2, start_date: '2022-12-25', end_date: '2023-01-04' } }
+
+      let_it_be(:no_special_periods) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: test, user_id: user.id } }
+      
+      it 'ホテルを登録できること' do
+        hotel_form = described_class.new(hotel_params)
+        expect(hotel_form.save).to be_truthy
+        expect {
+          hotel_form.save
+        }.to change(SpecialPeriod, :count).by(3)
       end
     end
 

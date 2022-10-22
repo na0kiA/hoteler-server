@@ -109,6 +109,7 @@ class HotelForm
 
     def build_special_periods(special_day:)
       special_day_array.map do |val|
+        Rails.logger.debug val[:period]
         special_day.special_periods.build(period: val[:period], start_date: val[:start_date], end_date: val[:end_date])
       end
     end
