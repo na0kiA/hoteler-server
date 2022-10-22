@@ -92,7 +92,7 @@ RSpec.describe HotelForm, type: :model do
 
     context '特別期間を1個だけ設定する場合' do
       let_it_be(:no_special_period_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, user_id: user.id } }
-      let_it_be(:obon) { {special_periods: {obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }} }}
+      let_it_be(:obon) { { special_periods: { obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' } } } }
 
       it '特別期間を1個だけ保存できること' do
         described_class.new(no_special_period_params.merge(obon)).save
@@ -103,15 +103,18 @@ RSpec.describe HotelForm, type: :model do
 
     context '特別期間を2個設定する場合' do
       let_it_be(:no_special_period_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, user_id: user.id } }
-      let_it_be(:two_special_periods) { {special_periods: { obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }, the_new_years_holiday: { period: 2, start_date: '2022-12-25', end_date: '2023-01-04' } } }}
+      let_it_be(:two_special_periods) {
+        { special_periods: { obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }, the_new_years_holiday: { period: 2, start_date: '2022-12-25', end_date: '2023-01-04' } } }
+      }
 
       it '特別期間を2個保存できること' do
         described_class.new(no_special_period_params.merge(two_special_periods)).save
         start_date = SpecialPeriod.eager_load(:day).pluck(:start_date)
         expect(start_date.length).to eq(2)
+        expect(I18n.l(start_date[0])).to eq('08/08')
+        expect(I18n.l(start_date[1])).to eq('12/25')
       end
     end
-
 
     context '特別期間の料金を設定しない場合' do
       let_it_be(:no_special_period_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, user_id: user.id } }

@@ -28,10 +28,9 @@ class HotelForm
     ActiveRecord::Base.transaction do
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
-      build_all_rest_rate(hotel:)
-      build_special_days_rate(hotel:)
+      build_normal_period_rest_rates(hotel:)
+      build_special_period_rest_rate(hotel:)
       hotel.save!
-      p each_rest_rate_array.friday
     end
   rescue ActiveRecord::RecordInvalid
     false
@@ -53,55 +52,71 @@ class HotelForm
       daily_rates.values_at(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
     end
 
-    DailyRate = Struct.new(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday)
+    DailyRate = Struct.new(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
 
-    def each_rest_rate_array
-      arr = []
-      normal_period_array.map do |period|
-        arr << period.fetch(:rest_rates)
+    def rest_rate_struct
+      arr = normal_period_array.map do |period|
+        period.fetch(:rest_rates)
       end
-      DailyRate.new(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5])
+      DailyRate.new(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6])
     end
 
-
-
-    def build_rest_rate(day:, each_rest_rate:)
-      day.rest_rates.build(plan: each_rest_rate[:plan], rate: each_rest_rate[:rate], first_time: each_rest_rate[:first_time], last_time: each_rest_rate[:last_time])
+    def build_normal_period_rest_rates(hotel:)
+      monday_through_thursday, friday, saturday, sunday, holiday, day_before_a_holiday = hotel.days.build([{ day: '月曜から木曜' }, { day: '金曜' }, { day: '土曜' }, { day: '日曜' }, { day: '祝日' },
+                                                                                                           { day: '祝前日' }])
+      build_monday_through_thursday_rest_rate(day: monday_through_thursday)
+      build_friday_rest_rate(day: friday)
+      build_saturday_rest_rate(day: saturday)
+      build_sunday_rest_rate(day: sunday)
+      build_holiday_rest_rate(day: holiday)
+      build_day_before_a_holiday_rest_rate(day: day_before_a_holiday)
     end
 
-    def build_all_rest_rate(hotel:)
-      monday_through_thursday, friday, saturday, sunday, holiday, day_before_a_holiday = hotel.days.build([{ day: '月曜から木曜' }, { day: '金曜' }, { day: '土曜' }, { day: '日曜' }, { day: '祝日' }, { day: '祝前日' }])
+    def build_rest_rate(day:, a_rest_rate:)
+      day.rest_rates.build(plan: a_rest_rate[:plan], rate: a_rest_rate[:rate], first_time: a_rest_rate[:first_time], last_time: a_rest_rate[:last_time])
+    end
 
-      daily_rates.dig(:monday_through_thursday, :rest_rates).map do |each_rest_rate|
-        build_rest_rate(day: monday_through_thursday, each_rest_rate:)
-      end
-
-      daily_rates.dig(:friday, :rest_rates).map do |each_rest_rate|
-        build_rest_rate(day: friday, each_rest_rate:)
-      end
-
-      daily_rates.dig(:saturday, :rest_rates).map do |each_rest_rate|
-        build_rest_rate(day: saturday, each_rest_rate:)
-      end
-
-      daily_rates.dig(:sunday, :rest_rates).map do |each_rest_rate|
-        build_rest_rate(day: sunday, each_rest_rate:)
-      end
-
-      daily_rates.dig(:holiday, :rest_rates).map do |each_rest_rate|
-        build_rest_rate(day: holiday, each_rest_rate:)
-      end
-
-      daily_rates.dig(:day_before_a_holiday, :rest_rates).map do |each_rest_rate|
-        build_rest_rate(day: day_before_a_holiday, each_rest_rate:)
+    def build_monday_through_thursday_rest_rate(day:)
+      rest_rate_struct.monday_through_thursday.map do |a_rest_rate|
+        build_rest_rate(day:, a_rest_rate:)
       end
     end
 
-    def build_special_days_rate(hotel:)
+    def build_friday_rest_rate(day:)
+      rest_rate_struct.friday.map do |a_rest_rate|
+        build_rest_rate(day:, a_rest_rate:)
+      end
+    end
+
+    def build_saturday_rest_rate(day:)
+      rest_rate_struct.saturday.map do |a_rest_rate|
+        build_rest_rate(day:, a_rest_rate:)
+      end
+    end
+
+    def build_sunday_rest_rate(day:)
+      rest_rate_struct.sunday.map do |a_rest_rate|
+        build_rest_rate(day:, a_rest_rate:)
+      end
+    end
+
+    def build_holiday_rest_rate(day:)
+      rest_rate_struct.holiday.map do |a_rest_rate|
+        build_rest_rate(day:, a_rest_rate:)
+      end
+    end
+
+    def build_day_before_a_holiday_rest_rate(day:)
+      rest_rate_struct.day_before_a_holiday.map do |a_rest_rate|
+        build_rest_rate(day:, a_rest_rate:)
+      end
+    end
+
+    def build_special_period_rest_rate(hotel:)
       day = hotel.days.build(day: '特別期間')
       build_special_periods(special_day: day)
-      daily_rates.dig(:special_days, :rest_rates).map do |each_rest_rate|
-        build_rest_rate(day:, each_rest_rate:)
+      rest_rate_struct.special_days.map do |a_rest_rate|
+        build_rest_rate(day:, a_rest_rate:)
       end
     end
 
@@ -115,6 +130,8 @@ class HotelForm
       return if special_periods.blank?
 
       special_day_array.map do |val|
+        next if val.nil?
+
         special_day.special_periods.build(period: val[:period], start_date: val[:start_date], end_date: val[:end_date])
       end
     end
