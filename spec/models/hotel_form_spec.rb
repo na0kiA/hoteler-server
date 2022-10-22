@@ -1,21 +1,20 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-# TODO: saveメソッドのテストが未完成
 
 RSpec.describe HotelForm, type: :model do
   describe 'models/hotel_form.rb #validation' do
     let_it_be(:user) { create(:user) }
 
     context '入力値が正常な場合' do
-      it 'nameとcontentとhotel_imagesがあれば正常なこと' do
-        params = { name: 'Hotel Kobe', content: 'このホテルは北野坂で最近できたホテルで..', key: ['upload/test', 'upload/test2'], user_id: user.id }
+      it 'name, content, hotel_images, daily_ratesのparamsがあること' do
+        params = { name: 'Hotel Kobe', content: 'このホテルは北野坂で最近できたホテルで..', key: ['upload/test', 'upload/test2'], daily_rates: daily_rate_params, user_id: user.id }
         hotel_form = described_class.new(attributes: params, user_id: user.id)
         expect(hotel_form).to be_valid
       end
 
       it 'nameが50文字、contentが2000文字入力できること' do
-        max_length_params = { name: 'Hotel' * 10, content: 'Hotel' * 400, key: ['upload/test', 'upload/test2'], user_id: user.id }
+        max_length_params = { name: 'Hotel' * 10, content: 'Hotel' * 400, key: ['upload/test', 'upload/test2'], daily_rates: daily_rate_params, user_id: user.id }
         hotel_form = described_class.new(attributes: max_length_params, user_id: user.id)
         expect(hotel_form).to be_valid
       end
@@ -23,7 +22,7 @@ RSpec.describe HotelForm, type: :model do
 
     context '入力値が異常な場合' do
       it 'nameとcontentが無ければエラーを返すこと' do
-        nil_params = { name: '', content: '', key: ['upload/test', 'upload/test2'], user_id: user.id }
+        nil_params = { name: '', content: '', key: ['upload/test', 'upload/test2'], daily_rates: daily_rate_params, user_id: user.id }
         hotel_form = described_class.new(attributes: nil_params, user_id: user.id)
         hotel_form.valid?
         expect(hotel_form).to be_invalid
@@ -32,7 +31,7 @@ RSpec.describe HotelForm, type: :model do
       end
 
       it 'nameが51文字、contentが2001文字入力できないこと' do
-        too_length_params = { name: "#{'Hotel' * 10}1", content: "#{'Hotel' * 400}1", key: ['upload/test', 'upload/test2'], user_id: user.id }
+        too_length_params = { name: "#{'Hotel' * 10}1", content: "#{'Hotel' * 400}1", key: ['upload/test', 'upload/test2'], daily_rates: daily_rate_params, user_id: user.id }
         hotel_form = described_class.new(attributes: too_length_params, user_id: user.id)
         hotel_form.valid?
         expect(hotel_form).to be_invalid
@@ -81,42 +80,69 @@ RSpec.describe HotelForm, type: :model do
         special_period_date = SpecialPeriod.eager_load(:day).pluck(:period)
         expect(special_period_date).to eq(%w[obon golden_week the_new_years_holiday])
       end
-    end
 
-    context '特別期間の料金を設定しない場合' do
-      let_it_be(:test)  {{ obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }, golden_week: { period: 0, start_date: '2022-05-02', end_date: '2022-05-01' }, the_new_years_holiday: { period: 2, start_date: '2022-12-25', end_date: '2023-01-04' } }
-
-      let_it_be(:no_special_periods) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: test, user_id: user.id } }
-      
-      it 'ホテルを登録できること' do
-        hotel_form = described_class.new(hotel_params)
-        expect(hotel_form.save).to be_truthy
-        expect {
-          hotel_form.save
-        }.to change(SpecialPeriod, :count).by(3)
+      it '特別期間の開始日付が登録されていること' do
+        described_class.new(hotel_params).save
+        obon, golden_week, the_new_years_holiday = SpecialPeriod.eager_load(:day).pluck(:start_date)
+        expect(I18n.l(obon)).to eq('08/08')
+        expect(I18n.l(golden_week)).to eq('05/02')
+        expect(I18n.l(the_new_years_holiday)).to eq('12/25')
       end
     end
 
-    context '正常に保存ができない場合' do
-      it 'paramsの値が異常でnilが返ること' do
-        invalid_params = { name: '', content: '', key: ['', ''],
-                           daily_rates: { friday: { rest_rates: { plan: '', rate: '', first_time: '', last_time: '24:00' } } }, user_id: user.id }
+    context '特別期間を1個だけ設定する場合' do
+      let_it_be(:no_special_period_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, user_id: user.id } }
+      let_it_be(:obon) { {special_periods: {obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }} }}
 
+      it '特別期間を1個だけ保存できること' do
+        described_class.new(no_special_period_params.merge(obon)).save
+        start_date = SpecialPeriod.eager_load(:day).pluck(:start_date)
+        expect(start_date.length).to eq(1)
+      end
+    end
+
+    context '特別期間を2個設定する場合' do
+      let_it_be(:no_special_period_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, user_id: user.id } }
+      let_it_be(:two_special_periods) { {special_periods: { obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }, the_new_years_holiday: { period: 2, start_date: '2022-12-25', end_date: '2023-01-04' } } }}
+
+      it '特別期間を2個保存できること' do
+        described_class.new(no_special_period_params.merge(two_special_periods)).save
+        start_date = SpecialPeriod.eager_load(:day).pluck(:start_date)
+        expect(start_date.length).to eq(2)
+      end
+    end
+
+
+    context '特別期間の料金を設定しない場合' do
+      let_it_be(:no_special_period_params) { { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, user_id: user.id } }
+
+      it 'ホテルを登録できるが、特別期間は登録されないこと' do
+        hotel_form = described_class.new(no_special_period_params)
+        expect {
+          hotel_form.save
+        }.to change(Hotel, :count).by(1)
+        expect {
+          hotel_form.save
+        }.not_to change(SpecialPeriod, :count)
+      end
+    end
+
+    context 'name,content,keyを入力していない場合' do
+      it 'ホテルを保存されないこと' do
+        invalid_params = { name: '', content: '', key: ['', ''], user_id: user.id }
         hotel_form = described_class.new(invalid_params)
-
         expect(hotel_form.save).to be_nil
         expect { hotel_form.save }.not_to change(Hotel, :count)
       end
+    end
 
-      # it 'rollbackされること' do
-      #   rollback_params = { name: '神戸北野坂', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998],
-      #                       daily_rates: '', user_id: user.id }
-
-      #   hotel_form = described_class.new(rollback_params)
-
-      #   expect(hotel_form.save).to be_nil
-      #   # expect { hotel_form.save }.not_to change(Hotel, :count)
-      # end
+    context '料金を入力していない場合' do
+      it 'ホテルが保存されずにrollbackされること' do
+        rollback_params = { name: '神戸北野坂', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], user_id: user.id }
+        hotel_form = described_class.new(rollback_params)
+        expect(hotel_form.save).to be_nil
+        expect { hotel_form.save }.not_to change(Hotel, :count)
+      end
     end
   end
 
