@@ -52,10 +52,6 @@ module V1
         @hotel.present? && @hotel.user.id == current_v1_user.id
       end
 
-      # def hotel_params
-      #   params.require(:hotel).permit(:name, :content, daily_rates: today_rate, special_periods: { period: [], start_date: [], end_date: [] }, key: []).merge(user_id: current_v1_user.id)
-      # end
-
       def hotel_params
         params.require(:hotel).permit(:name, :content, daily_rates: daily_rate_params, special_periods: special_period_params, key: []).merge(user_id: current_v1_user.id)
       end
@@ -65,11 +61,11 @@ module V1
       end
 
       def fee_params
-        { rest_rates: %i[plan rate first_time last_time], stay_rates: %i[plan rate first_time last_time] }
+        { rest_rates: %i[plan rate first_time last_time] }
       end
 
       def daily_rate_params(fee = fee_params)
-        { friday: fee, monday_through_thursday: fee, saturday: fee, sunday: fee, holiday: fee, day_before_a_holiday: fee, special_days: fee }
+        { monday_through_thursday: fee, friday: fee, saturday: fee, sunday: fee, holiday: fee, day_before_a_holiday: fee, special_days: fee }
       end
 
       def set_hotel

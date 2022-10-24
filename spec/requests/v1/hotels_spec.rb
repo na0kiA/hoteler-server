@@ -41,11 +41,10 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
     let_it_be(:day) { create(:day, hotel_id: accepted_hotel.id) }
     let_it_be(:rest_rate) { create(:rest_rate, day_id: day.id) }
+    let_it_be(:edited_params) { { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } } }
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        let_it_be(:edited_params) { { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } } }
-
         patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
 
         expect(response).to have_http_status :ok
