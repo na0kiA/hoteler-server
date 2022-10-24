@@ -94,7 +94,7 @@ module HotelFormSpecHelper
   end
 
   def special_period_params
-    { obon: { period: 1, start_date: '2022-08-08', end_date: '2022-08-15' }, golden_week: { period: 0, start_date: '2022-05-02', end_date: '2022-05-01' },
-      the_new_years_holiday: { period: 2, start_date: '2022-12-25', end_date: '2023-01-04' } }
+    { obon: { period: 'obon', start_date: '2022-08-08', end_date: '2022-08-15' }, golden_week: { period: 'golden_week', start_date: '2022-05-02', end_date: '2022-05-01' },
+      the_new_years_holiday: { period: 'the_new_years_holiday', start_date: '2022-12-25', end_date: '2023-01-04' } }
   end
 end

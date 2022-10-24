@@ -6,12 +6,10 @@ RSpec.describe 'V1::Hotels', type: :request do
   describe 'POST /v1/hotels - v1/hotels#create' do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
+    let_it_be(:params) { { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } } }
 
     context 'ログインしている場合' do
       it 'ホテルの投稿ができること' do
-        params = { hotel: { name: 'hotelName', content: 'Kobe Kitanosaka is location', key: ['upload/test'],
-                            friday_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } } } }
-
         expect do
           post v1_hotels_path, params:, headers: auth_tokens
         end.to change(Hotel.all, :count).by(1)
@@ -21,7 +19,6 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしていない場合' do
       it 'ホテルの投稿ができないこと' do
-        params = { hotel: { name: 'hotelName', content: 'hotelContent', key: ['upload/test'] } }
         post v1_hotels_path, params: params, headers: nil
         expect(response).to have_http_status(:unauthorized)
         expect(response.message).to include('Unauthorized')
@@ -47,8 +44,7 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        edited_params = { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: ['upload/test'],
-                                   friday_rates: { day: '金曜', rest_rates: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' } } } }
+        let_it_be(:edited_params) { { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } } }
 
         patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
 
@@ -158,8 +154,6 @@ RSpec.describe 'V1::Hotels', type: :request do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        p response
-        p response_body
         expect(response_body[:name]).to include('hotel')
         expect(response_body.length).to eq 7
       end

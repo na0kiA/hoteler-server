@@ -22,6 +22,8 @@ class HotelForm
     validates :daily_rates
   end
 
+  DAY_OF_THE_WEEK = [{ day: '月曜から木曜' }, { day: '金曜' }, { day: '土曜' }, { day: '日曜' }, { day: '祝日' }, { day: '祝前日' }].freeze
+
   def save
     return if invalid?
 
@@ -29,7 +31,8 @@ class HotelForm
       hotel = Hotel.new(name:, content:, user_id:)
       build_hotel_images(hotel:)
       build_normal_period_rest_rates(hotel:)
-      build_special_period_rest_rate(hotel:)
+
+      build_special_period_and_rest_rate(hotel:)
       hotel.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -54,7 +57,7 @@ class HotelForm
 
     DailyRate = Struct.new(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
 
-    def rest_rate_struct
+    def rest_rates_by_day_of_the_week
       arr = normal_period_array.map do |period|
         period.fetch(:rest_rates)
       end
@@ -62,8 +65,8 @@ class HotelForm
     end
 
     def build_normal_period_rest_rates(hotel:)
-      monday_through_thursday, friday, saturday, sunday, holiday, day_before_a_holiday = hotel.days.build([{ day: '月曜から木曜' }, { day: '金曜' }, { day: '土曜' }, { day: '日曜' }, { day: '祝日' },
-                                                                                                           { day: '祝前日' }])
+      monday_through_thursday, friday, saturday, sunday, holiday, day_before_a_holiday = hotel.days.build(DAY_OF_THE_WEEK)
+
       build_monday_through_thursday_rest_rate(day: monday_through_thursday)
       build_friday_rest_rate(day: friday)
       build_saturday_rest_rate(day: saturday)
@@ -77,62 +80,61 @@ class HotelForm
     end
 
     def build_monday_through_thursday_rest_rate(day:)
-      rest_rate_struct.monday_through_thursday.map do |a_rest_rate|
+      rest_rates_by_day_of_the_week.monday_through_thursday.map do |a_rest_rate|
         build_rest_rate(day:, a_rest_rate:)
       end
     end
 
     def build_friday_rest_rate(day:)
-      rest_rate_struct.friday.map do |a_rest_rate|
+      rest_rates_by_day_of_the_week.friday.map do |a_rest_rate|
         build_rest_rate(day:, a_rest_rate:)
       end
     end
 
     def build_saturday_rest_rate(day:)
-      rest_rate_struct.saturday.map do |a_rest_rate|
+      rest_rates_by_day_of_the_week.saturday.map do |a_rest_rate|
         build_rest_rate(day:, a_rest_rate:)
       end
     end
 
     def build_sunday_rest_rate(day:)
-      rest_rate_struct.sunday.map do |a_rest_rate|
+      rest_rates_by_day_of_the_week.sunday.map do |a_rest_rate|
         build_rest_rate(day:, a_rest_rate:)
       end
     end
 
     def build_holiday_rest_rate(day:)
-      rest_rate_struct.holiday.map do |a_rest_rate|
+      rest_rates_by_day_of_the_week.holiday.map do |a_rest_rate|
         build_rest_rate(day:, a_rest_rate:)
       end
     end
 
     def build_day_before_a_holiday_rest_rate(day:)
-      rest_rate_struct.day_before_a_holiday.map do |a_rest_rate|
+      rest_rates_by_day_of_the_week.day_before_a_holiday.map do |a_rest_rate|
         build_rest_rate(day:, a_rest_rate:)
       end
     end
 
-    def build_special_period_rest_rate(hotel:)
+    def build_special_period_and_rest_rate(hotel:)
       day = hotel.days.build(day: '特別期間')
-      build_special_periods(special_day: day)
-      rest_rate_struct.special_days.map do |a_rest_rate|
+
+      build_special_days_rest_rate(day:)
+      build_special_periods(day:)
+    end
+
+    def build_special_days_rest_rate(day:)
+      rest_rates_by_day_of_the_week.special_days.map do |a_rest_rate|
         build_rest_rate(day:, a_rest_rate:)
       end
     end
 
-    def special_day_array
+    def build_special_periods(day:)
       return if special_periods.blank?
 
-      special_periods.values_at(:obon, :golden_week, :the_new_years_holiday)
-    end
-
-    def build_special_periods(special_day:)
-      return if special_periods.blank?
-
-      special_day_array.map do |val|
+      special_periods.values_at(:obon, :golden_week, :the_new_years_holiday).map do |val|
         next if val.nil?
 
-        special_day.special_periods.build(period: val[:period], start_date: val[:start_date], end_date: val[:end_date])
+        day.special_periods.build(period: val[:period], start_date: val[:start_date], end_date: val[:end_date])
       end
     end
 end
