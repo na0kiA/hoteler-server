@@ -7,4 +7,5 @@ class Hotel < ApplicationRecord
   has_many :hotel_images, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :days, dependent: :destroy
+  has_many :rest_rates, through: :days
 end

@@ -2,31 +2,41 @@
 
 FactoryBot.define do
   factory :day do
-    day { '月曜から木曜' }
-    association :hotel, factory: :completed_profile_hotel
-  end
-  factory :weekdays, class: 'Day' do
-    day { '月曜から木曜' }
-    association :hotel, factory: :completed_profile_hotel
-  end
-  factory :friday, class: 'Day' do
-    day { '金曜' }
-    association :hotel, factory: :completed_profile_hotel
-  end
-  factory :saturday, class: 'Day' do
-    day { '土曜' }
-    association :hotel, factory: :completed_profile_hotel
-  end
-  factory :sunday, class: 'Day' do
-    day { '日曜' }
-    association :hotel, factory: :completed_profile_hotel
-  end
-  factory :holiday, class: 'Day' do
-    day { '祝日' }
-    association :hotel, factory: :completed_profile_hotel
-  end
-  factory :special_days, class: 'Day' do
-    day { '特別期間' }
-    association :hotel, factory: :completed_profile_hotel
+
+    trait :with_rest_rates do
+      after(:build) do |day|
+        day.rest_rates << FactoryBot.build(:rest_rate, :normal_rest_rate)
+        day.rest_rates << FactoryBot.build(:rest_rate, :midnight_rest_rate)
+        day.rest_rates << FactoryBot.build(:rest_rate, :short_rest_rate)
+      end
+    end
+
+    trait :monday_through_thursday do
+      day { '月曜から木曜' }
+    end
+
+    trait :friday do
+      day { '金曜' }
+    end
+
+    trait :saturday do
+      day { '土曜' }
+    end
+
+    trait :sunday do
+      day { '日曜' }
+    end
+
+    trait :holiday do
+      day { '祝日' }
+    end
+
+    trait :day_before_a_holiday do
+      day { '祝前日' }
+    end
+
+    trait :special_days do
+      day { '特別期間' }
+    end
   end
 end
