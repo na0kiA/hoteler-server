@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :hotel do
-    accepted { true }
+    accepted { false }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
   end
@@ -31,6 +31,5 @@ FactoryBot.define do
         hotel.days << FactoryBot.build(:day, :special_days, :with_rest_rates)
       end
     end
-
   end
 end

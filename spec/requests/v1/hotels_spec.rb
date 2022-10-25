@@ -6,7 +6,9 @@ RSpec.describe 'V1::Hotels', type: :request do
   describe 'POST /v1/hotels - v1/hotels#create' do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
-    let_it_be(:params) { { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } } }
+    let_it_be(:params) {
+      { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } }
+    }
 
     context 'ログインしている場合' do
       it 'ホテルの投稿ができること' do
@@ -35,17 +37,20 @@ RSpec.describe 'V1::Hotels', type: :request do
     end
   end
 
+  # TODO: keyが複数個保存されることをテストするべき
+  # keyがrspecではjsonとして送られるため文字列になってしまい、保存できない
   describe 'PATCH /v1/hotel - v1/hotels#update' do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
-    let_it_be(:day) { create(:day, hotel_id: accepted_hotel.id) }
-    let_it_be(:rest_rate) { create(:rest_rate, day_id: day.id) }
-    let_it_be(:edited_params) { { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } } }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, user_id: client_user.id) }
+    let_it_be(:edited_params) {
+      { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', daily_rates: daily_rate_params, special_periods: special_period_params, key: %w[key1998 key1999], user_id: client_user.id } }
+    }
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
+        headers = { "CONTENT_TYPE" => "application/json" }
+        patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: headers.merge(auth_tokens)
 
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
@@ -111,10 +116,8 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, user_id: client_user.id) }
     let_it_be(:hotel_image) { create(:hotel_image, hotel_id: accepted_hotel.id) }
-    let_it_be(:day) { create(:day, hotel_id: accepted_hotel.id) }
-    let_it_be(:rest_rate) { create(:rest_rate, day_id: day.id) }
 
     context 'ホテルが承認されている場合' do
       it 'ホテル一覧を取得できること' do
@@ -146,7 +149,7 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, user_id: client_user.id) }
 
     context 'ホテルが承認されている場合' do
       it 'ホテル詳細を取得できること' do

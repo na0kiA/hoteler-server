@@ -2,12 +2,11 @@
 
 FactoryBot.define do
   factory :day do
-
     trait :with_rest_rates do
       after(:build) do |day|
         day.rest_rates << FactoryBot.build(:rest_rate, :normal_rest_rate)
-        day.rest_rates << FactoryBot.build(:rest_rate, :midnight_rest_rate)
         day.rest_rates << FactoryBot.build(:rest_rate, :short_rest_rate)
+        day.rest_rates << FactoryBot.build(:rest_rate, :midnight_rest_rate)
       end
     end
 

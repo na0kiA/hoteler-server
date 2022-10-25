@@ -6,9 +6,9 @@ RSpec.describe RestRate, type: :model do
   describe 'models/rest_rate.rb #now_rest_rate' do
     let_it_be(:user) { create(:user) }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: user.id) }
-    let_it_be(:weekdays) { create(:weekdays, hotel_id: accepted_hotel.id) }
-    let_it_be(:normal_rest_rate) { create(:normal_rest_rate, day_id: weekdays.id) }
-    let_it_be(:midnight_rest_rate) { create(:midnight_rest_rate, day_id: weekdays.id) }
+    let_it_be(:weekdays) { create(:day, :monday_through_thursday, hotel_id: accepted_hotel.id) }
+    let_it_be(:normal_rest_rate) { create(:rest_rate, :normal_rest_rate, day_id: weekdays.id) }
+    let_it_be(:midnight_rest_rate) { create(:rest_rate, :midnight_rest_rate, day_id: weekdays.id) }
 
     context '曜日が木曜日で、時刻が23時59分の場合' do
       before do
