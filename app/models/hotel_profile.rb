@@ -1,29 +1,28 @@
 # frozen_string_literal: true
 
 class HotelProfile
-  attr_reader :params, :set_hotel, :key, :day, :friday_rates, :today_rest_rate, :plan, :rate, :first_time, :last_time
+  include ActiveModel::Model
+
+  attr_reader :params, :name, :content, :set_hotel, :key, :daily_rates
 
   def initialize(params:, set_hotel:)
     @params = params
+    @name = params.fetch(:name)
+    @content = params.fetch(:content)
+    @key = params.fetch(:key)
+    Rails.logger.debug key
+    @daily_rates = params.fetch(:daily_rates)
     @set_hotel = set_hotel
-    @key = JSON.parse(params[:key])
-    @friday_rates = params.fetch(:friday_rates)
-    @day = friday_rates.fetch(:day)
-    @today_rest_rate = friday_rates.fetch(:rest_rates)
-    @plan = today_rest_rate.fetch(:plan)
-    @rate = today_rest_rate.fetch(:rate)
-    @first_time = today_rest_rate.fetch(:first_time)
-    @last_time = today_rest_rate.fetch(:last_time)
-    freeze
   end
 
   def update
+    return if invalid?
+
     ActiveRecord::Base.transaction do
-      update_hotel
       find_or_create_key
       remove_unnecessary_key
-      update_day
-      update_friday_rest_rates
+      update_monday_through_thursday_rest_rate
+      update_hotel
     end
   rescue ActiveRecord::RecordInvalid
     false
@@ -32,7 +31,7 @@ class HotelProfile
   private
 
     def update_hotel
-      Hotel.update!(set_hotel.id, name: params[:name], content: params[:content])
+      Hotel.update!(set_hotel.id, name:, content:)
     end
 
     def difference_key_array
@@ -49,23 +48,40 @@ class HotelProfile
       set_hotel.hotel_images.where(key: difference_key_array).delete_all
     end
 
-    def update_day
-      Day.update!(set_day_ids, day:, hotel_id: set_hotel.id)
+    DailyRate = Struct.new(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
+
+    def rest_rates_by_day_of_the_week
+      arr = normal_period_array.map do |period|
+        period.fetch(:rest_rates)
+      end
+      DailyRate.new(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6])
     end
 
-  # TODO: 複数個のdayを取得する必要がある
-    def set_day_ids
-      set_hotel.days.pick(:id)
-      # set_hotel.days.all.pluck(:id).slice(0)
+    def normal_period_array
+      daily_rates.values_at(:monday_through_thursday, :friday, :saturday, :sunday, :holiday, :day_before_a_holiday, :special_days)
     end
 
-  # TODO: FIX_ME: updated_atが更新されてしまう
-    def update_friday_rest_rates
-      RestRate.update!(pick_rest_rate.id, plan:, rate:, first_time:, last_time:, day_id: set_day_ids)
+  # def update_a_rest_rate(rest_rate_id:, a_rest_rate:)
+  #   RestRate.update!(rest_rate_id, plan: a_rest_rate[:plan], rate: a_rest_rate[:rate], first_time: a_rest_rate[:first_time], last_time: a_rest_rate[:last_time])
+  # end
+
+    def update_monday_through_thursday_rest_rate
+      rest_rates_by_day_of_the_week.monday_through_thursday.each do |a_rest_rate|
+        rest_rate = generate_hash(plan: a_rest_rate[:plan], rate: a_rest_rate[:rate], first_time: a_rest_rate[:first_time], last_time: a_rest_rate[:last_time])
+
+        RestRate.update!(rest_rate.keys, rest_rate.values)
+      end
     end
 
-    def pick_rest_rate
-      # update_day.rest_rates.pick(:id)
-      RestRate.find_by(day_id: set_day_ids)
+    def monday_through_thursday_rest_rate_ids
+      set_hotel.rest_rates.where(day_id: set_hotel.days.where(day: '月曜から木曜').ids).ids
+    end
+
+    def generate_hash(plan:, rate:, first_time:, last_time:)
+      hash = {}
+      monday_through_thursday_rest_rate_ids.each do |val|
+        hash = { val => { plan:, rate:, first_time:, last_time: } }
+      end
+      hash
     end
 end
