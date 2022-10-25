@@ -38,6 +38,8 @@ ja:
           attributes:
             user:
               required: "ユーザー情報"
+            days:
+              required: "曜日情報"
         hotel_image:
           attributes:
             hotel:
