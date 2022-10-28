@@ -2,8 +2,7 @@
 
 class V1::HotelImagesController < ApplicationController
   before_action :authenticate_v1_user!
-  before_action :set_image, only: %i[show update destroy]
-  # before_action :set_hotel, only: %i[show update destroy]
+  before_action :set_image, only: %i[show]
 
 # TODO: 承認済みのホテルの画像を表示する
   def index
@@ -20,35 +19,17 @@ class V1::HotelImagesController < ApplicationController
 
   def create
     image = HotelImage.new(image_params)
-    if image.save!
+    if image.save
       render json: image, status: :ok
     else
       render json: image.errors, status: :bad_request
-    end
-  end
-
-  def update
-    if @image.present? && authenticated?
-      @image.update!(image_params)
-      render json: image, status: :ok
-    else
-      render json: image.errors, status: :bad_request
-    end
-  end
-
-  def destroy
-    if @image.present? && authenticated?
-      @image.destroy
-      render json: @image, status: :ok
-    else
-      render json: @image.errors, status: :bad_request
     end
   end
 
   private
 
     def authenticated?
-      @image.user.id == current_v1_user.id
+      @image.hotel.user_id == current_v1_user.id
     end
 
     def image_params
@@ -60,6 +41,6 @@ class V1::HotelImagesController < ApplicationController
     end
 
     def set_hotel
-      @hotel = Hotel.find(params[:hotel_id])
+      Hotel.find(params[:hotel_id])
     end
 end

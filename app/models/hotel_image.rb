@@ -5,22 +5,31 @@ class HotelImage < ApplicationRecord
 
   validates :key, presence: true
 
-  def save!
-    find_or_create_key
-    # remove_unnecessary_key
+  def save
+    remove_unnecessary_key
+    create_hotel_images
   end
+
+  # def update(set_hotel_images:, image_params:)
+  #   remove_unnecessary_key
+
+  # end
 
   private
 
-  def find_or_create_key
-    JSON.parse(key).each do |val|
-      HotelImage.find_or_create_by!(key: val)
+    def create_hotel_images
+      JSON.parse(key).map do |val|
+        break if val.blank?
+
+        HotelImage.find_or_create_by!(key: val, hotel_id:)
+      end
     end
-  end
-  
-  # def remove_unnecessary_key
-  #   p HotelImage.pluck(:key)
-  #   p find_or_create_key.difference(key)
-  #   HotelImage.where(key: HotelImage.pluck(:key).difference(key)).delete_all
-  # end
+
+    def remove_unnecessary_key
+      HotelImage.where(key: difference_key_array).delete_all
+    end
+
+    def difference_key_array
+      HotelImage.where(hotel_id:).pluck(:key).difference(JSON.parse(key))
+    end
 end
