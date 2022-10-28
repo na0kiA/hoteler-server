@@ -18,7 +18,11 @@ FactoryBot.define do
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
 
-    association :user
+    trait :with_hotel_images do
+      after(:build) do |hotel|
+        hotel.hotel_images << FactoryBot.build(:hotel_image)
+      end
+    end
 
     trait :with_a_day_and_rest_rates do
       after(:build) do |hotel|
