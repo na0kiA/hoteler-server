@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     scope shallow_prefix: 'user' do
       resources :hotels do
         resources :reviews, shallow: true
+        resources :rest_rates, only: %i[create update destroy]
+        resources :images, controller: 'hotel_images'
+        resource :days, only: %i[create]
       end
     end
 

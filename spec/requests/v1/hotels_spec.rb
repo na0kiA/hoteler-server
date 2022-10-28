@@ -7,7 +7,7 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:params) {
-      { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key1998 key1998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: client_user.id } }
+      { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', user_id: client_user.id } }
     }
 
     context 'ログインしている場合' do
@@ -29,7 +29,7 @@ RSpec.describe 'V1::Hotels', type: :request do
 
     context 'ホテルの投稿ができない場合' do
       it '400を返すこと' do
-        params = { hotel: { name: '', content: 'hotelContent', key: ['upload/test'] } }
+        params = { hotel: { name: '', content: 'hotelContent' } }
         post v1_hotels_path, params: params, headers: auth_tokens
         expect(response).to have_http_status(:bad_request)
         expect(response.message).to include('Bad Request')
@@ -37,44 +37,41 @@ RSpec.describe 'V1::Hotels', type: :request do
     end
   end
 
-  # TODO: keyが複数個保存されることをテストするべき
-  # keyがrspecではjsonとして送られるため文字列になってしまい、保存できない
   describe 'PATCH /v1/hotel - v1/hotels#update' do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:completed_profile_hotel, user_id: client_user.id) }
     let_it_be(:edited_params) {
-      { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', daily_rates: daily_rate_params, special_periods: special_period_params, key: %w[key1998 key1999], user_id: client_user.id } }
+      { hotel: { name: 'ホテルレジャー', content: 'ホテルの名前が変わりました', user_id: client_user.id } }
     }
 
     context 'ログインしている場合' do
       it '自分の投稿したホテルの編集ができること' do
-        headers = { "CONTENT_TYPE" => "application/json" }
-        patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: headers.merge(auth_tokens)
+        patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
 
         expect(response).to have_http_status :ok
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:attributes]).to include(name: 'ホテルレジャー', content: 'ホテルの名前が変わりました')
+        expect(response_body[:name]).to eq('ホテルレジャー')
       end
 
-      it '自分が投稿していないホテルの編集ができないこと' do
-        user = create(:user)
-        hotel = create(:accepted_hotel, user_id: user.id)
-        params = { hotel: { name: 'hotel 777', content: 'hotel has been updated!', key: ['upload/test', 'upload/test2'] } }
+      it '他人が投稿したホテルの編集ができないこと' do
+        other_user = create(:user)
+        hotel = create(:accepted_hotel, user_id: other_user.id)
+        params = { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', user_id: client_user.id } }
         patch v1_hotel_path(hotel.id), params: params, headers: auth_tokens
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body).not_to include(name: 'hotel 7777', content: 'hotel has been updated!')
+        expect(response_body[:name]).not_to eq('神戸北野')
         expect(response).to have_http_status(:bad_request)
       end
     end
 
     context 'ログインしていない場合' do
       it 'ホテルの編集ができないこと' do
-        params = { hotel: { name: 'hotel 77777', content: 'hotel has been updated!!' } }
+        params = { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', user_id: client_user.id } }
         patch v1_hotel_path(accepted_hotel.id), params: params
         response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body[:name]).not_to eq('神戸北野')
         expect(response).to have_http_status(:unauthorized)
-        expect(response_body).not_to include(name: 'hotel 77777', content: 'hotel has been updated!!')
       end
     end
   end
@@ -127,13 +124,6 @@ RSpec.describe 'V1::Hotels', type: :request do
         expect(response_body[0][:reviews_count]).to eq(0)
         expect(response_body.length).to eq 1
       end
-
-      # it '各ホテルのプランと料金とサービス営業時間を取得できること' do
-      #   get v1_hotels_path
-      #   response_body = JSON.parse(response.body, symbolize_names: true)
-      #   expect(response).to have_http_status(:success)
-      #   expect(response_body).to include('休憩90分')
-      # end
     end
 
     context 'ホテルが承認されていない場合' do
