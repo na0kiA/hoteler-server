@@ -8,13 +8,8 @@ ja:
       hotel_form:
         name: "ホテル名"
         content: "内容"
-        key: "画像ファイル"
-        plan: "料金プラン"
-        rate: "価格"
-        first_time: "サービス開始時刻"
-        last_time: "サービス終了時刻"
       hotel_image:
-        key: "画像ファイル"
+        key: "ホテルの画像"
       hotel:
         name: "ホテル名"
         content: "内容"
@@ -27,7 +22,7 @@ ja:
         last_time: "サービス終了時刻"
     errors:
       messages:
-        record_invalid: "%{errors}が正しくありません。"
+        record_invalid: "%{errors}"
         blank: "%{attribute}を入力してください。"
         too_short: "%{attribute}は%{count}文字以上入力してください。"
         contain_blacklist_words: "%{attribute}に暴力的もしくは卑猥なワードが含まれています"
