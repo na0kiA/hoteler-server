@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   private
 
     def record_not_found
-      render json: { errors: '404 NOT FOUND' }, status: :not_found
+      render json: { errors: { title: '404 NOT FOUND', body: '既に削除されてあるか、存在しないページです' } }, status: :not_found
     end
 
     def path_not_found
