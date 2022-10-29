@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
 class V1::HotelImagesController < ApplicationController
-  before_action :authenticate_v1_user!
+  before_action :authenticate_v1_user!, only: %i[create]
   before_action :set_image, only: %i[show]
+  before_action :set_hotel, only: %i[index show]
 
-# TODO: 承認済みのホテルの画像を表示する
   def index
-    render json: Hotel.hotel_images
+    if (@hotel.accepted? && hotel_image_present?) || (hotel_image_present? && authenticated?)
+      render json: @hotel.hotel_images,
+             each_serializer: HotelImageSerializer
+    else
+      record_not_found
+    end
   end
 
   def show
-    if @image.present?
-      render json: @image
+    if (@hotel.accepted? && @image.present?) || (@image.present? && authenticated?)
+      render json: @image,
+             Serializer: HotelImageSerializer
     else
       record_not_found
     end
@@ -29,11 +35,17 @@ class V1::HotelImagesController < ApplicationController
   private
 
     def authenticated?
-      @image.hotel.user_id == current_v1_user.id
+      return if current_v1_user.blank?
+
+      @hotel.user_id == current_v1_user.id
     end
 
     def image_params
       params.require(:hotel_image).permit(key: []).merge(hotel_id: set_hotel.id)
+    end
+
+    def hotel_image_present?
+      set_hotel.hotel_images.present?
     end
 
     def set_image
@@ -41,6 +53,6 @@ class V1::HotelImagesController < ApplicationController
     end
 
     def set_hotel
-      Hotel.find(params[:hotel_id])
+      @hotel = Hotel.find(params[:hotel_id])
     end
 end
