@@ -6,14 +6,21 @@ class HotelImage < ApplicationRecord
   validates :key, presence: true
 
   def save
+    return if too_many_value?
+
+    # keyはフロントから配列で送られてくるので、重複したkeyを削除する必要がある
     remove_unnecessary_key
     create_hotel_images
   end
 
-  # def update(set_hotel_images:, image_params:)
-  #   remove_unnecessary_key
+  def self.signed_url(filename, operation)
+    signer = Aws::S3::Presigner.new
+    signer.presigned_url(operation, bucket: ENV.fetch('S3_BUCKET_NAME', nil), key: filename)
+  end
 
-  # end
+  def too_many_value?
+    HotelImage.where(hotel_id:).length > 10
+  end
 
   private
 
