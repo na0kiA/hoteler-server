@@ -15,6 +15,10 @@ class V1::DaysController < ApplicationController
   private
 
     def day_params
-      params.require(:day).permit(:day)
+      params.permit(:day).merge(hotel_id: set_hotel.id)
+    end
+
+    def set_hotel
+      @hotel = Hotel.find(params[:hotel_id])
     end
 end

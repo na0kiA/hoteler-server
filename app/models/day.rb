@@ -6,4 +6,10 @@ class Day < ApplicationRecord
   has_many :special_periods, dependent: :destroy
 
   validates :day, presence: true, length: { maximum: 10 }
+
+  def save
+    day.map do |day_of_the_week|
+      Day.create!(day: day_of_the_week, hotel_id:)
+    end
+  end
 end

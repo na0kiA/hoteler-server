@@ -13,11 +13,6 @@ class HotelImage < ApplicationRecord
     create_hotel_images
   end
 
-  def self.signed_url(filename, operation)
-    signer = Aws::S3::Presigner.new
-    signer.presigned_url(operation, bucket: ENV.fetch('S3_BUCKET_NAME', nil), key: filename)
-  end
-
   def too_many_value?
     HotelImage.where(hotel_id:).length > 10
   end

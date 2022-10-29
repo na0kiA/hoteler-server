@@ -35,11 +35,15 @@ class V1::RestRatesController < ApplicationController
   private
 
     def rest_rate_params
-      params.require(:rest_rate).permit(:plan, :rate, :first_time, :last_rate)
+      params.require(:rest_rate).permit(:plan, :rate, :first_time, :last_rate).merge(day_id: set_day.id)
     end
 
     def set_rest_rate
       @rest_rate = RestRate.find(params[:id])
+    end
+
+    def set_day
+      @day = Day.find(params[:day_id])
     end
 
     def authenticated?

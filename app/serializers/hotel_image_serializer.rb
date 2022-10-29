@@ -6,10 +6,4 @@ class HotelImageSerializer < ActiveModel::Serializer
   def file_url
     Aws::S3::Object.new(ENV.fetch('S3_BUCKET', nil), object.key).public_url
   end
-
-  # private
-
-  # def key
-
-  # end
 end
