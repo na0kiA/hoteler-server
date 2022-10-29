@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :hotel_image do
-    key { "aws/s3/keys/199" }
-    # association :hotel, factory: :completed_profile_hotel
+    sequence(:key) { |n| "aws/s3/keys1998/#{n}" }
   end
 end
