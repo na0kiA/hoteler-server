@@ -6,11 +6,15 @@ class HotelImage < ApplicationRecord
   validates :key, presence: true
 
   def save
-    return if too_many_value?
+    return if too_many_value? || key.blank?
 
     # keyはフロントから配列で送られてくるので、重複したkeyを削除する必要がある
-    remove_unnecessary_key
-    create_hotel_images
+    ActiveRecord::Base.transaction do
+      remove_unnecessary_key
+      create_hotel_images
+    end
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 
   def too_many_value?
@@ -21,7 +25,7 @@ class HotelImage < ApplicationRecord
 
     def create_hotel_images
       JSON.parse(key).map do |val|
-        break if val.blank?
+        # break if val.blank?
 
         HotelImage.find_or_create_by!(key: val, hotel_id:)
       end

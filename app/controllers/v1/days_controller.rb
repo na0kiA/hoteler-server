@@ -1,22 +1,17 @@
 # frozen_string_literal: true
 
 class V1::DaysController < ApplicationController
-  before_action :authenticate_v1_user!
+  before_action :set_hotel, only: [:index]
 
-  def create
-    day = Day.new(day_params)
-    if day.save
-      render json: day, status: :ok
+  def index
+    if @hotel.present?
+      render json: @hotel.days
     else
-      render json: day.errors, status: :bad_request
+      record_not_found
     end
   end
 
   private
-
-    def day_params
-      params.permit(:day).merge(hotel_id: set_hotel.id)
-    end
 
     def set_hotel
       @hotel = Hotel.find(params[:hotel_id])

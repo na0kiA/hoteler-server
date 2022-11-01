@@ -55,7 +55,6 @@ RSpec.describe 'V1::RestRates', type: :request do
     let_it_be(:day_id) { hotel.days.ids[0] }
     let_it_be(:rest_rate_id) { hotel.days[0].rest_rates.ids[0] }
 
-
     context 'ログインしているユーザーとホテル作成者が一致している場合' do
       it 'ホテルの休憩料金を5000円に編集できること' do
         params = { rest_rate: { plan: '休憩90分', rate: 5000, first_time: '6:00', last_time: '24:00' }, day_id: }
@@ -103,7 +102,6 @@ RSpec.describe 'V1::RestRates', type: :request do
     end
 
     context 'ホテル運営者以外が休憩料金を削除しようとした場合' do
-
       let_it_be(:other_user) { create(:user) }
       let_it_be(:other_user_auth_tokens) { other_user.create_new_auth_token }
 
@@ -114,7 +112,6 @@ RSpec.describe 'V1::RestRates', type: :request do
     end
 
     context '既に削除されている休憩料金を削除しようとした場合' do
-
       before do
         delete v1_rest_rate_path(day_id, rest_rate_id), headers: auth_tokens
       end

@@ -14,19 +14,19 @@ class Hotel < ApplicationRecord
 
   after_commit :create_days, on: %i[create]
 
-  DAY_OF_THE_WEEK = ['月曜から木曜', '金曜', '土曜', '日曜', '祝日', '祝前日', '特別期間'].freeze
+  DAY_OF_THE_WEEK = %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間].freeze
 
   private
 
-  def create_days
-    Day.create(generate_days_hash)
-  end
-
-  def generate_days_hash
-    hash = {}
-    DAY_OF_THE_WEEK.each do |val|
-      hash = { day: val, hotel_id: id}
+    def create_days
+      Day.create(generate_days_hash)
     end
-    hash
-  end
+
+    def generate_days_hash
+      hash = {}
+      DAY_OF_THE_WEEK.each do |val|
+        hash = { day: val, hotel_id: id }
+      end
+      hash
+    end
 end

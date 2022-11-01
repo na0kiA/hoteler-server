@@ -7,9 +7,9 @@ class Day < ApplicationRecord
 
   validates :day, presence: true, length: { maximum: 10 }
 
-  def save
-    day.map do |day_of_the_week|
-      Day.create!(day: day_of_the_week, hotel_id:)
-    end
-  end
+  # def save
+  #   day.map do |day_of_the_week|
+  #     Day.create!(day: day_of_the_week, hotel_id:)
+  #   end
+  # end
 end

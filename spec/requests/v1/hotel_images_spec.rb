@@ -53,7 +53,9 @@ RSpec.describe 'V1::HotelImages', type: :request do
     context 'S3のkeyがない場合' do
       it '400を返すこと' do
         params = { hotel_image: { key: [''] } }
-        post v1_hotel_images_path(hotel.id), params: params, headers: auth_tokens
+        expect do
+          post v1_hotel_images_path(hotel.id), params:, headers: auth_tokens
+        end.not_to change(HotelImage, :count)
         expect(response.status).to eq(400)
         expect(response.message).to eq('Bad Request')
       end
