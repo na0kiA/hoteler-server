@@ -42,5 +42,6 @@ RSpec.configure do |config|
   config.include CustomValidatorHelper, type: :model
   config.include RequestSpecHelper
   config.include HotelFormSpecHelper
+  config.include RestRateSpecHelper
   config.include ActiveSupport::Testing::TimeHelpers
 end

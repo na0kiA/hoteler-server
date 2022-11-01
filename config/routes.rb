@@ -13,14 +13,13 @@ Rails.application.routes.draw do
       resources :hotels do
         resources :reviews, shallow: true
         resources :images, only: %i[index show create], controller: 'hotel_images'
-        # resource :days, only: %i[create]
-        resources :rest_rates, only: %i[create update destroy]
+        resources :days, only: %i[index]
       end
     end
-    
-    
-    # scope '/days/:day_id' do
-    # end
+
+    scope '/days/:day_id' do
+      resources :rest_rates, only: %i[create update destroy]
+    end
 
     scope '/reviews/:review_id' do
       resource :helpfulnesses, only: %i[create destroy]

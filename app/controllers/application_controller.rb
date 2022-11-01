@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
       render json: { errors: '存在しないページです' }, status: :not_found
     end
 
-    def render_json_bad_request_with_custom_errors(title, detail)
-      render json: { errors: { title:, detail: } }, status: :bad_request
+    def render_json_bad_request_with_custom_errors(title:, body:)
+      render json: { errors: { title:, body: } }, status: :bad_request
     end
 end
