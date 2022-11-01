@@ -6,7 +6,8 @@ module V1
     before_action :set_hotel, only: %i[show update destroy]
 
     def index
-      render json: Hotel.accepted
+      @hotel = Hotel.accepted
+      render json: @hotel
     end
 
     def show

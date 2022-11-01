@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: 'home#index'
   resources :posts, only: :index
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
+    # get 'home', to: 'home#index'
+    root to: 'home#index', as: :home
+
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
       registrations: 'v1/auth/registrations'
     }
