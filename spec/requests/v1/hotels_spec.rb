@@ -127,7 +127,6 @@ RSpec.describe 'V1::Hotels', type: :request do
     end
 
     context 'ホテルが承認されていない場合' do
-
       let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
 
       it 'ホテル一覧を取得できないこと' do

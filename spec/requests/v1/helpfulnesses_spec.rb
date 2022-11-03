@@ -21,7 +21,6 @@ RSpec.describe 'V1::Helpfulnesses', type: :request do
     end
 
     context '参考になったを押せない場合' do
-
       it 'ログインしていないとき、401エラーがでること' do
         expect { post v1_helpfulnesses_path(review_id: review.id), headers: }.not_to change(Helpfulness, :count)
         post v1_helpfulnesses_path(review_id: review.id), headers: nil
