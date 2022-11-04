@@ -8,6 +8,7 @@ class Hotel < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :days, dependent: :destroy
   has_many :rest_rates, through: :days
+  has_many :special_periods, through: :days
 
   validates :name, length: { maximum: 50 }, presence: true, invalid_words: true
   validates :content, length: { minimum: 10, maximum: 2000 }, presence: true, invalid_words: true

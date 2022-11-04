@@ -44,5 +44,6 @@ RSpec.configure do |config|
   config.include HotelFormSpecHelper
   config.include RestRateSpecHelper
   config.include ActiveSupport::Testing::TimeHelpers
+  # config.include SerializerExampleGroup
   # config.include Rails.application.routes.url_helpers
 end

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
     scope '/days/:day_id' do
       resources :rest_rates, only: %i[create update destroy]
+      resources :special_periods, only: %i[create update destroy]
     end
 
     scope '/reviews/:review_id' do
