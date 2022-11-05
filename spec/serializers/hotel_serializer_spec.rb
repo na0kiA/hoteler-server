@@ -81,7 +81,6 @@ RSpec.describe HotelSerializer, type: :serializer do
     end
 
     context '今日が特別期間の6時00分の場合' do
-
       before do
         travel_to Time.zone.local(2022, 12, 25, 6, 0, 0)
       end

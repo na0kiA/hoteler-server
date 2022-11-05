@@ -20,6 +20,10 @@ ja:
         rate: "価格"
         first_time: "サービス開始時刻"
         last_time: "サービス終了時刻"
+      special_period:
+        period: "特別な期間"
+        start_date: "開始日時"
+        end_date: "終了日時"
     errors:
       messages:
         record_invalid: "%{errors}"
@@ -36,7 +40,13 @@ ja:
               required: "ユーザー情報"
             days:
               required: "曜日情報"
+              invalid: "無効な日時"
         hotel_image:
           attributes:
             hotel:
               required: "ホテル情報"
+        special_period:
+          attributes:
+            period:
+              required: "特別期間の情報"
+              inclusion: "特別期間が設定されていません"

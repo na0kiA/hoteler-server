@@ -89,7 +89,6 @@ class HotelSerializer < ActiveModel::Serializer
       (I18n.l time, format: :hours).to_i
     end
 
-
     def select_todays_day_of_the_week(today = Time.zone.today.wday, hotel_id = object.id)
       return Day.where(day: '祝日', hotel_id:) if HolidayJapan.check(Date.current)
       return Day.where(day: '祝前日', hotel_id:) if HolidayJapan.check(Date.current.tomorrow)
@@ -99,7 +98,7 @@ class HotelSerializer < ActiveModel::Serializer
 
     # def check_today_is_special_periods_or_not(today = Time.zone.today, hotel_id = object.id)
     #   if object.special_periods.start_date
-    #     Day.where(day: '特別期間', hotel_id:) 
+    #     Day.where(day: '特別期間', hotel_id:)
     #   end
     # end
 
