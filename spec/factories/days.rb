@@ -10,11 +10,22 @@ FactoryBot.define do
       end
     end
 
-    trait :with_special_period_and_rest_rates do
+    trait :with_day_off_rest_rates do
       after(:build) do |day|
-        day.rest_rates << FactoryBot.build(:rest_rate, :normal_rest_rate)
-        day.rest_rates << FactoryBot.build(:rest_rate, :short_rest_rate)
-        day.rest_rates << FactoryBot.build(:rest_rate, :midnight_rest_rate)
+        day.rest_rates << FactoryBot.build(:day_off_rest_rate, :normal_rest_rate)
+        day.rest_rates << FactoryBot.build(:day_off_rest_rate, :midnight_rest_rate)
+      end
+    end
+
+    trait :with_special_rest_rates do
+      after(:build) do |day|
+        day.rest_rates << FactoryBot.build(:special_rest_rate, :normal_rest_rate)
+        day.rest_rates << FactoryBot.build(:special_rest_rate, :midnight_rest_rate)
+      end
+    end
+
+    trait :with_special_period do
+      after(:build) do |day|
         day.special_periods << FactoryBot.build(:special_period, :golden_week)
         day.special_periods << FactoryBot.build(:special_period, :obon)
         day.special_periods << FactoryBot.build(:special_period, :the_new_years_holiday)

@@ -21,9 +21,10 @@ RSpec.describe 'V1::Days', type: :request do
         delete v1_hotel_path(hotel.id), headers: auth_tokens
       end
 
-      it 'ホテルの曜日を返すこと' do
+      it '404を返すこと' do
         get v1_hotel_days_path(hotel_id: hotel.id)
         expect(response.status).to eq(404)
+        expect(symbolized_body(response)[:errors][:title]).to eq('404 NOT FOUND')
       end
     end
   end

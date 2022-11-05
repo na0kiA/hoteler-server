@@ -15,8 +15,11 @@ SimpleCov.start do
 
   add_group 'Models', 'app/models'
   add_group 'Forms', 'app/forms'
-  add_group 'Controllers (api)', 'app/controllers/v1'
-  add_group 'Helpers', 'app/helpers'
+  add_group 'Serializers', 'app/serializers/'
+  add_group 'Controllers', 'app/controllers/'
+  add_group 'Validators', 'app/validators/'
+  add_group 'Helpers', 'app/helpers/'
+  add_group 'Support', 'spec/support/'
 end
 require 'devise'
 
