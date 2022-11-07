@@ -29,7 +29,7 @@ class HotelSerializer < ActiveModel::Serializer
   end
 
   def rest_rates
-    return '営業時間外です' if can_take_service_list.all?(&:nil?)
+    return '営業時間外です' if can_take_services_list.all?(&:nil?)
 
     ActiveModelSerializers::SerializableResource.new(
       filtered_cheapest_a_rest_rate,
@@ -47,10 +47,10 @@ class HotelSerializer < ActiveModel::Serializer
     end
 
     def during_business_hours_list
-      can_take_services_list_or_not.select(&:present?)
+      can_take_services_list.select(&:present?)
     end
 
-    def can_take_services_list_or_not
+    def can_take_services_list
       BusinessHour.take_services_list(today_rate_list: extract_today_services_rate_list)
     end
 

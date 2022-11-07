@@ -123,6 +123,14 @@ RSpec.describe 'V1::Hotels', type: :request do
         expect(response_body[0][:reviews_count]).to eq(0)
         expect(response_body.length).to eq 1
       end
+
+      it 'ホテルを複数個取得できること' do
+        create_list(:completed_profile_hotel, 2, :with_a_day_and_rest_rates, user_id: client_user.id)
+        get v1_hotels_path
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(:success)
+        expect(response_body.length).to eq 3
+      end
     end
 
     context 'ホテルが承認されていない場合' do
@@ -134,28 +142,19 @@ RSpec.describe 'V1::Hotels', type: :request do
         expect(response_body.length).not_to eq 2
       end
     end
-
-    # context 'ホテルが承認されていない場合' do
-    #   it 'ホテル一覧を取得できないこと' do
-    #     get v1_hotels_path
-    #     response_body = JSON.parse(response.body, symbolize_names: true)
-    #     expect(response_body.length).not_to eq 2
-    #   end
-    # end
   end
 
   describe 'GET /v1/hotel/:id - v1/hotels#show' do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, user_id: client_user.id) }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_rest_rates, user_id: client_user.id) }
 
     context 'ホテルが承認されている場合' do
       it 'ホテル詳細を取得できること' do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[:name]).to include('hotel')
         expect(response_body.length).to eq 8
       end
 
@@ -165,6 +164,21 @@ RSpec.describe 'V1::Hotels', type: :request do
         expect(response).to have_http_status(:success)
         expect(response_body[:reviews_count]).to eq(0)
         expect(response_body[:average_rating]).to eq('0.0')
+      end
+    end
+
+    context '今日がお盆の場合' do
+
+      before do
+        travel_to Time.zone.local(2023, 8, 14, 6, 0, 0)
+      end
+
+      it '特別期間の料金を取得できること' do
+        get v1_hotel_path(accepted_hotel.id)
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response).to have_http_status(:success)
+        expect(response_body[:day_of_the_week][0][:day]).to eq('特別期間')
+        expect(response_body[:rest_rates][0][:rate]).to eq(5980)
       end
     end
 
