@@ -10,7 +10,7 @@ RSpec.describe 'V1::RestRates', type: :request do
 
     context 'ログインしている場合' do
       it 'ホテルの休憩料金が投稿できること' do
-        params = { rest_rate: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' }, day_id: hotel.days.ids[0] }
+        params = { rest_rate: { plan: '休憩90分', rate: 3980, start_time: '6:00', end_time: '24:00' }, day_id: hotel.days.ids[0] }
         expect do
           post v1_rest_rates_path(hotel.days.ids[0]), params:, headers: auth_tokens
         end.to change(RestRate, :count).by(1)
@@ -20,7 +20,7 @@ RSpec.describe 'V1::RestRates', type: :request do
 
     context 'ログアウトしている場合' do
       it 'ホテルの休憩料金が投稿できないこと' do
-        params = { rest_rate: { plan: '休憩90分', rate: 3980, first_time: '6:00', last_time: '24:00' }, day_id: hotel.days.ids[0] }
+        params = { rest_rate: { plan: '休憩90分', rate: 3980, start_time: '6:00', end_time: '24:00' }, day_id: hotel.days.ids[0] }
         post v1_rest_rates_path(hotel.days.ids[0]), params:, headers: nil
         expect(response.status).to eq(401)
         expect(symbolized_body(response)[:errors][0]).to eq('ログイン、もしくはアカウント登録をしてください。')
@@ -29,7 +29,7 @@ RSpec.describe 'V1::RestRates', type: :request do
 
     context 'planに記号が含まれる場合' do
       it 'ホテルの休憩料金が投稿できないこと' do
-        params = { rest_rate: { plan: '<><><>', rate: 3980, first_time: '6:00', last_time: '24:00' }, day_id: hotel.days.ids[0] }
+        params = { rest_rate: { plan: '<><><>', rate: 3980, start_time: '6:00', end_time: '24:00' }, day_id: hotel.days.ids[0] }
         post v1_rest_rates_path(hotel.days.ids[0]), params:, headers: auth_tokens
         expect(response.status).to eq(400)
         expect(symbolized_body(response)[:plan][0]).to eq('料金プランに無効な記号もしくはURLが含まれています')
@@ -38,7 +38,7 @@ RSpec.describe 'V1::RestRates', type: :request do
 
     context 'paramsがnilの場合' do
       it 'ホテルの休憩料金が投稿できないこと' do
-        params = { rest_rate: { plan: nil, rate: nil, first_time: nil, last_time: nil }, day_id: hotel.days.ids[0] }
+        params = { rest_rate: { plan: nil, rate: nil, start_time: nil, end_time: nil }, day_id: hotel.days.ids[0] }
         expect do
           post v1_rest_rates_path(hotel.days.ids[0]), params:, headers: auth_tokens
         end.not_to change(RestRate, :count)
@@ -57,7 +57,7 @@ RSpec.describe 'V1::RestRates', type: :request do
 
     context 'ログインしているユーザーとホテル作成者が一致している場合' do
       it 'ホテルの休憩料金を5000円に編集できること' do
-        params = { rest_rate: { plan: '休憩90分', rate: 5000, first_time: '6:00', last_time: '24:00' }, day_id: }
+        params = { rest_rate: { plan: '休憩90分', rate: 5000, start_time: '6:00', end_time: '24:00' }, day_id: }
         patch v1_rest_rate_path(day_id, rest_rate_id), params:, headers: auth_tokens
         expect(response.status).to eq(200)
         expect(symbolized_body(response)[:rate]).to eq(5000)
@@ -69,7 +69,7 @@ RSpec.describe 'V1::RestRates', type: :request do
       let_it_be(:other_user_auth_tokens) { other_user.create_new_auth_token }
 
       it '400エラーを返すこと' do
-        params = { rest_rate: { plan: '休憩90分', rate: 5000, first_time: '6:00', last_time: '24:00' }, day_id: }
+        params = { rest_rate: { plan: '休憩90分', rate: 5000, start_time: '6:00', end_time: '24:00' }, day_id: }
         patch v1_rest_rate_path(day_id, rest_rate_id), params:, headers: other_user_auth_tokens
         expect(response.status).to eq(400)
       end
@@ -77,7 +77,7 @@ RSpec.describe 'V1::RestRates', type: :request do
 
     context '編集する時の値が不正な場合' do
       it '編集できないこと' do
-        params = { rest_rate: { plan: '<script>', rate: 1, first_time: '', last_time: '' }, day_id: }
+        params = { rest_rate: { plan: '<script>', rate: 1, start_time: '', end_time: '' }, day_id: }
         patch v1_rest_rate_path(day_id, rest_rate_id), params:, headers: auth_tokens
         expect(response.status).to eq(400)
         expect(symbolized_body(response)[:plan][0]).to eq('料金プランに無効な記号もしくはURLが含まれています')

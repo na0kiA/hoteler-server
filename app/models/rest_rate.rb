@@ -6,7 +6,7 @@ class RestRate < ApplicationRecord
   with_options presence: true do
     validates :plan, length: { maximum: 10 }, invalid_words: true
     validates :rate, numericality: { less_than: 10_000_000 }
-    validates :first_time
-    validates :last_time
+    validates :start_time
+    validates :end_time
   end
 end

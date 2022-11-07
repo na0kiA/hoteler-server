@@ -71,7 +71,7 @@
 #     # end
 
 #     # def build_rest_rate(day:, a_rest_rate:)
-#     #   day.rest_rates.build(plan: a_rest_rate[:plan], rate: a_rest_rate[:rate], first_time: a_rest_rate[:first_time], last_time: a_rest_rate[:last_time])
+#     #   day.rest_rates.build(plan: a_rest_rate[:plan], rate: a_rest_rate[:rate], start_time: a_rest_rate[:start_time], end_time: a_rest_rate[:end_time])
 #     # end
 
 #     # def build_monday_through_thursday_rest_rate(day:)

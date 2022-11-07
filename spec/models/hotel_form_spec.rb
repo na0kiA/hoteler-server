@@ -156,7 +156,7 @@
 #     context '正常にjson_paramsをシンボルに変換できる場合' do
 #       it 'シンボルを返すこと' do
 #         json_params = { 'name' => '神戸三宮', 'content' => '2017年にリニューアルオープンしました', 'user_id' => user.id, 'key' => ['key1998'],
-#                         'daily_rates' => { 'friday' => { 'rest_rates' => { 'plan' => '休憩90分', 'rate' => 4980, 'last_time' => '00:00', 'first_time' => '06:00' } } } }
+#                         'daily_rates' => { 'friday' => { 'rest_rates' => { 'plan' => '休憩90分', 'rate' => 4980, 'end_time' => '00:00', 'start_time' => '06:00' } } } }
 #         hotel_form = described_class.new(json_params)
 #         expect(hotel_form.to_deep_symbol[:daily_rates][:friday][:rest_rates][:plan]).to eq('休憩90分')
 #       end

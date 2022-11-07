@@ -37,7 +37,7 @@ class V1::RestRatesController < ApplicationController
   private
 
     def rest_rate_params
-      params.require(:rest_rate).permit(:plan, :rate, :first_time, :last_time).merge(day_id: set_day.id)
+      params.require(:rest_rate).permit(:plan, :rate, :start_time, :end_time).merge(day_id: set_day.id)
     end
 
     def set_rest_rate

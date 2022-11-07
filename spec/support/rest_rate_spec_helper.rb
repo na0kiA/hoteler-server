@@ -25,9 +25,9 @@ module RestRateSpecHelper
 
   def rest_rates
     [
-      { plan: '休憩90分', rate: 3580, first_time: '6:00', last_time: '24:00' },
-      { plan: '休憩60分', rate: 2580, first_time: '6:00', last_time: '19:00' },
-      { plan: '深夜休憩90分', rate: 3580, first_time: '0:00', last_time: '5:00' }
+      { plan: '休憩90分', rate: 3580, start_time: '6:00', end_time: '24:00' },
+      { plan: '休憩60分', rate: 2580, start_time: '6:00', end_time: '19:00' },
+      { plan: '深夜休憩90分', rate: 3580, start_time: '0:00', end_time: '5:00' }
     ]
   end
 end

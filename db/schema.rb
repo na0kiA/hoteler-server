@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_10_081633) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_07_114949) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
@@ -60,8 +60,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_10_081633) do
     t.bigint "day_id", null: false
     t.string "plan", default: "", null: false
     t.integer "rate", default: 0, null: false
-    t.time "first_time", default: "2000-01-01 00:00:00", null: false
-    t.time "last_time", default: "2000-01-01 00:00:00", null: false
+    t.time "start_time", default: "2000-01-01 00:00:00", null: false
+    t.time "end_time", default: "2000-01-01 00:00:00", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["day_id"], name: "index_rest_rates_on_day_id"
