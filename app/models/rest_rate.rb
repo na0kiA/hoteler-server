@@ -9,8 +9,4 @@ class RestRate < ApplicationRecord
     validates :first_time
     validates :last_time
   end
-
-  # def save
-  #   RestRate.create(plan:, rate:, first_time:, last_time:, day_id:)
-  # end
 end

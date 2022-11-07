@@ -17,7 +17,7 @@ class Day < ApplicationRecord
 
   DAYS = %w[日曜 月曜 火曜 水曜 木曜 金曜 土曜].freeze
 
-  def self.select_day_of_the_week(today = Time.zone.today.wday)
+  def self.select_a_day_of_the_week(today = Time.zone.today.wday)
     return Day.holiday if HolidayJapan.check(Date.current)
     return Day.day_before_a_holiday if HolidayJapan.check(Date.current.tomorrow)
     return Day.monday_through_thursday if DAYS[today].start_with?('月曜', '火曜', '水曜', '木曜')

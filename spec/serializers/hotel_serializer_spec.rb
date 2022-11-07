@@ -120,7 +120,6 @@ RSpec.describe HotelSerializer, type: :serializer do
     end
 
     context '今日が祝前日の場合' do
-
       before do
         travel_to Time.zone.local(2022, 11, 2, 6, 0, 0)
       end
@@ -132,7 +131,6 @@ RSpec.describe HotelSerializer, type: :serializer do
     end
 
     context '今日が土曜の場合' do
-
       before do
         travel_to Time.zone.local(2022, 11, 5, 6, 0, 0)
       end
