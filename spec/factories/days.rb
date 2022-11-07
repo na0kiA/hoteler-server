@@ -24,6 +24,29 @@ FactoryBot.define do
       end
     end
 
+
+    trait :with_stay_rates do
+      after(:build) do |day|
+        day.stay_rates << FactoryBot.build(:stay_rate, :normal_stay_rate)
+        day.stay_rates << FactoryBot.build(:stay_rate, :long_stay_rate)
+        day.stay_rates << FactoryBot.build(:stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_day_off_stay_rates do
+      after(:build) do |day|
+        day.stay_rates << FactoryBot.build(:day_off_stay_rate, :normal_stay_rate)
+        day.stay_rates << FactoryBot.build(:day_off_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_special_stay_rates do
+      after(:build) do |day|
+        day.stay_rates << FactoryBot.build(:special_stay_rate, :normal_stay_rate)
+        day.stay_rates << FactoryBot.build(:special_stay_rate, :midnight_stay_rate)
+      end
+    end
+
     trait :with_special_period do
       after(:build) do |day|
         day.special_periods << FactoryBot.build(:special_period, :golden_week)

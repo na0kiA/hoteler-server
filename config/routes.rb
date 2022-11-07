@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   resources :posts, only: :index
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
-    # get 'home', to: 'home#index'
     root to: 'home#index', as: :home
 
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
@@ -21,6 +20,7 @@ Rails.application.routes.draw do
 
     scope '/days/:day_id' do
       resources :rest_rates, only: %i[create update destroy]
+      resources :stay_rates, only: %i[create update destroy]
       resources :special_periods, only: %i[create update destroy]
     end
 

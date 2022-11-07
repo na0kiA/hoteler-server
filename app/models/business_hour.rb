@@ -4,7 +4,7 @@ class BusinessHour
   class << self
     def take_services_list(today_rate_list:)
       today_rate_list.pluck(:start_time, :end_time, :id)&.map do |val|
-        can_take_at_midnight_or_daytime?(start_time: val[0], end_time: val[1], service: RestRate.find(val[2]))
+        can_take_at_midnight_or_daytime?(start_time: val[0], end_time: val[1], service: val[2])
       end
     end
 

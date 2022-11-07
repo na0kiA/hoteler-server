@@ -112,7 +112,7 @@ RSpec.describe 'V1::Hotels', type: :request do
   describe 'GET /v1/hotels - v1/hotels#index' do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_rest_rates, user_id: client_user.id) }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: client_user.id) }
     let_it_be(:hotel_image) { create_list(:hotel_image, 3, hotel_id: accepted_hotel.id) }
 
     context 'ホテルが承認されている場合' do
@@ -125,7 +125,7 @@ RSpec.describe 'V1::Hotels', type: :request do
       end
 
       it 'ホテルを複数個取得できること' do
-        create_list(:completed_profile_hotel, 2, :with_a_day_and_rest_rates, user_id: client_user.id)
+        create_list(:completed_profile_hotel, 2, :with_a_day_and_service_rates, user_id: client_user.id)
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
@@ -148,7 +148,7 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_rest_rates, user_id: client_user.id) }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: client_user.id) }
 
     context 'ホテルが承認されている場合' do
       it 'ホテル詳細を取得できること' do
@@ -168,7 +168,6 @@ RSpec.describe 'V1::Hotels', type: :request do
     end
 
     context '今日がお盆の場合' do
-
       before do
         travel_to Time.zone.local(2023, 8, 14, 6, 0, 0)
       end

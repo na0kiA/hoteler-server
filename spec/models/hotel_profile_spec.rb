@@ -5,7 +5,7 @@
 
 # RSpec.describe HotelProfile, type: :model do
 #   describe 'models/hotel_profile.rb #update' do
-#     let_it_be(:hotel) { create(:completed_profile_hotel, :with_a_day_and_rest_rates) }
+#     let_it_be(:hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates) }
 #     let_it_be(:update_params) {
 #       { name: '神戸レジャー', content: '最高峰のラグジュアリーホテルをお届けします', key: %w[key2998 key3998], daily_rates: daily_rate_params, special_periods: special_period_params, user_id: hotel.user_id }
 #     }

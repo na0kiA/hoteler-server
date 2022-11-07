@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RestRateSerializer < ActiveModel::Serializer
+class StayRateSerializer < ActiveModel::Serializer
   attribute :plan
   attribute :rate
   attribute :start_time do
