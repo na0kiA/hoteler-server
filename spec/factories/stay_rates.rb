@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :stay_rate do
     trait :normal_stay_rate do
@@ -24,14 +26,14 @@ FactoryBot.define do
     factory :day_off_stay_rate, class: 'StayRate' do
       trait :normal_stay_rate do
         plan { '宿泊1部' }
-        rate { 12980 }
+        rate { 12_980 }
         start_time { '22:00' }
         end_time { '11:00' }
       end
 
       trait :midnight_stay_rate do
         plan { '素泊まり' }
-        rate { 10980 }
+        rate { 10_980 }
         start_time { '0:00' }
         end_time { '9:00' }
       end
@@ -40,14 +42,14 @@ FactoryBot.define do
     factory :special_stay_rate, class: 'StayRate' do
       trait :midnight_stay_rate do
         plan { '素泊まり' }
-        rate { 10980 }
+        rate { 10_980 }
         start_time { '0:00' }
         end_time { '9:00' }
       end
 
       trait :normal_stay_rate do
         plan { '宿泊1部' }
-        rate { 12980 }
+        rate { 12_980 }
         start_time { '22:00' }
         end_time { '11:00' }
       end

@@ -16,6 +16,13 @@ FactoryBot.define do
       end_time { '24:00' }
     end
 
+    trait :morning_rest_rate do
+      plan { '早朝休憩90分' }
+      rate { 4980 }
+      start_time { '4:00' }
+      end_time { '11:00' }
+    end
+
     trait :midnight_rest_rate do
       plan { '深夜休憩90分' }
       rate { 4980 }

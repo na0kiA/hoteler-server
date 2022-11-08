@@ -19,8 +19,26 @@ RSpec.describe HotelSerializer, type: :serializer do
         expect(json_serializer.keys).to include :rest_rates
       end
 
+      it 'stay_ratesが含めれていること' do
+        expect(json_serializer.keys).to include :stay_rates
+      end
+
       it 'hotel_imagesが含めれていること' do
         expect(json_serializer.keys).to include :hotel_images
+      end
+    end
+
+    context '同じ料金の休憩プランがある場合' do
+      let_it_be(:same_rest_rate_plan) { create(:rest_rate, :morning_rest_rate, day_id: hotel.days.ids[0]) }
+
+      before do
+        travel_to Time.zone.local(2022, 10, 13, 4, 0, 0)
+      end
+
+      it '現在時刻から終了時刻までが一番長い休憩プランが返ること' do
+        json_serializer = HotelSerializer.new(hotel).as_json
+        expect(json_serializer[:day_of_the_week][0][:day]).to eq('月曜から木曜')
+        expect(json_serializer[:rest_rates][0][:plan]).to eq('早朝休憩90分')
       end
     end
 
@@ -33,6 +51,12 @@ RSpec.describe HotelSerializer, type: :serializer do
         json_serializer = HotelSerializer.new(hotel).as_json
         expect(json_serializer[:day_of_the_week][0][:day]).to eq('月曜から木曜')
         expect(json_serializer[:rest_rates][0][:plan]).to eq('休憩60分')
+      end
+
+      it '月曜から木曜にだけある宿泊2部が表示されること' do
+        json_serializer = HotelSerializer.new(hotel).as_json
+        expect(json_serializer[:day_of_the_week][0][:day]).to eq('月曜から木曜')
+        expect(json_serializer[:stay_rates][0][:plan]).to eq('宿泊2部')
       end
 
       it '深夜休憩が表示されないこと' do
@@ -50,6 +74,11 @@ RSpec.describe HotelSerializer, type: :serializer do
         json_serializer = HotelSerializer.new(hotel).as_json
         expect(json_serializer[:day_of_the_week][0][:day]).to eq('月曜から木曜')
         expect(json_serializer[:rest_rates][0][:plan]).to eq('深夜休憩90分')
+      end
+
+      it '素泊まりプランが表示されること' do
+        json_serializer = HotelSerializer.new(hotel).as_json
+        expect(json_serializer[:stay_rates][0][:plan]).to eq('素泊まり')
       end
 
       it '通常の休憩料金が表示されないこと' do
@@ -94,6 +123,7 @@ RSpec.describe HotelSerializer, type: :serializer do
         json_serializer = HotelSerializer.new(hotel).as_json
         expect(json_serializer[:day_of_the_week][0][:day]).to eq('特別期間')
         expect(json_serializer[:rest_rates][0][:rate]).to eq(5980)
+        expect(json_serializer[:stay_rates][0][:rate]).to eq(10980)
       end
 
       it '通常の休憩料金が表示されないこと' do
@@ -102,7 +132,7 @@ RSpec.describe HotelSerializer, type: :serializer do
       end
     end
 
-    context '今日が祝日の場合' do
+    context '今日が祝日で明日が平日の場合' do
       before do
         travel_to Time.zone.local(2022, 11, 3, 6, 0, 0)
       end
@@ -111,6 +141,11 @@ RSpec.describe HotelSerializer, type: :serializer do
         json_serializer = HotelSerializer.new(hotel).as_json
         expect(json_serializer[:day_of_the_week][0][:day]).to eq('祝日')
         expect(json_serializer[:rest_rates][0][:rate]).to eq(5980)
+      end
+
+      it '宿泊は平日料金が表示されること' do
+        json_serializer = HotelSerializer.new(hotel).as_json
+        expect(json_serializer[:stay_rates][0][:rate]).to eq(3980)
       end
 
       it '通常の休憩料金が表示されないこと' do
@@ -130,7 +165,7 @@ RSpec.describe HotelSerializer, type: :serializer do
       end
     end
 
-    context '今日が土曜の場合' do
+    context '今日が土曜の6時の場合' do
       before do
         travel_to Time.zone.local(2022, 11, 5, 6, 0, 0)
       end
@@ -138,6 +173,12 @@ RSpec.describe HotelSerializer, type: :serializer do
       it '土曜が表示されること' do
         json_serializer = HotelSerializer.new(hotel).as_json
         expect(json_serializer[:day_of_the_week][0][:day]).to eq('土曜')
+      end
+
+      it '宿泊料金は土曜料金が表示されること' do
+        json_serializer = HotelSerializer.new(hotel).as_json
+        p json_serializer
+        expect(json_serializer[:stay_rates][0][:plan]).to eq('宿泊1部')
       end
 
       it '通常の休憩料金が表示されないこと' do

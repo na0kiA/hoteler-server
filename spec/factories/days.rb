@@ -24,7 +24,6 @@ FactoryBot.define do
       end
     end
 
-
     trait :with_stay_rates do
       after(:build) do |day|
         day.stay_rates << FactoryBot.build(:stay_rate, :normal_stay_rate)
