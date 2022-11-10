@@ -56,11 +56,38 @@ class HotelSerializer < ActiveModel::Serializer
     end
 
     def pick_up_a_stay
-      if StayRate.the_time_now_is_after_6_am?
-        the_next_start_stay_service
-      else
-        filtered_cheap_stay_rates.where(id: select_a_long_stay_time_service)
+      # 朝の6時以降かつ今の時間が宿泊の開始時刻ではない場合
+      return the_next_start_stay_service if StayRate.the_time_now_is_after_6_am? && aftet_stay_time
+
+      p aftet_stay_time
+      filtered_cheap_stay_rates.where(id: select_a_long_stay_time_service)
+    end
+
+    def aftet_stay_time
+      during_business_hours_stay_list.pluck(:start_time, :id)&.map do |val|
+        arr = []
+        arr << val[1] << aftet_business_hours(start_time: val[0])
       end
+    end
+
+    def aa
+      after_stay_time.filter do |id, bool|
+        if bool
+          during_business_hours_stay_list.where(id: id)
+        end
+      end
+    end
+
+    def aftet_business_hours(start_time:)
+      [*convert_at_hour(start_time)..23].none?(convert_at_hour(Time.current))
+    end
+
+    def convert_at_hour(time)
+      (I18n.l time, format: :hours).to_i
+    end
+
+    def the_next_start_stay_service
+      during_business_hours_stay_list.where(id: StayRate.select_the_next_start_stay_id(stay_rates: during_business_hours_stay_list))
     end
 
     def select_a_long_rest_time_service
@@ -71,9 +98,6 @@ class HotelSerializer < ActiveModel::Serializer
       HotelBusinessHour.select_the_longest_business_hour_service_id(cheap_services: filtered_cheap_stay_rates)
     end
 
-    def the_next_start_stay_service
-      during_business_hours_stay_list.where(id: StayRate.select_the_next_start_stay_id(stay_rates: during_business_hours_stay_list))
-    end
 
     def filtered_cheap_rest_rates
       during_business_hours_rest_list.where(rate: during_business_hours_rest_list.pluck(:rate).min)

@@ -2,7 +2,7 @@
 
 class HotelBusinessHour
   include ConvertAtHour
-  
+
   class << self
     def take_services_list(today_rate_list:)
       today_rate_list.pluck(:start_time, :end_time, :id)&.map do |val|
