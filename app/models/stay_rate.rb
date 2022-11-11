@@ -23,7 +23,7 @@ class StayRate < ApplicationRecord
         arr << val[2] << if the_time_now_is_after_6_am?(val[0]) && aftet_business_hours(start_time: val[0])
                            [*convert_at_hour(Time.current)...convert_at_hour(val[0])].length
                          else
-                          MAX_TIME
+                           MAX_TIME
                          end
       end
     end
