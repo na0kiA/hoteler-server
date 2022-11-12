@@ -2,18 +2,20 @@
 
 module V1
   class HotelsController < ApplicationController
+    include HotelIncludable
+
     before_action :authenticate_v1_user!, except: %i[index show]
     before_action :set_hotel, only: %i[show update destroy]
 
     def index
       hotel = Hotel.accepted
-      render json: hotel, serializer: HotelSerializer
+      render json: hotel, each_serializer: HotelIndexSerializer
     end
 
     def show
-      hotel = Hotel.accepted.find_by(id: @hotel.id)
-      if hotel.present?
-        render json: hotel, serializer: HotelSerializer
+      accepted_hotel = Hotel.accepted.find_by(id: @hotel.id)
+      if accepted_hotel.present?
+        render json: accepted_hotel, serializer: HotelShowSerializer
       else
         record_not_found
       end

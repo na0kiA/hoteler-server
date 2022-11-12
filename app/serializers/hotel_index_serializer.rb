@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class HotelSerializer < ActiveModel::Serializer
+class HotelIndexSerializer < ActiveModel::Serializer
+
   attributes :id,
              :name,
              :content,
@@ -54,8 +55,10 @@ class HotelSerializer < ActiveModel::Serializer
   end
 
   def select_a_day
-    return Day.special_day.where(hotel_id: object.id) if SpecialPeriod.check_that_today_is_a_special_period?(hotel: object)
-
-    Day.select_a_day_of_the_week.where(hotel_id: object.id)
+    if SpecialPeriod.check_that_today_is_a_special_period?(hotel: object)
+      Day.special_day.where(hotel_id: object.id)
+    else
+      Day.select_a_day_of_the_week.where(hotel_id: object.id)
+    end
   end
 end

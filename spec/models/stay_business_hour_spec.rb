@@ -14,7 +14,7 @@ RSpec.describe StayBusinessHour, type: :model do
 
       it '現在時刻から最も宿泊の開始時刻が近い、宿泊プランを一つ抽出できること' do
         day_before_a_holiday_rest_rates = hotel.stay_rates.where(day_id: hotel.days.ids[6])
-
+        stay_business_hour = described_class.new(date: day_before_a_holiday_rest_rates)
         expect(stay_business_hour.extract_the_stay_rate[0][:plan]).to eq('宿泊1部')
         expect(stay_business_hour.extract_the_stay_rate[0][:rate]).to eq(12_980)
       end

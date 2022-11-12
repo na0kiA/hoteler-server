@@ -149,14 +149,14 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: client_user.id) }
+    let_it_be(:hotel_image) { create_list(:hotel_image, 3, hotel_id: accepted_hotel.id) }
 
     context 'ホテルが承認されている場合' do
       it 'ホテル詳細を取得できること' do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
-        p response_body
         expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq 9
+        expect(response_body.length).to eq(8)
       end
 
       it '口コミの評価率と評価数が取得できること' do
@@ -177,8 +177,7 @@ RSpec.describe 'V1::Hotels', type: :request do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        p response_body
-        expect(response_body[:day_of_the_week]).to eq('特別期間')
+        expect(response_body[:day_of_the_week][0][:day]).to eq('特別期間')
       end
     end
 

@@ -108,7 +108,6 @@ class StayBusinessHour
 
     # ホテルの締め時間は朝6時なので,6時以降に表示する宿泊プランは今夜の宿泊プランの必要がある。そして次の最初の宿泊時間までは、その最初の宿泊プランを表示する
     def the_time_now_is_between_6_am_and_next_stay_time(time = Time.current)
-      p select_today_first_stay_start_time
       convert_at_hour(time) >= CLOSING_TIME && convert_at_hour(time) <= select_today_first_stay_start_time
     end
 

@@ -3,16 +3,14 @@
 module HotelIncludable
   def hotel_includes_by(model:, serializer:)
     case serializer.name
-    when 'HotelSerializer'
+    when 'HotelIndexSerializer'
       model.includes(
         :hotel_images,
         :days,
-        days: :rest_rates
+        days: [:rest_rates, :stay_rates, :special_periods]
       )
     else
       raise StandardError, "Unsupported serializer: #{serializer}"
     end
   end
-
-  # module_function :hotel_includes_by
 end
