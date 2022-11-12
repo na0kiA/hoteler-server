@@ -31,7 +31,7 @@ FactoryBot.define do
         hotel.days << FactoryBot.build(:day, :saturday, :with_day_off_rest_rates, :with_day_off_stay_rates)
         hotel.days << FactoryBot.build(:day, :sunday, :with_day_off_rest_rates, :with_stay_rates)
         hotel.days << FactoryBot.build(:day, :holiday, :with_day_off_rest_rates, :with_stay_rates)
-        hotel.days << FactoryBot.build(:day, :day_before_a_holiday, :with_rest_rates, :with_day_off_stay_rates)
+        hotel.days << FactoryBot.build(:day, :day_before_a_holiday, :with_day_off_rest_rates, :with_day_off_stay_rates)
         hotel.days << FactoryBot.build(:day, :special_days, :with_special_rest_rates, :with_special_stay_rates, :with_special_period)
       end
     end

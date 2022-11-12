@@ -97,6 +97,19 @@ RSpec.describe HotelSerializer, type: :serializer do
         expect(json_serializer[:rest_rates]).to eq('営業時間外です')
       end
     end
+    
+    context '今日が月曜日の13時の場合' do
+      before do
+        travel_to Time.zone.local(2022, 11, 14, 13, 0, 0)
+      end
+
+      it '宿泊1部が表示されること' do
+        json_serializer = HotelSerializer.new(hotel).as_json
+        expect(json_serializer[:day_of_the_week][0][:day]).to eq('月曜から木曜')
+        expect(json_serializer[:stay_rates][0][:plan]).to eq('宿泊1部')
+        expect(json_serializer[:stay_rates][0][:rate]).to eq(5980)
+      end
+    end
 
     context '今日が金曜日で、時刻が5時59分の場合' do
       before do
@@ -134,7 +147,7 @@ RSpec.describe HotelSerializer, type: :serializer do
 
     context '今日が祝日で明日が平日の朝6時の場合' do
       before do
-        travel_to Time.zone.local(2022, 11, 3, 6, 0, 0)
+        travel_to Time.zone.local(2022, 11, 3, 13, 0, 0)
       end
 
       it '祝日料金が表示されること' do
@@ -154,14 +167,22 @@ RSpec.describe HotelSerializer, type: :serializer do
       end
     end
 
-    context '今日が祝前日の場合' do
+    context '今日が祝前日の13時の場合' do
       before do
-        travel_to Time.zone.local(2022, 11, 2, 6, 0, 0)
+        travel_to Time.zone.local(2022, 11, 2, 13, 0, 0)
       end
 
       it '祝前日が表示されること' do
         json_serializer = HotelSerializer.new(hotel).as_json
         expect(json_serializer[:day_of_the_week][0][:day]).to eq('祝前日')
+      end
+
+      it '祝前日料金が表示されること' do
+        json_serializer = HotelSerializer.new(hotel).as_json
+        expect(json_serializer[:stay_rates][0][:plan]).to eq('宿泊1部')
+        expect(json_serializer[:stay_rates][0][:rate]).to eq(12_980)
+        expect(json_serializer[:rest_rates][0][:plan]).to eq('休憩90分')
+        expect(json_serializer[:rest_rates][0][:rate]).to eq(5980)
       end
     end
 
