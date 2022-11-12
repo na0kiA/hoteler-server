@@ -92,31 +92,39 @@ class StayBusinessHour
     end
 
     def select_the_next_start_stay_id(stay_rates:)
-      create_list_of_id_and_time_length_from_the_current_time(stay_rates:).min_by { |a| a[1] }.first
+      create_list_of_id_and_time_length_from_the_current_time(stay_rates:).min_by { |a| a[1] }&.first
     end
 
     def create_list_of_id_and_time_length_from_the_current_time(stay_rates:)
       making_each_stay_array(date: stay_rates).map do |val|
         arr = []
-        arr << val[2] << midnight_service?(start_time:) ? MAX_TIME : [*convert_at_hour(Time.current)...convert_at_hour(start_time)].length
+        arr << val[2] << if midnight_service?(start_time: val[0])
+                           MAX_TIME
+                         else
+                           [*convert_at_hour(Time.current)...convert_at_hour(val[0])].length
+                         end
       end
     end
 
-
     # ホテルの締め時間は朝6時なので,6時以降に表示する宿泊プランは今夜の宿泊プランの必要がある。そして次の最初の宿泊時間までは、その最初の宿泊プランを表示する
     def the_time_now_is_between_6_am_and_next_stay_time(time = Time.current)
+      p select_today_first_stay_start_time
       convert_at_hour(time) >= CLOSING_TIME && convert_at_hour(time) <= select_today_first_stay_start_time
     end
 
     def today_stay_start_time
       making_each_stay_array(date:).map do |val|
         arr = []
-        arr << val[2] << midnight_service?(start_time: val[0]) ? MAX_TIME : convert_at_hour(val[0])
+        arr << val[2] << if midnight_service?(start_time: val[0])
+                           MAX_TIME
+                         else
+                           convert_at_hour(val[0])
+                         end
       end
     end
 
     def select_today_first_stay_start_time(stay_id_and_start_time = today_stay_start_time)
-      stay_id_and_start_time.min_by { |a| a[1] }.second
+      stay_id_and_start_time.min_by { |a| a[1] }&.second
     end
 
     def convert_at_hour(time)

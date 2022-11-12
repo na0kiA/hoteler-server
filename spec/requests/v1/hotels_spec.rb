@@ -154,8 +154,9 @@ RSpec.describe 'V1::Hotels', type: :request do
       it 'ホテル詳細を取得できること' do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
+        p response_body
         expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq 8
+        expect(response_body.length).to eq 9
       end
 
       it '口コミの評価率と評価数が取得できること' do
@@ -176,8 +177,8 @@ RSpec.describe 'V1::Hotels', type: :request do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[:day_of_the_week][0][:day]).to eq('特別期間')
-        expect(response_body[:rest_rates][0][:rate]).to eq(5980)
+        p response_body
+        expect(response_body[:day_of_the_week]).to eq('特別期間')
       end
     end
 

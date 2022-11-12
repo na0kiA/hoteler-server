@@ -97,7 +97,7 @@ RSpec.describe HotelSerializer, type: :serializer do
         expect(json_serializer[:rest_rates]).to eq('営業時間外です')
       end
     end
-    
+
     context '今日が月曜日の13時の場合' do
       before do
         travel_to Time.zone.local(2022, 11, 14, 13, 0, 0)

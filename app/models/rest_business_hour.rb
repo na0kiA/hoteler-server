@@ -2,6 +2,7 @@
 
 class RestBusinessHour
   attr_reader :date
+
   # private :date
 
   # 現在時刻からトップページに表示する休憩料金を一つ表示する
