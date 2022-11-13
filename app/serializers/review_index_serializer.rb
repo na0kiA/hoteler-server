@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
 class ReviewIndexSerializer < ActiveModel::Serializer
-  attributes :user_name,
-             :user_image,
-             :title,
+  attributes :title,
              :content,
-             :five_star_rating,
-             :end_time,
+             :five_star_rate,
              :created_at
 
-  def user_name
+  # def user_name
     
-  end
+  # end
 
   private
 

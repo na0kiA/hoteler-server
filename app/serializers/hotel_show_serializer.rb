@@ -31,7 +31,7 @@ class HotelShowSerializer < ActiveModel::Serializer
     ActiveModelSerializers::SerializableResource.new(
       select_four_reviews,
       each_serializer: ReviewIndexSerializer,
-      reviewer: reviewed_by,
+      # reviewer: reviewed_by,
       adapter: :attributes
     ).serializable_hash
   end
@@ -39,7 +39,7 @@ class HotelShowSerializer < ActiveModel::Serializer
   private
 
   def select_four_reviews
-    object.reviews.limit(4)
+    object.reviews
   end
 
   def reviewed_by

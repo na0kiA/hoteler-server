@@ -36,11 +36,6 @@ FactoryBot.define do
       end
     end
 
-    # trait :with_a_special_day_and_rest_rates do
-    #   after(:build) do |hotel|
-    #     hotel.days << FactoryBot.build(:day, :special_days, :with_special_period_rest_rates)
-    #   end
-    # end
 
     trait :with_days do
       after(:build) do |hotel|
