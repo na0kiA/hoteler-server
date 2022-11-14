@@ -5,11 +5,4 @@ class ReviewIndexSerializer < ActiveModel::Serializer
              :content,
              :five_star_rate,
              :created_at
-
-  # def user_name
-    
-  # end
-
-  private
-
 end

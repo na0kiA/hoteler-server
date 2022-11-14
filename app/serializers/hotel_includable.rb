@@ -7,7 +7,7 @@ module HotelIncludable
       model.includes(
         :hotel_images,
         :days,
-        days: [:rest_rates, :stay_rates, :special_periods]
+        days: %i[rest_rates stay_rates special_periods]
       )
     else
       raise StandardError, "Unsupported serializer: #{serializer}"

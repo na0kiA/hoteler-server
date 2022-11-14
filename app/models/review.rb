@@ -8,16 +8,9 @@ class Review < ApplicationRecord
 
   after_commit :update_reviews_count_and_rating, on: %i[create update]
 
-
-
   def self.update_zero_rating(set_review:)
     Hotel.update!(set_review.hotel_id, reviews_count: 0, average_rating: 0) if set_review.id == Review.where(hotel_id: set_review.hotel_id).last.id
   end
-
-  # def self.order_of_most_to_helpful_top_four(set_hotel:)
-  #   Review.where(hotel_id: set_hotel.id)
-  #   Helpfulness.where(review_id: set_hotel.review_ids)
-  # end
 
   private
 

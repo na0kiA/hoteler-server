@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class HotelIndexSerializer < ActiveModel::Serializer
-
   attributes :id,
              :name,
              :content,

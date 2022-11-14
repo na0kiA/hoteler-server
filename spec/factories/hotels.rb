@@ -36,7 +36,6 @@ FactoryBot.define do
       end
     end
 
-
     trait :with_days do
       after(:build) do |hotel|
         hotel.days << FactoryBot.build(:day, :monday_through_thursday)
