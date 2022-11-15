@@ -8,11 +8,10 @@ RSpec.describe 'V1::Reviews', type: :request do
   describe 'POST /v1/hotels/:hotel_id/reviews - v1/reviews#create' do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-
-    let_it_be(:hotel_user) { create(:user) }
-    let_it_be(:hotel_user_auth_tokens) { hotel_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: hotel_user.id) }
-    let_it_be(:hotel) { create(:hotel, user_id: hotel_user.id) }
+    let_it_be(:hotel_maneger) { create(:user) }
+    let_it_be(:hotel_maneger_auth_tokens) { hotel_maneger.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: hotel_maneger.id) }
+    let_it_be(:hotel) { create(:hotel, user_id: hotel_maneger.id) }
     let_it_be(:params) { { review: { title: '綺麗でした', content: '10月に改装したので綺麗でした', five_star_rate: 5 } } }
 
     context 'ログインしていて口コミの投稿ができる場合' do
@@ -75,11 +74,18 @@ RSpec.describe 'V1::Reviews', type: :request do
 
     context 'ホテル運営者が自分のホテルに口コミを書こうとした場合' do
       it '400を返すこと' do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: hotel_user_auth_tokens
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: hotel_maneger_auth_tokens
 
         expect(response).to have_http_status(:bad_request)
-        p response
         expect(symbolized_body(response)[:errors][:body]).to eq('ホテル運営者様は自身のホテルに口コミを書くことは出来ません。')
+      end
+    end
+
+    context '口コミに投稿する画像が4枚の場合' do
+      it '400を返すこと' do
+        images_params = { review: { title: 'お風呂が綺麗でした', content: 'また行きたいと思っています', five_star_rate: 5, key: ['upload/test', 'upload/test2', 'upload/test3', 'upload/test3'] } }
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: images_params, headers: auth_tokens
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -87,7 +93,10 @@ RSpec.describe 'V1::Reviews', type: :request do
   describe 'GET /v1/hotels/:hotel_id/reviews - v1/reviews#index' do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    let_it_be(:hotel_user) { create(:user) }
+    let_it_be(:hotel_maneger_auth_tokens) { create(:user).create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: hotel_user.id) }
+    let_it_be(:hotel) { create(:hotel, user_id: hotel_user.id) }
 
     context '口コミ一覧を正常に取得できる場合' do
       let_it_be(:review) { create(:review, hotel_id: accepted_hotel.id, user_id: client_user.id) }
@@ -101,7 +110,7 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context '画像の含まれている口コミを取得できる場合' do
-      images_params = { review: { title: 'お風呂が綺麗でした', content: 'また行きたいと思っています', five_star_rate: 5, key: ['upload/test'] } }
+      images_params = { review: { title: 'お風呂が綺麗でした', content: 'また行きたいと思っています', five_star_rate: 5, key: ['upload/test', 'upload/test2', 'upload/test3'] } }
 
       before do
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: images_params, headers: auth_tokens
@@ -109,9 +118,8 @@ RSpec.describe 'V1::Reviews', type: :request do
 
       it '200を返すこと' do
         get v1_hotel_reviews_path(hotel_id: accepted_hotel.id)
-
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[0][:review_images][0][:key]).to eq('upload/test')
+        expect(symbolized_body(response)[0][:review_images].length).to eq(3)
       end
     end
 
@@ -261,22 +269,25 @@ RSpec.describe 'V1::Reviews', type: :request do
   describe 'GET /v1/reviews/:id - v1/reviews#show' do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+
+    let_it_be(:hotel_maneger) { create(:user) }
+    let_it_be(:hotel_maneger_auth_tokens) { hotel_maneger.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: hotel_maneger.id) }
+
     let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
 
     context '口コミが書かれている場合' do
       it '200を返すこと' do
-        review = create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id)
         get v1_user_review_path(review.id)
 
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(10)
+        expect(symbolized_body(response).length).to eq(8)
       end
     end
 
     context '口コミを書いたホテルが存在しない場合' do
       before do
-        delete v1_hotel_path(accepted_hotel.id), headers: auth_tokens
+        delete v1_hotel_path(accepted_hotel.id), headers: hotel_maneger_auth_tokens
       end
 
       it '404を返すこと' do
@@ -288,13 +299,14 @@ RSpec.describe 'V1::Reviews', type: :request do
     end
 
     context '口コミを消去している場合' do
+      let_it_be(:before_delete_review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
+
       before do
-        delete v1_user_review_path(review.id), headers: auth_tokens
+        delete v1_user_review_path(before_delete_review.id), headers: auth_tokens
       end
 
       it '404を返すこと' do
-        get v1_user_review_path(review.id)
-
+        get v1_user_review_path(before_delete_review.id)
         expect(symbolized_body(response).length).to eq(1)
         expect(response.status).to eq(404)
       end

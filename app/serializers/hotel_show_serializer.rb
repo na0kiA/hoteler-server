@@ -27,20 +27,14 @@ class HotelShowSerializer < ActiveModel::Serializer
   end
 
   def top_four_reviews
+    return '口コミはまだありません。' if select_top_four_reviews.blank?
+
     ActiveModelSerializers::SerializableResource.new(
       select_top_four_reviews,
       each_serializer: ReviewIndexSerializer,
       adapter: :attributes
     ).serializable_hash
   end
-
-  # def average_rating
-  #   ActiveModelSerializers::SerializableResource.new(
-  #     select_top_four_reviews,
-  #     each_serializer: ReviewIndexSerializer,
-  #     adapter: :attributes
-  #   ).serializable_hash
-  # end
 
   private
 

@@ -24,11 +24,7 @@ class ReviewForm
 
     ActiveRecord::Base.transaction do
       review = Review.new(title:, content:, five_star_rate:, hotel_id:, user_id:)
-      if key.present?
-        JSON.parse(key).each do |val|
-          review.review_images.build(key: val)
-        end
-      end
+      build_key(review:)
       review.save!
     end
   rescue ActiveRecord::RecordInvalid
@@ -38,4 +34,20 @@ class ReviewForm
   def to_deep_symbol
     attributes.deep_symbolize_keys
   end
+
+  def too_many_images?
+    return if key.blank?
+
+    JSON.parse(key).length > 3
+  end
+
+  private
+
+    def build_key(review:)
+      return if key.blank?
+
+      JSON.parse(key).each do |val|
+        review.review_images.build(key: val)
+      end
+    end
 end

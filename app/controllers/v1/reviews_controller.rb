@@ -7,7 +7,8 @@ module V1
 
     def index
       if accepted_hotel_params.present?
-        render json: Review.all
+        reviews = accepted_hotel_params.reviews
+        render json: reviews, each_serializer: ReviewIndexSerializer
       else
         render json: { error: e.message }.to_json, status: :not_found
       end
@@ -25,7 +26,9 @@ module V1
     def create
       review_form = ReviewForm.new(review_params)
       if reviewed_by_other_than_hotel_manager?
-        if review_form.save && reviewed_by_other_than_hotel_manager?
+        if review_form.too_many_images?
+          render_json_bad_request_with_custom_errors(title: '画像の投稿に失敗しました。', body: '口コミに投稿できる画像は3枚までです。')
+        elsif review_form.save
           render json: review_form
         else
           render json: review_form.errors, status: :bad_request

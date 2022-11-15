@@ -26,7 +26,6 @@ class HotelImage < ApplicationRecord
     def create_hotel_images
       JSON.parse(key).map do |val|
         # break if val.blank?
-
         HotelImage.find_or_create_by!(key: val, hotel_id:)
       end
     end
