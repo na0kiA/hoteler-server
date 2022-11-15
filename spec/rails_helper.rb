@@ -10,6 +10,10 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 
 require 'rspec/rails'
 require 'test_prof/recipes/rspec/let_it_be'
+
+# ActiveRecord::Base.logger = Logger.new($stdout)
+# ActiveRecord::Base.verbose_query_logs = true
+
 SimpleCov.start do
   enable_coverage :branch
 

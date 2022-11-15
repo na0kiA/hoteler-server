@@ -3,11 +3,11 @@
 class HotelShowSerializer < ActiveModel::Serializer
   attributes :id,
              :name,
-             :hotel_images,
+             :content,
              :average_rating,
              :reviews_count,
+             :hotel_images,
              :day_of_the_week,
-             :content,
              :top_four_reviews
 
   def hotel_images
@@ -34,11 +34,18 @@ class HotelShowSerializer < ActiveModel::Serializer
     ).serializable_hash
   end
 
+  # def average_rating
+  #   ActiveModelSerializers::SerializableResource.new(
+  #     select_top_four_reviews,
+  #     each_serializer: ReviewIndexSerializer,
+  #     adapter: :attributes
+  #   ).serializable_hash
+  # end
+
   private
 
     def select_top_four_reviews
-      object.reviews
-      #  ReviewOfTopPage.new(date: object.reviews).extract_top_reviews
+      ReviewOfTopPage.new(reviews_of_a_hotel: object.reviews).extract_top_reviews
     end
 
     def select_a_day

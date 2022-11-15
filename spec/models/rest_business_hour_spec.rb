@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe RestBusinessHour, type: :model do
   describe 'models/rest_business_hour.rb #extract_the_rest_rate' do
     let_it_be(:user) { create(:user) }
-    let_it_be(:hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: user.id) }
+    let_it_be(:hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: user.id) }
 
     context '今が月曜の深夜4時で、深夜休憩と早朝休憩の料金が同じ場合' do
       let_it_be(:morning_rest_rate) { create(:rest_rate, :morning_rest_rate, day_id: hotel.days.ids[0]) }

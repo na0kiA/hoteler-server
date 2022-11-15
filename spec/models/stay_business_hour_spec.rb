@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe StayBusinessHour, type: :model do
   describe 'models/stay_business_hour.rb #extract_the_stay_rate' do
     let_it_be(:user) { create(:user) }
-    let_it_be(:hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: user.id) }
+    let_it_be(:hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: user.id) }
 
     context '今日が祝前日の13時の場合' do
       before do

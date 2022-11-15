@@ -112,7 +112,7 @@ RSpec.describe 'V1::Hotels', type: :request do
   describe 'GET /v1/hotels - v1/hotels#index' do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: client_user.id) }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: client_user.id) }
     let_it_be(:hotel_image) { create_list(:hotel_image, 3, hotel_id: accepted_hotel.id) }
 
     context 'ホテルが承認されている場合' do
@@ -125,7 +125,7 @@ RSpec.describe 'V1::Hotels', type: :request do
       end
 
       it 'ホテルを複数個取得できること' do
-        create_list(:completed_profile_hotel, 2, :with_a_day_and_service_rates, user_id: client_user.id)
+        create_list(:completed_profile_hotel, 2, :with_days_and_service_rates, user_id: client_user.id)
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
@@ -148,8 +148,8 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: client_user.id) }
-    let_it_be(:hotel_image) { create_list(:hotel_image, 3, hotel_id: accepted_hotel.id) }
+    let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: client_user.id) }
+    let_it_be(:hotel_image) { create(:hotel_image, 1, hotel_id: accepted_hotel.id) }
 
     context 'ホテルが承認されている場合' do
       it 'ホテル詳細を取得できること' do
@@ -165,6 +165,28 @@ RSpec.describe 'V1::Hotels', type: :request do
         expect(response).to have_http_status(:success)
         expect(response_body[:reviews_count]).to eq(0)
         expect(response_body[:average_rating]).to eq('0.0')
+      end
+    end
+
+    context '口コミが新しく記述された場合' do
+      let_it_be(:other_user) { create(:user) }
+      let_it_be(:other_user_auth_tokens) { other_user.create_new_auth_token }
+
+      before do
+        params = { review: { title: '綺麗でした', content: 'また行こうと思っています', five_star_rate: 5 } }
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: other_user_auth_tokens
+      end
+
+      it 'ホテルの口コミカウントが更新されること' do
+        get v1_hotel_path(accepted_hotel.id)
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body[:reviews_count]).to eq(1)
+      end
+
+      it 'ホテルの五つ星が更新されること' do
+        get v1_hotel_path(accepted_hotel.id)
+        response_body = JSON.parse(response.body, symbolize_names: true)
+        expect(response_body[:average_rating]).to eq('5.0')
       end
     end
 

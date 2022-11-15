@@ -51,7 +51,7 @@ RSpec.describe 'V1::SpecialPeriod', type: :request do
   describe 'PATCH /v1/day/:day_id/special_periods/:id - v1/day/:day_id/special_periods/:id #update' do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
-    let_it_be(:hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: client_user.id) }
+    let_it_be(:hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: client_user.id) }
     let_it_be(:day_id) { hotel.days.ids[6] }
     let_it_be(:special_period_id) { hotel.special_periods.ids[0] }
 
@@ -89,7 +89,7 @@ RSpec.describe 'V1::SpecialPeriod', type: :request do
   describe 'DELETE /v1/day/:day_id/special_periods/:id - v1/day/:day_id/special_periods/:id #destroy' do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
-    let_it_be(:hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: client_user.id) }
+    let_it_be(:hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: client_user.id) }
     let_it_be(:day_id) { hotel.days.ids[6] }
     let_it_be(:special_period_id) { hotel.special_periods.ids[0] }
 

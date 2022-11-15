@@ -24,10 +24,14 @@ module V1
 
     def create
       review_form = ReviewForm.new(review_params)
-      if review_form.save
-        render json: review_form
+      if reviewed_by_other_than_hotel_manager?
+        if review_form.save && reviewed_by_other_than_hotel_manager?
+          render json: review_form
+        else
+          render json: review_form.errors, status: :bad_request
+        end
       else
-        render json: review_form.errors, status: :bad_request
+        render_json_bad_request_with_custom_errors(title: '書き込みに失敗しました。', body: 'ホテル運営者様は自身のホテルに口コミを書くことは出来ません。')
       end
     end
 
@@ -57,9 +61,12 @@ module V1
         @review.present? && @review.user_id == current_v1_user.id
       end
 
+      def reviewed_by_other_than_hotel_manager?
+        current_v1_user.id != accepted_hotel_params.user.id
+      end
+
       def review_params
-        params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id,
-                                                                                         hotel_id: accepted_hotel_params.id)
+        params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
       end
 
     # reviewのupdateのrouting(v1/reviews/:id)にホテルのidが含まれていないため専用のupdate_paramsを用意

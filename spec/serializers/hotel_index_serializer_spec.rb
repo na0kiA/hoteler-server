@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe HotelIndexSerializer, type: :serializer do
   describe HotelIndexSerializer do
     let_it_be(:user) { create(:user) }
-    let_it_be(:hotel) { create(:completed_profile_hotel, :with_a_day_and_service_rates, user_id: user.id) }
+    let_it_be(:hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: user.id) }
     let_it_be(:hotel_images) { create_list(:hotel_image, 3, hotel_id: hotel.id) }
 
     context 'ホテル一覧が取得できる場合' do

@@ -8,8 +8,11 @@ RSpec.describe 'V1::Reviews', type: :request do
   describe 'POST /v1/hotels/:hotel_id/reviews - v1/reviews#create' do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
-    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
-    let_it_be(:hotel) { create(:hotel, user_id: client_user.id) }
+
+    let_it_be(:hotel_user) { create(:user) }
+    let_it_be(:hotel_user_auth_tokens) { hotel_user.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: hotel_user.id) }
+    let_it_be(:hotel) { create(:hotel, user_id: hotel_user.id) }
     let_it_be(:params) { { review: { title: '綺麗でした', content: '10月に改装したので綺麗でした', five_star_rate: 5 } } }
 
     context 'ログインしていて口コミの投稿ができる場合' do
@@ -67,6 +70,16 @@ RSpec.describe 'V1::Reviews', type: :request do
 
         expect(response).to have_http_status(:unauthorized)
         expect(response.status).to eq(401)
+      end
+    end
+
+    context 'ホテル運営者が自分のホテルに口コミを書こうとした場合' do
+      it '400を返すこと' do
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: hotel_user_auth_tokens
+
+        expect(response).to have_http_status(:bad_request)
+        p response
+        expect(symbolized_body(response)[:errors][:body]).to eq('ホテル運営者様は自身のホテルに口コミを書くことは出来ません。')
       end
     end
   end
