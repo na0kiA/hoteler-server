@@ -40,7 +40,7 @@ module V1
 
     def update
       review_form = ReviewForm.new(update_params)
-      if review_form.valid? && authenticate?
+      if review_form.valid? && authenticated?
         ReviewEdit.new(params: review_form.to_deep_symbol, set_review: @review).update
         render json: review_form, status: :ok
       else
@@ -49,8 +49,10 @@ module V1
     end
 
     def destroy
-      if authenticate?
-        Review.update_zero_rating(set_review: @review)
+      if authenticated?
+        # if @review.id == Review.where(hotel_id: @review.hotel_id).last.id
+          # Review.update_zero_rating(set_review: @review)
+        # end
         @review.destroy
         render json: @review, status: :ok
       else
@@ -60,7 +62,7 @@ module V1
 
     private
 
-      def authenticate?
+      def authenticated?
         @review.present? && @review.user_id == current_v1_user.id
       end
 
