@@ -8,10 +8,6 @@ class Review < ApplicationRecord
 
   after_commit :update_reviews_count_and_rating, on: %i[create update destroy]
 
-  # def self.update_zero_rating(set_review:)
-  #   Hotel.update!(set_review.hotel_id, reviews_count: 0, average_rating: 0)
-  # end
-
   private
 
     def update_reviews_count_and_rating

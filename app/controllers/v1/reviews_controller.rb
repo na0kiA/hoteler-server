@@ -50,9 +50,6 @@ module V1
 
     def destroy
       if authenticated?
-        # if @review.id == Review.where(hotel_id: @review.hotel_id).last.id
-          # Review.update_zero_rating(set_review: @review)
-        # end
         @review.destroy
         render json: @review, status: :ok
       else
