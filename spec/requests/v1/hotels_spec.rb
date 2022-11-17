@@ -149,7 +149,7 @@ RSpec.describe 'V1::Hotels', type: :request do
     let_it_be(:hidden_hotel) { create(:hotel, user_id: client_user.id) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: client_user.id) }
-    let_it_be(:hotel_image) { create(:hotel_image, 1, hotel_id: accepted_hotel.id) }
+    let_it_be(:hotel_image) { create(:hotel_image, hotel_id: accepted_hotel.id) }
 
     context 'ホテルが承認されている場合' do
       it 'ホテル詳細を取得できること' do
