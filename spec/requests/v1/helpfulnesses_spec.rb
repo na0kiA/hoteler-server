@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'V1::Helpfulnesses', type: :request do
@@ -24,14 +26,13 @@ RSpec.describe 'V1::Helpfulnesses', type: :request do
         post v1_helpfulnesses_path(review_id: review.id), headers: nil
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response.status).to eq(401)
-        expect(response_body[:errors][0]).to include('ログインもしくはアカウント登録してください')
+        expect(response_body[:errors][0]).to eq('ログイン、もしくはアカウント登録をしてください。')
       end
 
       it '口コミが存在しないとき、エラーが表示されること' do
         post v1_helpfulnesses_path(0), headers: auth_tokens
         expect(response).to have_http_status(:bad_request)
-        expect(response.message).to include('Bad Request')
-        expect(JSON.parse(response.body)['errors']['title']).to include('存在しない口コミです')
+        expect(symbolized_body(response)[:errors][:title]).to eq('存在しない口コミです')
       end
     end
 
@@ -59,7 +60,7 @@ RSpec.describe 'V1::Helpfulnesses', type: :request do
       end
     end
 
-    context 'ログインをしていない場合' do
+    context 'ログインをしていなのに削除しようとした場合' do
       let_it_be(:helpfulness) { Helpfulness.create(user_id: client_user.id, review_id: review.id) }
       it '401が帰ってくること' do
         delete v1_helpfulnesses_path(review_id: review.id), headers: nil
@@ -73,17 +74,7 @@ RSpec.describe 'V1::Helpfulnesses', type: :request do
       it '400とカスタムエラーが帰ってくること' do
         delete v1_helpfulnesses_path(review_id: 0), headers: auth_tokens
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['errors']['title']).to include('「参考になった」を取り消せません')
-      end
-    end
-
-    context 'ログインをしていない場合' do
-      let_it_be(:helpfulness) { Helpfulness.create(user_id: client_user.id, review_id: review.id) }
-
-      it '401が帰ってくること' do
-        delete v1_helpfulnesses_path(review_id: review.id), headers: nil
-        expect(response.status).to eq(401)
-        expect(response.message).to include('Unauthorized')
+        expect(symbolized_body(response)[:errors][:title]).to eq('「参考になった」を取り消せません')
       end
     end
 
@@ -91,7 +82,7 @@ RSpec.describe 'V1::Helpfulnesses', type: :request do
       it '400とカスタムエラーが帰ってくること' do
         delete v1_helpfulnesses_path(review_id: review.id), headers: auth_tokens
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['errors']['title']).to include('「参考になった」を取り消せません')
+        expect(symbolized_body(response)[:errors][:title]).to include('「参考になった」を取り消せません')
       end
     end
   end

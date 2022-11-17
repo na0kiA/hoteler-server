@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 require 'simplecov'
@@ -8,17 +10,24 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 
 require 'rspec/rails'
 require 'test_prof/recipes/rspec/let_it_be'
+
+# ActiveRecord::Base.logger = Logger.new($stdout)
+# ActiveRecord::Base.verbose_query_logs = true
+
 SimpleCov.start do
   enable_coverage :branch
 
   add_group 'Models', 'app/models'
   add_group 'Forms', 'app/forms'
-  add_group 'Controllers (api)', 'app/controllers/v1'
-  add_group 'Helpers', 'app/helpers'
+  add_group 'Serializers', 'app/serializers/'
+  add_group 'Controllers', 'app/controllers/'
+  add_group 'Validators', 'app/validators/'
+  add_group 'Helpers', 'app/helpers/'
+  add_group 'Support', 'spec/support/'
 end
 require 'devise'
 
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 begin
   ActiveRecord::Migration.maintain_test_schema!
@@ -39,4 +48,9 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include CustomValidatorHelper, type: :model
   config.include RequestSpecHelper
+  config.include HotelFormSpecHelper
+  config.include RestRateSpecHelper
+  config.include ActiveSupport::Testing::TimeHelpers
+  # config.include SerializerExampleGroup
+  # config.include Rails.application.routes.url_helpers
 end

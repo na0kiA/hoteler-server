@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   resources :posts, only: :index
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
+    root to: 'home#index', as: :home
+
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
       registrations: 'v1/auth/registrations'
     }
@@ -9,13 +13,19 @@ Rails.application.routes.draw do
     scope shallow_prefix: 'user' do
       resources :hotels do
         resources :reviews, shallow: true
+        resources :images, only: %i[index show create], controller: 'hotel_images'
+        resources :days, only: %i[index]
       end
     end
 
+    scope '/days/:day_id' do
+      resources :rest_rates, only: %i[create update destroy]
+      resources :stay_rates, only: %i[create update destroy]
+      resources :special_periods, only: %i[create update destroy]
+    end
+
     scope '/reviews/:review_id' do
-      resource :helpfulnesses, only: [:create, :destroy]
-      # post 'helpfulness', to: 'helpfulnesses#create'
-      # delete 'helpfulness/:id', to: 'helpfulnesses#destroy'
+      resource :helpfulnesses, only: %i[create destroy]
     end
 
     get 'images', to: 'images#signed_url'

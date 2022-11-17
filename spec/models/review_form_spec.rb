@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ReviewForm, type: :model do
@@ -57,10 +59,6 @@ RSpec.describe ReviewForm, type: :model do
   describe 'models/review_form.rb #save' do
     let_it_be(:user) { create(:user) }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: user.id) }
-
-    def params
-      attributes.deep_symbolize_keys
-    end
 
     context '正常に保存ができる場合' do
       it '口コミに画像がなくても保存できること' do

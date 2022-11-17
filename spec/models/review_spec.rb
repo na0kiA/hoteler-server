@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Review, type: :model do
@@ -8,7 +10,9 @@ RSpec.describe Review, type: :model do
 
     context '口コミ数が0になった場合' do
       it 'ホテルの評価数と評価率が0になること' do
-        expect { described_class.update_zero_rating(set_review: review) }.to change { Hotel.where(id: review.hotel_id).pluck(:reviews_count) }.from([1]).to([0])
+        expect { described_class.update_zero_rating(set_review: review) }.to change {
+                                                                               Hotel.where(id: review.hotel_id).pluck(:reviews_count)
+                                                                             }.from([1]).to([0])
         expect(described_class.update_zero_rating(set_review: review).average_rating).to eq(0.0)
       end
     end

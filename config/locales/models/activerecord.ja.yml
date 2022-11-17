@@ -8,19 +8,33 @@ ja:
       hotel_form:
         name: "ホテル名"
         content: "内容"
-        key: "画像ファイル"
-        file_url: "画像ファイル"
       hotel_image:
-        key: "画像ファイル"
-        file_url: "画像ファイル"
+        key: "ホテルの画像"
       hotel:
         name: "ホテル名"
         content: "内容"
+      day:
+        day: "曜日"
+      rest_rate:
+        plan: "料金プラン"
+        rate: "価格"
+        start_time: "サービス開始時刻"
+        end_time: "サービス終了時刻"
+      stay_rate:
+        plan: "料金プラン"
+        rate: "価格"
+        start_time: "サービス開始時刻"
+        end_time: "サービス終了時刻"
+      special_period:
+        period: "特別な期間"
+        start_date: "開始日時"
+        end_date: "終了日時"
     errors:
       messages:
-        record_invalid: "%{errors}が正しくありません。"
+        record_invalid: "%{errors}"
         blank: "%{attribute}を入力してください。"
         too_short: "%{attribute}は%{count}文字以上入力してください。"
+        not_a_number: "%{attribute}は数値のみ入力できます。"
         contain_blacklist_words: "%{attribute}に暴力的もしくは卑猥なワードが含まれています"
         contain_same_words: "%{attribute}に同じ文字列が羅列しています"
         contain_invalid_regex: "%{attribute}に無効な記号もしくはURLが含まれています"
@@ -29,7 +43,15 @@ ja:
           attributes:
             user:
               required: "ユーザー情報"
+            days:
+              required: "曜日情報"
+              invalid: "無効な日時"
         hotel_image:
           attributes:
             hotel:
               required: "ホテル情報"
+        special_period:
+          attributes:
+            period:
+              required: "特別期間の情報"
+              inclusion: "特別期間が設定されていません"

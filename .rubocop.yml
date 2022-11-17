@@ -1,35 +1,158 @@
-inherit_from: .rubocop_todo.yml
-
-# inherit_gem:
-#   test-prof: config/rubocop-rspec.yml
+# inherit_from: .rubocop_todo.yml
 
 require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
-  # - rubocop-inflector
   - ./config/initializers/inflections # My custom rule file
 
 AllCops:
   NewCops: enable
+  TargetRubyVersion: 3.1.2
+  TargetRailsVersion: 7.0.3.1
+  Exclude:
+    - 'vendor/*/*'
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'tmp/**/*'
+    - 'lib/tasks/auto_annotate_models.rake'
 
-Style/Documentation:
+Rails:
+  Enabled: true
+
+
+## 日本語コメントを許可。
+Style/AsciiComments:
   Enabled: false
 
-# Style/StringConcatenation:
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
 
+Layout/CommentIndentation:
+  Enabled: false
+
+# https://rubocop.readthedocs.io/en/stable/cops_layout/#layoutemptylinesaroundattributeaccessor
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_layout/#layoutspacearoundmethodcalloperator
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+# https://docs.rubocop.org/rubocop/cops_lint.html#lintdeprecatedopensslconstant
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_lint/#lintraiseexception
+Lint/RaiseException:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_lint/#lintstructnewoverride
+Lint/StructNewOverride:
+  Enabled: true
+
+Layout/LineLength:
+  Max: 200
+
+Metrics/BlockLength:
+  # CountComments: false
+  Max: 40
+  Exclude:
+    - 'Guardfile'
+    - 'config/routes.rb'
+    - 'spec/**/*'
+    - 'app/views/**/*.jbuilder'
+    - 'lib/tasks/dev.rake'
+
+Metrics/ClassLength:
+  CountComments: false
+
+Metrics/MethodLength:
+  Max: 15
+  # CountComments: false
+  Exclude:
+    - 'lib/tasks/dev.rake'
+
+Metrics/ModuleLength:
+  CountComments: false
 
 Metrics/AbcSize:
   Max: 25
 
-Metrics/BlockLength:
-  Max: 40
+Naming/FileName:
+  Exclude:
+    - 'Gemfile'
+    - 'Guardfile'
 
-RSpec/ExampleLength:
-  Max: 20
+Naming/MethodParameterName:
+  AllowedNames: [e]
 
 RSpec/ContextWording:
   Enabled: false
 
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/ExpectInHook:
+  Enabled: false
+
+# An instance variable can be used when needed, but use let when possible.
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
 RSpec/MultipleExpectations:
-  Max: 5
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#styleblockdelimiters
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+  Exclude:
+    - 'spec/**/*'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#styleexponentialnotation
+Style/ExponentialNotation:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#stylehasheachmethods
+Style/HashEachMethods:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#stylehashtransformkeys
+Style/HashTransformKeys:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#stylehashtransformvalues
+Style/HashTransformValues:
+  Enabled: true
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/RegexpLiteral:
+  Enabled: false
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#styleslicingwithrange
+Style/SlicingWithRange:
+  Enabled: true

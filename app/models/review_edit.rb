@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewEdit
   attr_reader :set_review, :five_star_rate, :key, :title, :content
 
@@ -6,11 +8,7 @@ class ReviewEdit
     @title = params.fetch(:title)
     @content = params.fetch(:content)
     @five_star_rate = params.fetch(:five_star_rate)
-    @key = if params[:key].present?
-             JSON.parse(params[:key])
-           else
-             []
-           end
+    @key = params[:key].present? ? JSON.parse(params[:key]) : []
     freeze
   end
 
@@ -28,21 +26,21 @@ class ReviewEdit
 
   private
 
-  def update_review
-    Review.update!(set_review.id, title:, content:, five_star_rate:)
-  end
-
-  def remove_unnecessary_key
-    set_review.review_images.where(key: extract_unnecessary_key).delete_all
-  end
-
-  def extract_unnecessary_key
-    set_review.review_images.pluck(:key).difference(key)
-  end
-
-  def find_or_create_key
-    key.each do |val|
-      set_review.review_images.find_or_create_by!(key: val)
+    def update_review
+      Review.update!(set_review.id, title:, content:, five_star_rate:)
     end
-  end
+
+    def remove_unnecessary_key
+      set_review.review_images.where(key: extract_unnecessary_key).delete_all
+    end
+
+    def extract_unnecessary_key
+      set_review.review_images.pluck(:key).difference(key)
+    end
+
+    def find_or_create_key
+      key.each do |val|
+        set_review.review_images.find_or_create_by!(key: val)
+      end
+    end
 end

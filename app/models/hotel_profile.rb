@@ -1,40 +1,49 @@
-class HotelProfile
-  attr_reader :params, :set_hotel, :key
+# frozen_string_literal: true
+# # frozen_string_literal: true
 
-  def initialize(params:, set_hotel:)
-    @params = params
-    @set_hotel = set_hotel
-    @key = JSON.parse(params[:key])
-    freeze
-  end
+# class HotelProfile
+#   include ActiveModel::Model
 
-  def update
-    ActiveRecord::Base.transaction do
-      update_hotel
-      find_or_create_key
-      remove_unnecessary_key
-    end
-  rescue ActiveRecord::RecordInvalid
-    false
-  end
+#   attr_reader :params, :name, :content, :set_hotel, :key, :daily_rates
 
-  private
+#   def initialize(params:, set_hotel:)
+#     @params = params
+#     @name = params.fetch(:name)
+#     @content = params.fetch(:content)
+#     @key = params.fetch(:key)
+#     @daily_rates = params.fetch(:daily_rates)
+#     @set_hotel = set_hotel
+#   end
 
-  def update_hotel
-    Hotel.update!(set_hotel.id, name: params[:name], content: params[:content])
-  end
+#   def update
+#     return if invalid?
 
-  def difference_key_array
-    set_hotel.hotel_images.pluck(:key).difference(key)
-  end
+#     ActiveRecord::Base.transaction do
+#       find_or_create_key
+#       remove_unnecessary_key
+#       update_hotel
+#     end
+#   rescue ActiveRecord::RecordInvalid
+#     false
+#   end
 
-  def find_or_create_key
-    key.each do |val|
-      set_hotel.hotel_images.find_or_create_by!(key: val)
-    end
-  end
+#   private
 
-  def remove_unnecessary_key
-    set_hotel.hotel_images.where(key: difference_key_array).delete_all
-  end
-end
+#     def update_hotel
+#       Hotel.update!(set_hotel.id, name:, content:)
+#     end
+
+    # def difference_key_array
+    #   set_hotel.hotel_images.pluck(:key).difference(key)
+    # end
+
+    # def find_or_create_key
+    #   key.each do |val|
+    #     set_hotel.hotel_images.find_or_create_by!(key: val)
+    #   end
+    # end
+
+    # def remove_unnecessary_key
+    #   set_hotel.hotel_images.where(key: difference_key_array).delete_all
+    # end
+# end

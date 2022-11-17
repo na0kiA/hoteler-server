@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ReviewEdit, type: :model do
@@ -5,10 +7,6 @@ RSpec.describe ReviewEdit, type: :model do
     let_it_be(:user) { create(:user) }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: user.id) }
     let_it_be(:review) { create(:review, hotel_id: accepted_hotel.id, user_id: user.id) }
-
-    def params
-      attributes.deep_symbolize_keys
-    end
 
     context '正常に更新ができる場合' do
       it 'paramsが正常なこと' do
@@ -20,7 +18,7 @@ RSpec.describe ReviewEdit, type: :model do
           'user_id' => user.id
         }
         review_form = ReviewForm.new(params)
-        review_edit = described_class.new(params: review_form.params, set_review: review)
+        review_edit = described_class.new(params: review_form.to_deep_symbol, set_review: review)
         expect(review_edit.update).to be_truthy
       end
 
@@ -49,7 +47,7 @@ RSpec.describe ReviewEdit, type: :model do
           'user_id' => user.id
         }
         review_form = ReviewForm.new(include_image_params)
-        review_edit = described_class.new(params: review_form.params, set_review: review)
+        review_edit = described_class.new(params: review_form.to_deep_symbol, set_review: review)
         expect { review_edit.update }.to change(ReviewImage, :count).by(2)
       end
 
@@ -62,9 +60,9 @@ RSpec.describe ReviewEdit, type: :model do
           'user_id' => user.id
         }
         review_form = ReviewForm.new(params)
-        review_edit = described_class.new(params: review_form.params, set_review: review)
+        review_edit = described_class.new(params: review_form.to_deep_symbol, set_review: review)
         review_edit.update
-        expect(Hotel.where(id: accepted_hotel.id).pluck(:average_rating)).to eq([0.3e1])
+        expect(Hotel.where(id: accepted_hotel.id).pick(:average_rating).to_i).to eq(3)
       end
     end
 
@@ -79,7 +77,7 @@ RSpec.describe ReviewEdit, type: :model do
           'user_id' => user.id
         }
         review_form = ReviewForm.new(invalid_params)
-        review_edit = described_class.new(params: review_form.params, set_review: review)
+        review_edit = described_class.new(params: review_form.to_deep_symbol, set_review: review)
         expect(review_edit.update).to be_nil
       end
     end

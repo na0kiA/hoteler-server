@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module V1
   class ReviewsController < ApplicationController
     before_action :authenticate_v1_user!, except: %i[index show]
@@ -5,7 +7,8 @@ module V1
 
     def index
       if accepted_hotel_params.present?
-        render json: Review.all
+        reviews = accepted_hotel_params.reviews
+        render json: reviews, each_serializer: ReviewIndexSerializer
       else
         render json: { error: e.message }.to_json, status: :not_found
       end
@@ -22,17 +25,23 @@ module V1
 
     def create
       review_form = ReviewForm.new(review_params)
-      if review_form.save
-        render json: review_form
+      if reviewed_by_other_than_hotel_manager?
+        if review_form.too_many_images?
+          render_json_bad_request_with_custom_errors(title: '画像の投稿に失敗しました。', body: '口コミに投稿できる画像は3枚までです。')
+        elsif review_form.save
+          render json: review_form
+        else
+          render json: review_form.errors, status: :bad_request
+        end
       else
-        render json: review_form.errors, status: :bad_request
+        render_json_bad_request_with_custom_errors(title: '書き込みに失敗しました。', body: 'ホテル運営者様は自身のホテルに口コミを書くことは出来ません。')
       end
     end
 
     def update
       review_form = ReviewForm.new(update_params)
-      if review_form.valid? && authenticate?
-        ReviewEdit.new(params: review_form.params, set_review: @review).update
+      if review_form.valid? && authenticated?
+        ReviewEdit.new(params: review_form.to_deep_symbol, set_review: @review).update
         render json: review_form, status: :ok
       else
         render json: review_form.errors, status: :bad_request
@@ -40,8 +49,7 @@ module V1
     end
 
     def destroy
-      if authenticate?
-        Review.update_zero_rating(set_review: @review)
+      if authenticated?
         @review.destroy
         render json: @review, status: :ok
       else
@@ -51,25 +59,29 @@ module V1
 
     private
 
-    def authenticate?
-      @review.present? && @review.user_id == current_v1_user.id
-    end
+      def authenticated?
+        @review.present? && @review.user_id == current_v1_user.id
+      end
 
-    def review_params
-      params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
-    end
+      def reviewed_by_other_than_hotel_manager?
+        current_v1_user.id != accepted_hotel_params.user.id
+      end
+
+      def review_params
+        params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
+      end
 
     # reviewのupdateのrouting(v1/reviews/:id)にホテルのidが含まれていないため専用のupdate_paramsを用意
-    def update_params
-      params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
-    end
+      def update_params
+        params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
+      end
 
-    def set_review
-      @review = Review.find(params[:id])
-    end
+      def set_review
+        @review = Review.find(params[:id])
+      end
 
-    def accepted_hotel_params
-      Hotel.accepted.find(params[:hotel_id])
-    end
+      def accepted_hotel_params
+        Hotel.accepted.find(params[:hotel_id])
+      end
   end
 end
