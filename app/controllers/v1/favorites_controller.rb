@@ -4,6 +4,10 @@ class V1::FavoritesController < ApplicationController
   before_action :authenticate_v1_user!
   before_action :set_hotel, only: [:create]
 
+  def index
+    
+  end
+
   def create
     if hotel_not_exists?
       render_json_bad_request_with_custom_errors(
