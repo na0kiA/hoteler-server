@@ -20,7 +20,7 @@ class Review < ApplicationRecord
 
     def average
       return 0 if Review.where(hotel_id:).blank?
-      
+
       Review.where(hotel_id:).average(:five_star_rate).round(1)
     end
 end
