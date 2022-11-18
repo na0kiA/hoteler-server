@@ -10,13 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_07_152834) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_18_112023) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["hotel_id"], name: "index_days_on_hotel_id"
+  end
+
+  create_table "favorites", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "hotel_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hotel_id"], name: "index_favorites_on_hotel_id"
+    t.index ["user_id", "hotel_id"], name: "index_favorites_on_user_id_and_hotel_id", unique: true
   end
 
   create_table "helpfulnesses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -138,6 +147,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_152834) do
   end
 
   add_foreign_key "days", "hotels"
+  add_foreign_key "favorites", "hotels"
+  add_foreign_key "favorites", "users"
   add_foreign_key "helpfulnesses", "reviews"
   add_foreign_key "helpfulnesses", "users"
   add_foreign_key "hotel_images", "hotels"
