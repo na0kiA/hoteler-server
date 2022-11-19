@@ -57,7 +57,7 @@ RSpec.describe 'V1::Favorites', type: :request do
     let_it_be(:hotel_manager)  { create(:user) }
     let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: hotel_manager.id) }
 
-    context 'ログインをしていないのに削除しようとした場合' do
+    context 'ログインをしていないのに削除しようとしている場合' do
       let_it_be(:favorite) { create(:favorite, hotel_id: accepted_hotel.id, user_id: client_user.id) }
 
       it '401が返ること' do
