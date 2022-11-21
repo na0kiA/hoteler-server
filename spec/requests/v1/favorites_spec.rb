@@ -38,7 +38,7 @@ RSpec.describe 'V1::Favorites', type: :request do
       it '400が返ること' do
         post v1_hotel_favorites_path(hidden_hotel), headers: auth_tokens
         expect(response.status).to eq(400)
-        expect(symbolized_body(response)[:errors][:body]).to eq('自分のホテルはお気に入りに登録できません。')
+        expect(symbolized_body(response)[:errors][:body]).to eq('自分のホテルはお気に入りに追加、及び削除ができません。')
       end
     end
 

@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :favorite do
-
     trait :with_hotel_and_image do
       association :hotel, factory: :with_user_and_hotel_images
     end

@@ -2,41 +2,29 @@
 
 class V1::FavoritesController < ApplicationController
   before_action :authenticate_v1_user!
-  before_action :set_hotel, only: [:create]
+  before_action :set_hotel, only: %i[create destroy]
 
   def create
     if hotel_not_exists?
-      render_json_bad_request_with_custom_errors(
-        title: '存在しないホテルです。',
-        body: '存在しないホテルに対しては「お気に入り」を押せません。'
-      )
+      hotel_not_exist_with_custom_errors
     elsif your_hotel?
-      render_json_bad_request_with_custom_errors(
-        title: 'お気に入りに登録できませんでした。',
-        body: '自分のホテルはお気に入りに登録できません。'
-      )
-    elsif @hotel.favorites.exists?(user_id: current_v1_user.id)
+      it_is_a_your_hotel_with_custom_errors
+    elsif @hotel.favorites.exists?(user: current_v1_user)
       redirect_to(action: :destroy) and return
     else
-      current_v1_user.favorites.create(hotel_id: @hotel.id)
+      current_v1_user.favorites.create(hotel: @hotel)
       render json: {}, status: :ok
     end
   end
 
   def destroy
-    favorite = Favorite.find_by(user_id: current_v1_user.id, hotel_id: params[:hotel_id])
+    favorite = Favorite.find_by(user: current_v1_user, hotel: @hotel)
     if favorite.blank?
-      render_json_bad_request_with_custom_errors(
-        title: '「お気に入り」を取り消せません',
-        body: '「お気に入り」を押していないので取り消せません'
-      )
-    elsif favorite.user_id != current_v1_user.id
+      hotel_not_exist_with_custom_errors
+    elsif favorite.user != current_v1_user
       render json: {}, status: :bad_request
     elsif your_hotel?
-      render_json_bad_request_with_custom_errors(
-        title: 'お気に入りを解除できませんでした。',
-        body: '自分のホテルはお気に入りは解除できません。'
-      )
+      it_is_a_your_hotel_with_custom_errors
     else
       favorite.destroy
       render json: {}, status: :ok
@@ -50,7 +38,7 @@ class V1::FavoritesController < ApplicationController
     end
 
     def my_hotel?
-      current_v1_user.id == set_hotel.user_id
+      current_v1_user == set_hotel.user
     end
 
     def accepted?
@@ -62,6 +50,20 @@ class V1::FavoritesController < ApplicationController
     end
 
     def your_hotel?
-      !accepted? && current_v1_user.id == set_hotel.user_id
+      !accepted? && current_v1_user == set_hotel.user
+    end
+
+    def hotel_not_exist_with_custom_errors
+      render_json_bad_request_with_custom_errors(
+        title: '存在しないホテルです。',
+        body: '存在しないホテルに対しては「お気に入り」を押せません。'
+      )
+    end
+
+    def it_is_a_your_hotel_with_custom_errors
+      render_json_bad_request_with_custom_errors(
+        title: 'お気に入りを操作できませんでした。',
+        body: '自分のホテルはお気に入りに追加、及び削除ができません。'
+      )
     end
 end
