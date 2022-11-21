@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_18_112023) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_21_085447) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
@@ -56,6 +56,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_18_112023) do
     t.integer "reviews_count", default: 0, null: false
     t.decimal "average_rating", precision: 2, scale: 1, default: "0.0", null: false
     t.index ["user_id"], name: "index_hotels_on_user_id"
+  end
+
+  create_table "notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "kind", default: 0, null: false
+    t.bigint "user_id", null: false
+    t.bigint "sender_id", null: false
+    t.string "message", default: "", null: false
+    t.boolean "read", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sender_id"], name: "index_notifications_on_sender_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -153,6 +165,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_18_112023) do
   add_foreign_key "helpfulnesses", "users"
   add_foreign_key "hotel_images", "hotels"
   add_foreign_key "hotels", "users"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "users", column: "sender_id"
   add_foreign_key "rest_rates", "days"
   add_foreign_key "review_images", "reviews"
   add_foreign_key "reviews", "hotels"
