@@ -11,6 +11,8 @@ class Hotel < ApplicationRecord
   has_many :stay_rates, through: :days
   has_many :special_periods, through: :days
   has_many :favorites, dependent: :destroy
+  has_many :favorite_users, through: :favorites, source: :user, dependent: :destroy
+  has_many :reviews_users, through: :reviews, source: :user, dependent: :destroy
 
   validates :name, length: { maximum: 50 }, presence: true, invalid_words: true
   validates :content, length: { minimum: 10, maximum: 2000 }, presence: true, invalid_words: true
@@ -19,8 +21,10 @@ class Hotel < ApplicationRecord
 
   DAY_OF_THE_WEEK = %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間].freeze
 
-  def send_notification_when_update(hotel_manager:, user_id:, message:)
-    hotel_manager.send_notifications.create(kind: 'hotel_updates', message:, user_id:)
+  def send_notification_when_update(hotel_manager:, user_id_list:, message:)
+    user_id_list.each do |id|
+      hotel_manager.send_notifications.create(kind: 'hotel_updates', message:, user_id: id)
+    end
   end
 
   private

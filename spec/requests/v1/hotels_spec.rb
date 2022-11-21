@@ -50,8 +50,6 @@ RSpec.describe 'V1::Hotels', type: :request do
         patch v1_hotel_path(accepted_hotel.id), params: edited_params, headers: auth_tokens
 
         expect(response).to have_http_status :ok
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:name]).to eq('ホテルレジャー')
       end
 
       it '他人が投稿したホテルの編集ができないこと' do
@@ -59,8 +57,6 @@ RSpec.describe 'V1::Hotels', type: :request do
         hotel = create(:accepted_hotel, user_id: other_user.id)
         params = { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', user_id: client_user.id } }
         patch v1_hotel_path(hotel.id), params: params, headers: auth_tokens
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:name]).not_to eq('神戸北野')
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -69,9 +65,17 @@ RSpec.describe 'V1::Hotels', type: :request do
       it 'ホテルの編集ができないこと' do
         params = { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', user_id: client_user.id } }
         patch v1_hotel_path(accepted_hotel.id), params: params
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:name]).not_to eq('神戸北野')
         expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'お気に入りに登録しているユーザーがいる場合' do
+      let_it_be(:favorite) { create(:with_user_favorite, hotel: accepted_hotel) }
+
+      it 'ホテルの編集時に更新メッセージと通知をユーザーに向けて登録できること' do
+        params = { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', user_id: client_user }, message: '新しいソファーを設置しました。' }
+        expect { patch v1_hotel_path(accepted_hotel.id), params:, headers: auth_tokens }.to change(Notification, :count).by(1)
+        expect(favorite.user.notifications.first[:message]).to eq('新しいソファーを設置しました。')
       end
     end
   end
