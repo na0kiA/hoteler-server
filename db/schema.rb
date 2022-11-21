@@ -62,10 +62,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_21_085447) do
     t.integer "kind", default: 0, null: false
     t.bigint "user_id", null: false
     t.bigint "sender_id", null: false
+    t.bigint "hotel_id"
     t.string "message", default: "", null: false
     t.boolean "read", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["hotel_id"], name: "index_notifications_on_hotel_id"
     t.index ["sender_id"], name: "index_notifications_on_sender_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
@@ -165,6 +167,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_21_085447) do
   add_foreign_key "helpfulnesses", "users"
   add_foreign_key "hotel_images", "hotels"
   add_foreign_key "hotels", "users"
+  add_foreign_key "notifications", "hotels"
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "sender_id"
   add_foreign_key "rest_rates", "days"
