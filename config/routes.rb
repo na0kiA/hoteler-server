@@ -24,16 +24,18 @@ Rails.application.routes.draw do
       resources :stay_rates, only: %i[create update destroy]
       resources :special_periods, only: %i[create update destroy]
     end
-    
+
     scope '/reviews/:review_id' do
       resource :helpfulnesses, only: %i[create destroy]
     end
-    
+
     resources :users, only: %i[index show] do
       member do
         resources :favorites, only: %i[index], controller: 'user_favorites'
       end
     end
+
+    resources :notifications, only: %i[index]
 
     namespace :auth do
       resources :sessions, only: %i[index]
@@ -42,7 +44,5 @@ Rails.application.routes.draw do
     get 'images', to: 'images#signed_url'
     post 'images/hotel', to: 'images#save_hotel_key'
     post 'images/user', to: 'images#save_user_key'
-
   end
 end
-
