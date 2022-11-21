@@ -25,7 +25,7 @@ class V1::HotelImagesController < ApplicationController
 
   def create
     image = HotelImage.new(image_params)
-    if image.save
+    if image.save_keys
       render json: image, status: :ok
     else
       render json: image.errors, status: :bad_request
