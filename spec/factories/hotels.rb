@@ -7,11 +7,14 @@ FactoryBot.define do
     sequence(:content) { |n| "hotel_content#{n}" }
   end
 
-
   factory :accepted_hotel, class: 'Hotel' do
     accepted { true }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
+
+    trait :with_user do
+      association :user
+    end
   end
 
   factory :completed_profile_hotel, class: 'Hotel' do
@@ -23,12 +26,12 @@ FactoryBot.define do
 
     trait :with_hotel_images do
       after(:build) do |hotel|
-        hotel.hotel_images << FactoryBot.build(:hotel_image)
+        hotel.hotel_images << FactoryBot.build(:hotel_image, :with_completed_profile_hotel)
       end
     end
 
     trait :with_user do
-      user_id { FactoryBot.create(:user).id }
+      association :user
     end
 
     trait :with_days_and_service_rates do
@@ -66,6 +69,7 @@ FactoryBot.define do
     end
 
     factory :with_five_reviews_and_helpfulnesses, traits: %i[with_days_and_service_rates with_reviews_and_helpfulnesses]
-    # factory :with_user_and_hotel_images, traits: %i[with_user with_hotel_images]
+    factory :with_user_and_hotel_images, traits: %i[with_user with_hotel_images]
+    factory :with_user_completed_hotel, traits: %i[with_user]
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class V1::UserFavoritesController < ApplicationController
   before_action :authenticate_v1_user!
 
@@ -6,5 +8,4 @@ class V1::UserFavoritesController < ApplicationController
     favorites = user.favorites.order(id: :desc)
     render json: favorites, each_serializer: UserFavoriteSerializer
   end
-
 end
