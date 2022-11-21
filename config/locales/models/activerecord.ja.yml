@@ -29,6 +29,8 @@ ja:
         period: "特別な期間"
         start_date: "開始日時"
         end_date: "終了日時"
+      favorite:
+        id: "お気に入り"
     errors:
       messages:
         record_invalid: "%{errors}"
@@ -55,3 +57,7 @@ ja:
             period:
               required: "特別期間の情報"
               inclusion: "特別期間が設定されていません"
+        favorite:
+          attributes:
+            hotel:
+              required: "ホテル情報"
