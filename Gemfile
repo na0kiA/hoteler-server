@@ -46,6 +46,7 @@ gem 'devise'
 gem 'devise_token_auth', git: 'https://github.com/lynndylanhurley/devise_token_auth'
 gem 'rack-cors'
 gem 'rails_admin'
+gem 'counter_culture'
 
 gem 'sassc-rails'
 
