@@ -19,19 +19,6 @@ RSpec.describe 'V1::Reviews', type: :request do
         post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
 
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(3)
-        expect(symbolized_body(response)[:attributes]).to include(title: '綺麗でした', content: '10月に改装したので綺麗でした')
-      end
-    end
-
-    context '画像を付けて口コミの投稿ができる場合' do
-      it '200を返すこと' do
-        images_params = { review: { title: '綺麗でした', content: '10月に改装したので綺麗でした', five_star_rate: 5, key: ['upload/test'] } }
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: images_params, headers: auth_tokens
-
-        expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(3)
-        expect(symbolized_body(response)[:attributes][:key]).to include('["upload/test"]')
       end
     end
 
@@ -80,14 +67,6 @@ RSpec.describe 'V1::Reviews', type: :request do
         expect(symbolized_body(response)[:errors][:body]).to eq('ホテル運営者様は自身のホテルに口コミを書くことは出来ません。')
       end
     end
-
-    context '口コミに投稿する画像が4枚の場合' do
-      it '400を返すこと' do
-        images_params = { review: { title: 'お風呂が綺麗でした', content: 'また行きたいと思っています', five_star_rate: 5, key: ['upload/test', 'upload/test2', 'upload/test3', 'upload/test3'] } }
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: images_params, headers: auth_tokens
-        expect(response).to have_http_status(:bad_request)
-      end
-    end
   end
 
   describe 'GET /v1/hotels/:hotel_id/reviews - v1/reviews#index' do
@@ -106,20 +85,6 @@ RSpec.describe 'V1::Reviews', type: :request do
 
         expect(response.status).to eq(200)
         expect(symbolized_body(response).length).to eq(1)
-      end
-    end
-
-    context '画像の含まれている口コミを取得できる場合' do
-      images_params = { review: { title: 'お風呂が綺麗でした', content: 'また行きたいと思っています', five_star_rate: 5, key: ['upload/test', 'upload/test2', 'upload/test3'] } }
-
-      before do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: images_params, headers: auth_tokens
-      end
-
-      it '200を返すこと' do
-        get v1_hotel_reviews_path(hotel_id: accepted_hotel.id)
-        expect(response.status).to eq(200)
-        expect(symbolized_body(response)[0][:review_images].length).to eq(3)
       end
     end
 
@@ -194,53 +159,19 @@ RSpec.describe 'V1::Reviews', type: :request do
 
     context '自分の投稿した口コミの編集ができる場合' do
       it '200を返すこと' do
-        patch v1_user_review_path(review.id), params: params, headers: auth_tokens
-
+        patch v1_user_review_path(review.id), params:, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:attributes]).to include(title: '追記：ホテルの対応について', content: '後日行ってみると丁寧に対応してくれました')
+        expect(review.reload.content).to eq('後日行ってみると丁寧に対応してくれました')
       end
     end
 
     context '五つ星の編集ができる場合' do
       it '200を返すこと' do
-        params = { review: { title: '五つ星を変えました', content: '五つ星を変えました。よかったです', five_star_rate: 2 } }
+        params = { review: { title: '五つ星を変えました', content: '後日行ってみると丁寧に対応してくれました', five_star_rate: 2 } }
         patch v1_user_review_path(review.id), params: params, headers: auth_tokens
 
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(3)
-      end
-    end
-
-    context '画像の追加編集ができる場合' do
-      empty_images_params = { review: { title: '綺麗でした', content: '10月に改装したので綺麗でした', five_star_rate: 5, key: [] } }
-
-      before do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: empty_images_params, headers: auth_tokens
-      end
-
-      it '200を返すこと' do
-        added_images_params = { review: { title: '綺麗でした', content: '10月に改装したので綺麗でした', five_star_rate: 5, key: ['upload/test'] } }
-        patch v1_user_review_path(review.id), params: added_images_params, headers: auth_tokens
-
-        expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:attributes][:key]).to eq('["upload/test"]')
-      end
-    end
-
-    context '既存の画像の削除ができる場合' do
-      params = { review: { title: '画像を追加しました', content: '画像を追加しました。よかったです', five_star_rate: 2, key: ['upload/test'] } }
-
-      before do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: auth_tokens
-      end
-
-      it '200を返すこと' do
-        delete_images_params = { review: { title: '画像を削除しました', content: '画像を削除しました。', five_star_rate: 2 } }
-        patch v1_user_review_path(review.id), params: delete_images_params, headers: auth_tokens
-
-        expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:attributes][:title]).to eq('画像を削除しました')
-        expect(symbolized_body(response)[:attributes][:file_url]).to be_nil
+        expect(review.reload.title).to eq('五つ星を変えました')
       end
     end
 
