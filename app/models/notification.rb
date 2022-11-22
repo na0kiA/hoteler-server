@@ -12,4 +12,10 @@ class Notification < ApplicationRecord
     came_favorites: 1,
     hotel_updates: 2
   }
+
+  def self.update_read(notifications)
+    notifications.where(read: false).find_each do |notification|
+      notification.update(read: true)
+    end
+  end
 end
