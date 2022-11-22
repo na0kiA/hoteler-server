@@ -26,6 +26,7 @@ class ReviewForm
       review = Review.new(title:, content:, five_star_rate:, hotel_id:, user_id:)
       build_key(review:)
       review.save!
+      send_notification_when_create
     end
   rescue ActiveRecord::RecordInvalid
     false
@@ -49,5 +50,13 @@ class ReviewForm
       JSON.parse(key).each do |val|
         review.review_images.build(key: val)
       end
+    end
+
+    def send_notification_when_create
+      Notification.create(kind: 'came_reviews', message: title, sender_id: user_id, hotel_id:, user_id: hotel_manager_id)
+    end
+
+    def hotel_manager_id
+      Hotel.find_by(id: hotel_id).user_id
     end
 end
