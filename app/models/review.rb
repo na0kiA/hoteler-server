@@ -5,17 +5,14 @@ class Review < ApplicationRecord
   belongs_to :hotel
   has_many :review_images, dependent: :destroy
   has_many :helpfulnesses, dependent: :destroy
+  counter_culture :hotel
 
   after_commit :update_reviews_count_and_rating, on: %i[create update destroy]
 
   private
 
     def update_reviews_count_and_rating
-      Hotel.update!(hotel_id, reviews_count: count, average_rating: average)
-    end
-
-    def count
-      Review.where(hotel_id:).count
+      Hotel.update!(hotel_id, average_rating: average)
     end
 
     def average
