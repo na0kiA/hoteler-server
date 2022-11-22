@@ -15,7 +15,7 @@ class Notification < ApplicationRecord
 
   def self.update_read(notifications)
     notifications.where(read: false).find_each do |notification|
-      notification.update(read: true)
+      notification.update!(read: true)
     end
   end
 end

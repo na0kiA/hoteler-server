@@ -11,9 +11,10 @@ RSpec.describe Notification, type: :model do
     let_it_be(:other_notification) { create(:notification, :with_hotel_updates, user: client_user, sender: accepted_hotel.user, hotel: accepted_hotel) }
 
     it '全てのfalseのreadをtrueに更新できること' do
-      read_notification = Notification.update_read(client_user.notifications)
-      expect(read_notification.first.read).to be(true)
-      expect(read_notification.last.read).to be(true)
+      notifications = client_user.notifications.where(read: false)
+      Notification.update_read(notifications)
+      expect(client_user.notifications.first.read).to eq(true)
+      expect(client_user.notifications.last.read).to eq(true)
     end
   end
 end

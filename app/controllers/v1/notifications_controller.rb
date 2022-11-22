@@ -8,8 +8,9 @@ class V1::NotificationsController < ApplicationController
     if notifications.blank?
       render json: { title: 'まだ通知はありません。' }
     else
-      read_notifications = Notification.update_read(notifications)
-      render json: read_notifications, each_serializer: NotificationSerializer
+      Notification.update_read(notifications)
+      notifications.reload
+      render json: notifications, each_serializer: NotificationSerializer
     end
   end
 end
