@@ -6,9 +6,10 @@ class V1::NotificationsController < ApplicationController
   def index
     notifications = current_v1_user.notifications
     if notifications.blank?
-      render json: {title: "まだ通知はありません。"}
+      render json: { title: 'まだ通知はありません。' }
     else
-      render json: notifications, each_serializer: NotificationSerializer
+      read_notifications = Notification.update_read(notifications)
+      render json: read_notifications, each_serializer: NotificationSerializer
     end
   end
 end

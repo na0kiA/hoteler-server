@@ -7,6 +7,10 @@ FactoryBot.define do
       kind { 'hotel_updates' }
     end
 
+    trait :with_read do
+      read { true }
+    end
+
     trait :with_user_passive_notifications do
       user_id { create(:user) }
     end
