@@ -25,8 +25,8 @@ class ReviewForm
     ActiveRecord::Base.transaction do
       review = Review.new(title:, content:, five_star_rate:, hotel_id:, user_id:)
       build_key(review:)
-      review.save!
       send_notification_when_create
+      review.save!
     end
   rescue ActiveRecord::RecordInvalid
     false
