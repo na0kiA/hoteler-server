@@ -12,7 +12,7 @@ class Hotel < ApplicationRecord
   has_many :special_periods, through: :days
   has_many :favorites, dependent: :destroy
   has_many :favorite_users, through: :favorites, source: :user, dependent: :destroy
-  has_many :reviews_users, through: :reviews, source: :user, dependent: :destroy
+  has_many :reviewer, through: :reviews, source: :user, dependent: :destroy
   has_many :notifications, dependent: :destroy
 
   validates :name, length: { maximum: 50 }, presence: true, invalid_words: true
@@ -24,7 +24,7 @@ class Hotel < ApplicationRecord
 
   def send_notification_when_update(hotel_manager:, user_id_list:, hotel_id:, message:)
     user_id_list.each do |id|
-      hotel_manager.send_notifications.create(kind: 'hotel_updates', message:, user_id: id, hotel_id: )
+      hotel_manager.send_notifications.create(kind: 'hotel_updates', message:, user_id: id, hotel_id:)
     end
   end
 
