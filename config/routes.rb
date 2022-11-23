@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         resources :reviews, shallow: true
         resources :images, only: %i[index show create], controller: 'hotel_images'
         resources :days, only: %i[index]
+        resource :favorites, only: %i[create destroy]
       end
     end
 
@@ -28,12 +29,20 @@ Rails.application.routes.draw do
       resource :helpfulnesses, only: %i[create destroy]
     end
 
-    get 'images', to: 'images#signed_url'
-    post 'images/hotel', to: 'images#save_hotel_key'
-    post 'images/user', to: 'images#save_user_key'
+    resources :users, only: %i[index show] do
+      member do
+        resources :favorites, only: %i[index], controller: 'user_favorites'
+      end
+    end
+
+    resources :notifications, only: %i[index]
 
     namespace :auth do
       resources :sessions, only: %i[index]
     end
+
+    get 'images', to: 'images#signed_url'
+    post 'images/hotel', to: 'images#save_hotel_key'
+    post 'images/user', to: 'images#save_user_key'
   end
 end

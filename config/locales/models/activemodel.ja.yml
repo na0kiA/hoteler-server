@@ -25,6 +25,8 @@ ja:
       review:
         title: "タイトル"
         content: "内容"
+      favorite:
+        id: "お気に入り"
     errors:
       messages:
         invalid: "%{attribute}が正しくありません。"

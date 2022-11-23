@@ -24,14 +24,12 @@ module V1
     end
 
     def create
-      review_form = ReviewForm.new(review_params)
+      review = Review.new(review_params)
       if reviewed_by_other_than_hotel_manager?
-        if review_form.too_many_images?
-          render_json_bad_request_with_custom_errors(title: '画像の投稿に失敗しました。', body: '口コミに投稿できる画像は3枚までです。')
-        elsif review_form.save
-          render json: review_form
+        if review.save
+          render json: {}, status: :ok
         else
-          render json: review_form.errors, status: :bad_request
+          render json: review.errors, status: :bad_request
         end
       else
         render_json_bad_request_with_custom_errors(title: '書き込みに失敗しました。', body: 'ホテル運営者様は自身のホテルに口コミを書くことは出来ません。')
@@ -39,12 +37,11 @@ module V1
     end
 
     def update
-      review_form = ReviewForm.new(update_params)
-      if review_form.valid? && authenticated?
-        ReviewEdit.new(params: review_form.to_deep_symbol, set_review: @review).update
-        render json: review_form, status: :ok
+      if @review.present? && authenticated?
+        @review.update(update_params)
+        render json: {}, status: :ok
       else
-        render json: review_form.errors, status: :bad_request
+        render json: @review.errors, status: :bad_request
       end
     end
 
@@ -68,12 +65,12 @@ module V1
       end
 
       def review_params
-        params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
+        params.require(:review).permit(:title, :content, :five_star_rate).merge(user_id: current_v1_user.id, hotel_id: accepted_hotel_params.id)
       end
 
     # reviewのupdateのrouting(v1/reviews/:id)にホテルのidが含まれていないため専用のupdate_paramsを用意
       def update_params
-        params.require(:review).permit(:title, :content, :five_star_rate, key: []).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
+        params.require(:review).permit(:title, :content, :five_star_rate).merge(user_id: current_v1_user.id, hotel_id: @review.hotel_id)
       end
 
       def set_review

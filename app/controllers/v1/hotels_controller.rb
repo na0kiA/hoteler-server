@@ -33,7 +33,8 @@ module V1
     def update
       if @hotel.present? && authenticated?
         @hotel.update!(hotel_params)
-        render json: @hotel, status: :ok
+        @hotel.send_notification_when_update(hotel_manager: current_v1_user, user_id_list: @hotel.favorite_users.pluck(:id), hotel_id: @hotel.id, message: update_params[:message])
+        render json: {}, status: :ok
       else
         render json: @hotel.errors, status: :bad_request
       end
@@ -56,6 +57,10 @@ module V1
 
       def hotel_params
         params.require(:hotel).permit(:name, :content).merge(user_id: current_v1_user.id)
+      end
+
+      def update_params
+        params.permit(:message)
       end
 
       def set_hotel

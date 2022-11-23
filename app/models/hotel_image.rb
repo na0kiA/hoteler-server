@@ -5,7 +5,7 @@ class HotelImage < ApplicationRecord
 
   validates :key, presence: true
 
-  def save
+  def save_keys
     return if too_many_value? || key.blank?
 
     # keyはフロントから配列で送られてくるので、重複したkeyを削除する必要がある
@@ -17,9 +17,9 @@ class HotelImage < ApplicationRecord
     false
   end
 
-  # def too_many_value?
-  #   HotelImage.where(hotel_id:).length > 10
-  # end
+  def too_many_value?
+    HotelImage.where(hotel_id:).length > 10
+  end
 
   def too_many_value?
     return if key.blank?
