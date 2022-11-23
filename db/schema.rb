@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_22_132950) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_23_181229) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
@@ -56,6 +56,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_22_132950) do
     t.integer "reviews_count", default: 0, null: false
     t.decimal "average_rating", precision: 2, scale: 1, default: "0.0", null: false
     t.integer "favorites_count", default: 0, null: false
+    t.boolean "full", default: false, null: false
     t.index ["user_id"], name: "index_hotels_on_user_id"
   end
 
@@ -107,6 +108,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_22_132950) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "five_star_rate", default: 0
+    t.integer "helpfulnesses_count", default: 0, null: false
     t.index ["hotel_id"], name: "index_reviews_on_hotel_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
