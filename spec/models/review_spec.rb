@@ -9,7 +9,6 @@ RSpec.describe Review, type: :model do
     let_it_be(:review) { create(:review, hotel_id: accepted_hotel.id, user_id: user.id) }
 
     context '口コミ数が0になった場合' do
-
       it 'ホテルの評価数が0になること' do
         expect { described_class.destroy(review.id) }.to change { Hotel.find_by(id: accepted_hotel).reviews_count }.from(1).to(0)
       end

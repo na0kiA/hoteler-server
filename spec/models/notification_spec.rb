@@ -13,8 +13,8 @@ RSpec.describe Notification, type: :model do
     it '全てのfalseのreadをtrueに更新できること' do
       notifications = client_user.notifications.where(read: false)
       Notification.update_read(notifications)
-      expect(client_user.notifications.first.read).to eq(true)
-      expect(client_user.notifications.last.read).to eq(true)
+      expect(client_user.notifications.first.read).to be(true)
+      expect(client_user.notifications.last.read).to be(true)
     end
   end
 end
