@@ -4,11 +4,16 @@ class HotelShowSerializer < ActiveModel::Serializer
   attributes :id,
              :name,
              :content,
+             :full,
              :average_rating,
              :reviews_count,
              :hotel_images,
              :day_of_the_week,
              :top_four_reviews
+
+  def full
+    '満室' || '空室'
+  end
 
   def hotel_images
     ActiveModelSerializers::SerializableResource.new(

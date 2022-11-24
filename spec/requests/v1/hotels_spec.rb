@@ -78,6 +78,23 @@ RSpec.describe 'V1::Hotels', type: :request do
         expect(favorite.user.notifications.first[:message]).to eq('新しいソファーを設置しました。')
       end
     end
+
+    context 'ホテルを空室から満室にのみ変更する場合' do
+      let_it_be(:hotel) { create(:hotel, name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', user: client_user, accepted: true) }
+      let_it_be(:favorite) { create(:with_user_favorite, hotel:) }
+
+      it '通知がユーザーに送信されないこと' do
+        params = { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', full: true, user: client_user } }
+        patch v1_hotel_path(hotel.id), params:, headers: auth_tokens
+        expect { patch v1_hotel_path(hotel.id), params:, headers: auth_tokens }.not_to change(Notification, :count)
+      end
+
+      it '満室になっていること' do
+        params = { hotel: { name: '神戸北野', content: '最高峰のラグジュアリーホテルをお届けします', full: true, user: client_user } }
+        patch v1_hotel_path(hotel.id), params:, headers: auth_tokens
+        expect(symbolized_body(response)[:full]).to be(true)
+      end
+    end
   end
 
   describe 'DELETE /v1/hotels - v1/hotels#destroy' do
