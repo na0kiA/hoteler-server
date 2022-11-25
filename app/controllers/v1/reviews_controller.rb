@@ -32,7 +32,7 @@ module V1
           render json: review.errors, status: :bad_request
         end
       else
-        render_json_bad_request_with_custom_errors(title: '書き込みに失敗しました。', body: 'ホテル運営者様は自身のホテルに口コミを書くことは出来ません。')
+        render_json_bad_request_with_custom_errors(title: "書き込みに失敗しました。", body: "ホテル運営者様は自身のホテルに口コミを書くことは出来ません。")
       end
     end
 

@@ -12,7 +12,7 @@ class HotelShowSerializer < ActiveModel::Serializer
              :top_four_reviews
 
   def full
-    '満室' || '空室'
+    "満室" || "空室"
   end
 
   def hotel_images
@@ -32,7 +32,7 @@ class HotelShowSerializer < ActiveModel::Serializer
   end
 
   def top_four_reviews
-    return '口コミはまだありません。' if select_top_four_reviews.blank?
+    return "口コミはまだありません。" if select_top_four_reviews.blank?
 
     ActiveModelSerializers::SerializableResource.new(
       select_top_four_reviews,

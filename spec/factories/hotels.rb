@@ -7,7 +7,7 @@ FactoryBot.define do
     sequence(:content) { |n| "hotel_content#{n}" }
   end
 
-  factory :accepted_hotel, class: 'Hotel' do
+  factory :accepted_hotel, class: "Hotel" do
     accepted { true }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
@@ -17,7 +17,7 @@ FactoryBot.define do
     end
   end
 
-  factory :completed_profile_hotel, class: 'Hotel' do
+  factory :completed_profile_hotel, class: "Hotel" do
     accepted { true }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }

@@ -24,7 +24,7 @@ class Hotel < ApplicationRecord
 
   def send_notification_when_update(hotel_manager:, user_id_list:, hotel_id:, message:)
     user_id_list.each do |id|
-      hotel_manager.send_notifications.create(kind: 'hotel_updates', message:, user_id: id, hotel_id:)
+      hotel_manager.send_notifications.create(kind: "hotel_updates", message:, user_id: id, hotel_id:)
     end
   end
 

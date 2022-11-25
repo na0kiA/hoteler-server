@@ -53,7 +53,7 @@ class ReviewForm
     end
 
     def send_notification_when_create
-      Notification.create(kind: 'came_reviews', message: title, sender_id: user_id, hotel_id:, user_id: hotel_manager_id)
+      Notification.create(kind: "came_reviews", message: title, sender_id: user_id, hotel_id:, user_id: hotel_manager_id)
     end
 
     def hotel_manager_id

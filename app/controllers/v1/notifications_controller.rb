@@ -6,7 +6,7 @@ class V1::NotificationsController < ApplicationController
   def index
     notifications = current_v1_user.notifications
     if notifications.blank?
-      render json: { title: 'まだ通知はありません。' }
+      render json: { title: "まだ通知はありません。" }
     else
       Notification.update_read(notifications)
       notifications.reload

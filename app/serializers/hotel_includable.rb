@@ -3,7 +3,7 @@
 module HotelIncludable
   def hotel_includes_by(model:, serializer:)
     case serializer.name
-    when 'HotelIndexSerializer'
+    when "HotelIndexSerializer"
       model.includes(
         :hotel_images,
         :days,

@@ -2,36 +2,36 @@
 
 Rails.application.routes.draw do
   resources :posts, only: :index
-  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+  mount RailsAdmin::Engine => "/admin", as: "rails_admin"
   namespace :v1 do
-    root to: 'home#index', as: :home
+    root to: "home#index", as: :home
 
-    mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-      registrations: 'v1/auth/registrations'
+    mount_devise_token_auth_for "User", at: "auth", controllers: {
+      registrations: "v1/auth/registrations"
     }
 
-    scope shallow_prefix: 'user' do
+    scope shallow_prefix: "user" do
       resources :hotels do
         resources :reviews, shallow: true
-        resources :images, only: %i[index show create], controller: 'hotel_images'
+        resources :images, only: %i[index show create], controller: "hotel_images"
         resources :days, only: %i[index]
         resource :favorites, only: %i[create destroy]
       end
     end
 
-    scope '/days/:day_id' do
+    scope "/days/:day_id" do
       resources :rest_rates, only: %i[create update destroy]
       resources :stay_rates, only: %i[create update destroy]
       resources :special_periods, only: %i[create update destroy]
     end
 
-    scope '/reviews/:review_id' do
+    scope "/reviews/:review_id" do
       resource :helpfulnesses, only: %i[create destroy]
     end
 
     resources :users, only: %i[index show] do
       member do
-        resources :favorites, only: %i[index], controller: 'user_favorites'
+        resources :favorites, only: %i[index], controller: "user_favorites"
       end
     end
 
@@ -41,8 +41,8 @@ Rails.application.routes.draw do
       resources :sessions, only: %i[index]
     end
 
-    get 'images', to: 'images#signed_url'
-    post 'images/hotel', to: 'images#save_hotel_key'
-    post 'images/user', to: 'images#save_user_key'
+    get "images", to: "images#signed_url"
+    post "images/hotel", to: "images#save_hotel_key"
+    post "images/user", to: "images#save_user_key"
   end
 end

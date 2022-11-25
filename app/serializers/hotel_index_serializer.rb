@@ -28,7 +28,7 @@ class HotelIndexSerializer < ActiveModel::Serializer
   end
 
   def rest_rates
-    return '営業時間外です' if take_the_rest_rate.blank?
+    return "営業時間外です" if take_the_rest_rate.blank?
 
     ActiveModelSerializers::SerializableResource.new(
       take_the_rest_rate,

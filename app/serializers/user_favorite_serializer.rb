@@ -11,7 +11,7 @@ class UserFavoriteSerializer < ActiveModel::Serializer
   end
 
   def hotel_top_image
-    return 'ホテルの画像は未設定です' if object.hotel.hotel_images.blank?
+    return "ホテルの画像は未設定です" if object.hotel.hotel_images.blank?
 
     ActiveModelSerializers::SerializableResource.new(
       object.hotel.hotel_images.first,
