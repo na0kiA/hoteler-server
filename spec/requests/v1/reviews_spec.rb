@@ -212,7 +212,7 @@ RSpec.describe "V1::Reviews", type: :request do
         get v1_user_review_path(review.id)
 
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(8)
+        expect(symbolized_body(response).length).to eq(9)
       end
     end
 
