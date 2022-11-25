@@ -42,7 +42,7 @@ RSpec.describe "V1::Hotels", type: :request do
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
     let_it_be(:accepted_hotel) { create(:completed_profile_hotel, user_id: client_user.id) }
     let_it_be(:edited_params) {
-      { hotel: { name: "ホテルレジャー", content: "ホテルの名前が変わりました", user_id: client_user.id } }
+      { hotel: { name: "ホテルレジャー", content: "ホテルの名前が変わりました", user_id: client_user.id }, notification: {message: "ホテルの名前が変わりました"} }
     }
 
     context "ログインしている場合" do
@@ -73,7 +73,7 @@ RSpec.describe "V1::Hotels", type: :request do
       let_it_be(:favorite) { create(:with_user_favorite, hotel: accepted_hotel) }
 
       it "ホテルの編集時に更新メッセージと通知をユーザーに向けて登録できること" do
-        params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user }, message: "新しいソファーを設置しました。" }
+        params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします。新しいソファーを設置しました。", user: client_user }, notification: {message: "新しいソファーを設置しました。"} }
         expect { patch v1_hotel_path(accepted_hotel.id), params:, headers: auth_tokens }.to change(Notification, :count).by(1)
         expect(favorite.user.notifications.first[:message]).to eq("新しいソファーを設置しました。")
       end
@@ -84,14 +84,13 @@ RSpec.describe "V1::Hotels", type: :request do
       let_it_be(:favorite) { create(:with_user_favorite, hotel:) }
 
       it "通知がユーザーに送信されないこと" do
-        params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", full: true, user: client_user } }
-        patch v1_hotel_path(hotel.id), params:, headers: auth_tokens
-        expect { patch v1_hotel_path(hotel.id), params:, headers: auth_tokens }.not_to change(Notification, :count)
+        only_patch_full_params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", full: true, user: client_user }, notification: {message: "新しいソファーを設置しました。"}  }
+        expect { patch v1_hotel_path(hotel.id), params: only_patch_full_params, headers: auth_tokens }.not_to change(Notification, :count)
       end
 
       it "満室になっていること" do
-        params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", full: true, user: client_user } }
-        patch v1_hotel_path(hotel.id), params:, headers: auth_tokens
+        only_patch_full_params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", full: true, user: client_user } }
+        patch v1_hotel_path(hotel.id), params: only_patch_full_params, headers: auth_tokens
         expect(symbolized_body(response)[:full]).to be(true)
       end
     end
@@ -188,7 +187,7 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq(8)
+        expect(response_body.length).to eq(9)
       end
 
       it "口コミの評価率と評価数が取得できること" do

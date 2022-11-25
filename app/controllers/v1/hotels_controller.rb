@@ -30,10 +30,11 @@ module V1
 
     def update
       if @hotel.present? && authenticated?
-        unless update_only_fulled_room?
-          @hotel.send_notification_when_update(hotel_manager: current_v1_user, user_id_list: @hotel.favorite_users.pluck(:id), hotel_id: @hotel.id, message: update_params[:message])
+        if update_only_fulled_room?(@hotel)
+          @hotel.update!(hotel_params)
+        else
+          @hotel.update!(hotel_params) && send_notification(@hotel)
         end
-        @hotel.update!(hotel_params)
         render json: @hotel, serializer: HotelShowSerializer, status: :ok
       else
         render json: @hotel.errors, status: :bad_request
@@ -55,16 +56,20 @@ module V1
         @hotel.user.id == current_v1_user.id
       end
 
-      def update_only_fulled_room?
-        hotel_params[:full] != set_hotel.full && hotel_params.values_at(:name, :content) == [set_hotel.name, set_hotel.content]
+      def update_only_fulled_room?(hotel)
+        hotel_params[:full] != hotel.full && hotel_params.values_at(:name, :content) == [hotel.name, set_hotel.content]
+      end
+
+      def send_notification(hotel)
+        hotel.send_notification_when_update(hotel_manager: current_v1_user, user_id_list: hotel.favorite_users.pluck(:id), hotel_id: hotel.id, message: notification_params[:message] )
       end
 
       def hotel_params
         params.require(:hotel).permit(:name, :content, :full).merge(user_id: current_v1_user.id)
       end
 
-      def update_params
-        params.permit(:message)
+      def notification_params
+        params.require(:notification).permit(:message)
       end
 
       def set_hotel

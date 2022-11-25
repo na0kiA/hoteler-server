@@ -11,10 +11,6 @@ class HotelShowSerializer < ActiveModel::Serializer
              :day_of_the_week,
              :top_four_reviews
 
-  def full
-    "満室" || "空室"
-  end
-
   def hotel_images
     ActiveModelSerializers::SerializableResource.new(
       object.hotel_images,
