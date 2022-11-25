@@ -36,6 +36,15 @@ RSpec.describe "V1::SpecialPeriod", type: :request do
       end
     end
 
+    context "start_dateに西暦が無い場合" do
+      it "ホテルの特別期間を投稿できないこと" do
+        params = { special_period: { period: "obon", start_date: "08-15", end_date: "08-15" }, day_id: hotel.days.ids[6] }
+        post v1_special_periods_path(hotel.days.ids[6]), params:, headers: auth_tokens
+        expect(response.status).to eq(400)
+        expect(symbolized_body(response)[:start_date][0]).to eq("開始日時を入力してください。")
+      end
+    end
+
     context "paramsがnilの場合" do
       it "ホテルの特別期間を投稿できないこと" do
         params = { special_period: { period: nil, start_date: nil, end_date: nil }, day_id: hotel.days.ids[6] }

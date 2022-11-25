@@ -145,6 +145,24 @@ RSpec.describe HotelIndexSerializer, type: :serializer do
       end
     end
 
+    context "今日が特別期間の最終日朝6時の場合" do
+      before do
+        travel_to Time.zone.local(2023, 8, 15, 6, 0, 0)
+      end
+
+      it "休憩料金は特別料金が表示されること" do
+        json_serializer = HotelIndexSerializer.new(hotel).as_json
+        expect(json_serializer[:day_of_the_week][0][:day]).to eq("特別期間")
+        expect(json_serializer[:rest_rates][0][:rate]).to eq(5980)
+      end
+
+      it "日をまたぐ宿泊などのサービスは通常料金が表示されること" do
+        json_serializer = HotelIndexSerializer.new(hotel).as_json
+        expect(json_serializer[:day_of_the_week][0][:day]).to eq("特別期間")
+        expect(json_serializer[:stay_rates][0][:rate]).to eq(5980)
+      end
+    end
+
     context "今日が祝日で明日が平日の朝6時の場合" do
       before do
         travel_to Time.zone.local(2022, 11, 3, 13, 0, 0)
