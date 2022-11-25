@@ -47,14 +47,19 @@ class HotelIndexSerializer < ActiveModel::Serializer
   end
 
   def take_the_rest_rate
-    RestBusinessHour.new(date: RestRate.where(day_id: select_a_day.ids)).extract_the_rest_rate
+    RestBusinessHour.new(date: object.rest_rates.where(day_id: select_a_day.ids)).extract_the_rest_rate
   end
 
   def take_the_stay_rate
-    StayBusinessHour.new(date: StayRate.where(day_id: select_a_day.ids)).extract_the_stay_rate
+    if SpecialPeriod.check_that_today_is_a_last_day_of_special_periods?(hotel:)
+      StayBusinessHour.new(date: object.stay_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: object.id).ids)).extract_the_stay_rate
+    else
+      StayBusinessHour.new(date: object.stay_rates.where(day_id: select_a_day.ids)).extract_the_stay_rate
+    end
   end
 
   def select_a_day
+    # 特別期間は最終日も含んで抽出している
     if SpecialPeriod.check_that_today_is_a_special_period?(hotel: object)
       Day.special_day.where(hotel_id: object.id)
     else
