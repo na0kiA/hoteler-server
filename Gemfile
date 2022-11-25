@@ -55,10 +55,10 @@ group :development, :test do
   gem "dotenv-rails"
   gem "factory_bot_rails"
   gem "rspec-rails"
+  gem "bullet"
 end
 
 group :development do
-  gem "bullet"
   gem "rubocop", require: false
   gem "rubocop-inflector", require: false
   gem "rubocop-performance", require: false
