@@ -32,10 +32,13 @@ module V1
       if @hotel.present? && authenticated?
         if update_only_fulled_room?(@hotel)
           @hotel.update!(hotel_params)
+          render json: @hotel, serializer: HotelShowSerializer, status: :ok
+        elsif message_blank?
+          render_bad_request_with_update_message_invalid
         else
           @hotel.update!(hotel_params) && send_notification(@hotel)
+          render json: @hotel, serializer: HotelShowSerializer, status: :ok
         end
-        render json: @hotel, serializer: HotelShowSerializer, status: :ok
       else
         render json: @hotel.errors, status: :bad_request
       end
@@ -61,7 +64,16 @@ module V1
       end
 
       def send_notification(hotel)
+
         hotel.send_notification_when_update(hotel_manager: current_v1_user, user_id_list: hotel.favorite_users.pluck(:id), hotel_id: hotel.id, message: notification_params[:message] )
+      end
+
+      def render_bad_request_with_update_message_invalid
+        render_json_bad_request_with_custom_errors(title: "ホテルを編集できませんでした", body: "更新メッセージを必ず入力してください") 
+      end
+
+      def message_blank?
+        notification_params[:message].blank?
       end
 
       def hotel_params

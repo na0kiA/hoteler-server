@@ -79,6 +79,21 @@ RSpec.describe "V1::Hotels", type: :request do
       end
     end
 
+    context "同じホテルを２回更新した場合" do
+      let_it_be(:favorite) { create(:with_user_favorite, hotel: accepted_hotel) }
+
+      it "お気に入り登録者に２回通知が行くこと" do
+        params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします。新しいソファーを設置しました。", user: client_user }, notification: {message: "新しいソファーを設置しました。"} }
+        patch v1_hotel_path(accepted_hotel.id), params:, headers: auth_tokens
+
+        re_update_params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: client_user }, notification: {message: "料金を下げました"} }
+        patch v1_hotel_path(accepted_hotel.id), params: re_update_params, headers: auth_tokens
+        
+        expect(favorite.user.notifications.length).to eq(2)
+        expect(favorite.user.notifications.first[:message]).to eq("料金を下げました")
+      end
+    end
+
     context "ホテルを空室から満室にのみ変更する場合" do
       let_it_be(:hotel) { create(:hotel, name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: client_user, accepted: true) }
       let_it_be(:favorite) { create(:with_user_favorite, hotel:) }
@@ -103,6 +118,18 @@ RSpec.describe "V1::Hotels", type: :request do
         params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: client_user } }
         patch v1_hotel_path(hotel.id), params:, headers: auth_tokens
         expect { patch v1_hotel_path(hotel.id), params:, headers: auth_tokens }.not_to change(Notification, :count)
+      end
+    end
+
+    context "通知メッセージが空の場合" do
+      let_it_be(:favorite) { create(:with_user_favorite, hotel: accepted_hotel) }
+
+      it "ホテルを更新できないこと" do
+        params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: client_user } , notification: {message: ""} }
+        patch v1_hotel_path(accepted_hotel.id), params:, headers: auth_tokens
+
+        expect(response.status).to eq(400)
+        expect(favorite.user.notifications).to eq([])
       end
     end
   end
@@ -171,6 +198,15 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response_body.length).not_to eq 2
+      end
+    end
+
+    context "ホテルが満室の場合" do
+      it "ホテル一覧のfullがtrueなこと" do
+        params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", full: true, user: client_user }, notification: {message: "新しいソファーを設置しました。"}}
+        patch v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
+        get v1_hotels_path
+        expect(symbolized_body(response)[0][:full]).to eq(true)
       end
     end
   end

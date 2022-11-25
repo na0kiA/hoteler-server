@@ -4,6 +4,7 @@ class HotelIndexSerializer < ActiveModel::Serializer
   attributes :id,
              :name,
              :content,
+             :full,
              :average_rating,
              :reviews_count,
              :hotel_images,
