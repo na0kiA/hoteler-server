@@ -46,7 +46,8 @@ module V1
 
     def destroy
       if @hotel.present? && authenticated?
-        @hotel.destroy
+        @hotel = Hotel.preload(days: [:rest_rates, :stay_rates, :special_periods]).find_by(id: @hotel.id)
+        @hotel.destroy!
         render json: {}, status: :ok
       else
         render json: @hotel.errors, status: :bad_request
