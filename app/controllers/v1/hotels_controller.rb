@@ -64,12 +64,11 @@ module V1
       end
 
       def send_notification(hotel)
-
-        hotel.send_notification_when_update(hotel_manager: current_v1_user, user_id_list: hotel.favorite_users.pluck(:id), hotel_id: hotel.id, message: notification_params[:message] )
+        hotel.send_notification_when_update(hotel_manager: current_v1_user, user_id_list: hotel.favorite_users.pluck(:id), hotel_id: hotel.id, message: notification_params[:message])
       end
 
       def render_bad_request_with_update_message_invalid
-        render_json_bad_request_with_custom_errors(title: "ホテルを編集できませんでした", body: "更新メッセージを必ず入力してください") 
+        render_json_bad_request_with_custom_errors(title: "ホテルを編集できませんでした", body: "更新メッセージを必ず入力してください")
       end
 
       def message_blank?
