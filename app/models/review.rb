@@ -13,7 +13,6 @@ class Review < ApplicationRecord
   validates :title, length: { minimum: 2, maximum: 30 }, presence: true, invalid_words: true
   validates :content, length: { minimum: 5, maximum: 1000 }, presence: true, invalid_words: true
 
-
   private
 
     def update_reviews_count_and_rating

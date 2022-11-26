@@ -12,7 +12,7 @@ RSpec.describe "V1::Notifications", type: :request do
 
     context "通知を取得できる場合" do
       let_it_be(:favorite) { create(:favorite, hotel: accepted_hotel, user: client_user) }
-      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user }, notification: {message: "新しいソファーを設置しました。" } } }
+      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user }, notification: { message: "新しいソファーを設置しました。" } } }
 
       before do
         patch v1_hotel_path(accepted_hotel.id), params: update_params, headers: hotel_auth_tokens
@@ -29,10 +29,10 @@ RSpec.describe "V1::Notifications", type: :request do
       let_it_be(:favorite) { create(:favorite, hotel: accepted_hotel, user: client_user) }
 
       it "ホテルの更新の通知を２個受け取ること" do
-        update_params = {hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: hotel_manager }, notification: {message: "新しいソファーを設置しました。" }}
+        update_params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: hotel_manager }, notification: { message: "新しいソファーを設置しました。" } }
         patch v1_hotel_path(accepted_hotel.id), params: update_params, headers: hotel_auth_tokens
 
-        re_update_params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします。価格を変更", user: hotel_manager }, notification: {message: "価格を下げました" } }
+        re_update_params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします。価格を変更", user: hotel_manager }, notification: { message: "価格を下げました" } }
         patch v1_hotel_path(accepted_hotel.id), params: re_update_params, headers: hotel_auth_tokens
 
         get v1_notifications_path, headers: auth_tokens
@@ -44,7 +44,7 @@ RSpec.describe "V1::Notifications", type: :request do
 
     context "通知をユーザーが表示した場合" do
       let_it_be(:favorite) { create(:favorite, hotel: accepted_hotel, user: client_user) }
-      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user }, notification: {message: "新しいソファーを設置しました。" } } }
+      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user }, notification: { message: "新しいソファーを設置しました。" } } }
 
       before do
         patch v1_hotel_path(accepted_hotel.id), params: update_params, headers: hotel_auth_tokens
@@ -57,7 +57,7 @@ RSpec.describe "V1::Notifications", type: :request do
     end
 
     context "お気に入りに登録していないホテルが更新された場合" do
-      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user },notification: {message: "新しいソファーを設置しました。" }} }
+      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user }, notification: { message: "新しいソファーを設置しました。" } } }
       let_it_be(:favorites) { create(:with_hotel_favorite, user: client_user) }
 
       before do
@@ -72,7 +72,7 @@ RSpec.describe "V1::Notifications", type: :request do
     end
 
     context "ホテル運営者がホテルを更新したが、メッセージが空の場合" do
-      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: accepted_hotel.user  }, notification: {message: "" } } }
+      let_it_be(:update_params) { { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user: accepted_hotel.user }, notification: { message: "" } } }
       let_it_be(:favorite) { create(:with_user_favorite, hotel: accepted_hotel) }
 
       before do

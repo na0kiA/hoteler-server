@@ -9,7 +9,6 @@ class SpecialPeriod < ApplicationRecord
   validates :start_date, presence: true
   validates :end_date, presence: true
 
-
   def self.check_that_today_is_a_special_period?(hotel:)
     start_date_list = hotel.special_periods.pluck(:start_date)
     end_date_list = hotel.special_periods.pluck(:end_date)
