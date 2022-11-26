@@ -8,7 +8,7 @@ class ReviewOfTopPage
   # 参考になったの数が同じ場合は、review_idの新しい順に並べる
 
   def initialize(reviews_of_a_hotel:)
-    @reviews_of_a_hotel = reviews_of_a_hotel
+    @reviews_of_a_hotel = Review.preload(:user, :helpfulnesses).where(id: reviews_of_a_hotel.ids)
   end
 
   def extract_top_reviews
@@ -23,7 +23,7 @@ class ReviewOfTopPage
 
     def review_id_and_helpsulness_count_array
       reviews_of_a_hotel.map do |review|
-        [review.id, review.helpfulnesses.length]
+        [review.id, review.helpfulnesses_count]
       end
     end
 end

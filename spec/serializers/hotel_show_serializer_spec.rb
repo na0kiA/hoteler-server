@@ -36,9 +36,10 @@ RSpec.describe HotelShowSerializer, type: :serializer do
 
       it "口コミは参考になったが多い順に4個までに絞り込まれていること" do
         json_serializer = HotelShowSerializer.new(hotel).as_json
-        expect(json_serializer[:top_four_reviews].length).to eq(4)
-        expect(json_serializer[:top_four_reviews].first[:helpfulnesses]).to eq(5)
-        expect(json_serializer[:top_four_reviews].last[:helpfulnesses]).to eq(2)
+        p json_serializer[:top_four_reviews]
+        expect(json_serializer[:top_four_reviews].count).to eq(4)
+        expect(json_serializer[:top_four_reviews].first[:helpfulnesses]).to eq(4)
+        expect(json_serializer[:top_four_reviews].last[:helpfulnesses]).to eq(1)
       end
     end
 
