@@ -7,7 +7,7 @@ RSpec.describe User, type: :model do
     let_it_be(:user) { create(:user) }
     context "userを削除した場合" do
       it "userを削除したときuserが投稿したhotelsは削除されること" do
-        Hotel.create(name: "Hotel_name", content: "Hotel_content", user_id: user.id)
+        create(:accepted_hotel, user:)
         expect { user.destroy }.to change(Hotel, :count).by(-1)
       end
     end
