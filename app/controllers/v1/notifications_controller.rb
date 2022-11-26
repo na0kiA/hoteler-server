@@ -5,6 +5,7 @@ class V1::NotificationsController < ApplicationController
 
   def index
     notifications = current_v1_user.notifications
+    # notifications = Notification.preload(:user, :hotel, :sender).where(user: current_v1_user)
     if notifications.blank?
       render json: { title: "まだ通知はありません。" }
     else

@@ -16,8 +16,11 @@ class Notification < ApplicationRecord
   validates :message, presence: true, length: { maximum: 30, minimum: 2 }
 
   def self.update_read(notifications)
-    notifications.where(read: false).find_each do |notification|
+    Notification.preload(:user, :hotel, :sender).where(id: notifications.ids).where(read: false).find_each do |notification|
       notification.update!(read: true)
     end
+    # notifications.where(read: false).find_each do |notification|
+    #   notification.update!(read: true)
+    # end
   end
 end
