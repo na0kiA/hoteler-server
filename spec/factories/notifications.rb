@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :notification do
     trait :with_hotel_updates do
-      message { '料金を値下げ致しました。' }
-      kind { 'hotel_updates' }
+      message { "料金を値下げ致しました。" }
+      kind { "hotel_updates" }
     end
 
     trait :with_read do

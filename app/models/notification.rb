@@ -5,7 +5,7 @@ class Notification < ApplicationRecord
 
   belongs_to :user
   belongs_to :hotel
-  belongs_to :sender, class_name: 'User'
+  belongs_to :sender, class_name: "User"
 
   enum kind: {
     came_reviews: 0,
@@ -13,9 +13,14 @@ class Notification < ApplicationRecord
     hotel_updates: 2
   }
 
+  validates :message, presence: true, length: { maximum: 30, minimum: 2 }
+
   def self.update_read(notifications)
-    notifications.where(read: false).find_each do |notification|
+    Notification.preload(:user, :hotel, :sender).where(id: notifications.ids).where(read: false).find_each do |notification|
       notification.update!(read: true)
     end
+    # notifications.where(read: false).find_each do |notification|
+    #   notification.update!(read: true)
+    # end
   end
 end

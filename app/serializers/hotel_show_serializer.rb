@@ -4,6 +4,7 @@ class HotelShowSerializer < ActiveModel::Serializer
   attributes :id,
              :name,
              :content,
+             :full,
              :average_rating,
              :reviews_count,
              :hotel_images,
@@ -27,7 +28,7 @@ class HotelShowSerializer < ActiveModel::Serializer
   end
 
   def top_four_reviews
-    return '口コミはまだありません。' if select_top_four_reviews.blank?
+    return "口コミはまだありません。" if select_top_four_reviews.blank?
 
     ActiveModelSerializers::SerializableResource.new(
       select_top_four_reviews,

@@ -7,9 +7,9 @@ class Hotel < ApplicationRecord
   has_many :hotel_images, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :days, dependent: :destroy
-  has_many :rest_rates, through: :days
-  has_many :stay_rates, through: :days
-  has_many :special_periods, through: :days
+  has_many :rest_rates, through: :days, dependent: :destroy
+  has_many :stay_rates, through: :days, dependent: :destroy
+  has_many :special_periods, through: :days, dependent: :destroy
   has_many :favorites, dependent: :destroy
   has_many :favorite_users, through: :favorites, source: :user, dependent: :destroy
   has_many :reviewer, through: :reviews, source: :user, dependent: :destroy
@@ -24,9 +24,18 @@ class Hotel < ApplicationRecord
 
   def send_notification_when_update(hotel_manager:, user_id_list:, hotel_id:, message:)
     user_id_list.each do |id|
-      hotel_manager.send_notifications.create(kind: 'hotel_updates', message:, user_id: id, hotel_id:)
+      hotel_manager.send_notifications.create(kind: "hotel_updates", message:, user_id: id, hotel_id:)
     end
   end
+
+  # def destroy_hotel_and_association(hotel)
+  #   ActiveRecord::Base.transaction do
+  #     hotel.in_batches.each do |target_hotel|
+  #       target_hotel.map(&:destroy!)
+  #       sleep(0.1)
+  #     end
+  #   end
+  # end
 
   private
 

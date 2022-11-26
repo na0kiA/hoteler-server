@@ -55,15 +55,15 @@ class V1::FavoritesController < ApplicationController
 
     def hotel_not_exist_with_custom_errors
       render_json_bad_request_with_custom_errors(
-        title: '存在しないホテルです。',
-        body: '存在しないホテルに対しては「お気に入り」を押せません。'
+        title: "存在しないホテルです。",
+        body: "存在しないホテルに対しては「お気に入り」を押せません。"
       )
     end
 
     def it_is_a_your_hotel_with_custom_errors
       render_json_bad_request_with_custom_errors(
-        title: 'お気に入りを操作できませんでした。',
-        body: '自分のホテルはお気に入りに追加、及び削除ができません。'
+        title: "お気に入りを操作できませんでした。",
+        body: "自分のホテルはお気に入りに追加、及び削除ができません。"
       )
     end
 end

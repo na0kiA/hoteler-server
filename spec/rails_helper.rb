@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-require 'simplecov'
-ENV['RAILS_ENV'] ||= 'test'
+require "simplecov"
+ENV["RAILS_ENV"] ||= "test"
 # require_relative '../config/environment'
-require File.expand_path('../config/environment', __dir__)
-abort('The Rails environment is running in production mode!') if Rails.env.production?
+require File.expand_path("../config/environment", __dir__)
+abort("The Rails environment is running in production mode!") if Rails.env.production?
 
-require 'rspec/rails'
-require 'test_prof/recipes/rspec/let_it_be'
+require "rspec/rails"
+require "test_prof/recipes/rspec/let_it_be"
 
 # ActiveRecord::Base.logger = Logger.new($stdout)
 # ActiveRecord::Base.verbose_query_logs = true
@@ -17,17 +17,17 @@ require 'test_prof/recipes/rspec/let_it_be'
 SimpleCov.start do
   enable_coverage :branch
 
-  add_group 'Models', 'app/models'
-  add_group 'Forms', 'app/forms'
-  add_group 'Serializers', 'app/serializers/'
-  add_group 'Controllers', 'app/controllers/'
-  add_group 'Validators', 'app/validators/'
-  add_group 'Helpers', 'app/helpers/'
-  add_group 'Support', 'spec/support/'
+  add_group "Models", "app/models"
+  add_group "Forms", "app/forms"
+  add_group "Serializers", "app/serializers/"
+  add_group "Controllers", "app/controllers/"
+  add_group "Validators", "app/validators/"
+  add_group "Helpers", "app/helpers/"
+  add_group "Support", "spec/support/"
 end
-require 'devise'
+require "devise"
 
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 begin
   ActiveRecord::Migration.maintain_test_schema!
@@ -53,4 +53,15 @@ RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
   # config.include SerializerExampleGroup
   # config.include Rails.application.routes.url_helpers
+
+  if Bullet.enable?
+    config.before do
+      Bullet.start_request
+    end
+
+    config.after do
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
+  end
 end

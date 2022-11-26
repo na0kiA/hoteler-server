@@ -116,6 +116,9 @@ Style/BlockComments:
   Exclude:
     - 'spec/spec_helper.rb'
 
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
 # https://rubocop.readthedocs.io/en/stable/cops_style/#styleblockdelimiters
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining

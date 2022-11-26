@@ -7,7 +7,7 @@ FactoryBot.define do
     sequence(:content) { |n| "hotel_content#{n}" }
   end
 
-  factory :accepted_hotel, class: 'Hotel' do
+  factory :accepted_hotel, class: "Hotel" do
     accepted { true }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
@@ -17,7 +17,7 @@ FactoryBot.define do
     end
   end
 
-  factory :completed_profile_hotel, class: 'Hotel' do
+  factory :completed_profile_hotel, class: "Hotel" do
     accepted { true }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
@@ -48,11 +48,21 @@ FactoryBot.define do
 
     trait :with_reviews_and_helpfulnesses do
       after(:build) do |hotel|
-        hotel.reviews << FactoryBot.build(:review, :five_star_rated_review, helpfulnesses_count: 5)
-        hotel.reviews << FactoryBot.build(:review, :four_star_rated_review, helpfulnesses_count: 4)
-        hotel.reviews << FactoryBot.build(:review, :three_star_rated_review, helpfulnesses_count: 3)
-        hotel.reviews << FactoryBot.build(:review, :two_star_rated_review, helpfulnesses_count: 2)
-        hotel.reviews << FactoryBot.build(:review, :one_star_rated_review, helpfulnesses_count: 1)
+        hotel.reviews << FactoryBot.build(:review, :five_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :four_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :three_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :two_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :one_star_rated_review)
+      end
+    end
+
+    trait :with_reviews do
+      after(:build) do |hotel|
+        hotel.reviews << FactoryBot.build(:review, :five_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :four_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :three_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :two_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :one_star_rated_review)
       end
     end
 
@@ -64,7 +74,7 @@ FactoryBot.define do
         hotel.days << FactoryBot.build(:day, :sunday)
         hotel.days << FactoryBot.build(:day, :holiday)
         hotel.days << FactoryBot.build(:day, :day_before_a_holiday)
-        hotel.days << FactoryBot.build(:day, :special_days)
+        hotel.days << FactoryBot.build(:day, :special_days, :with_special_period)
       end
     end
 

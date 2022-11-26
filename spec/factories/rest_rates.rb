@@ -3,62 +3,62 @@
 FactoryBot.define do
   factory :rest_rate do
     trait :normal_rest_rate do
-      plan { '休憩90分' }
+      plan { "休憩90分" }
       rate { 3980 }
-      start_time { '6:00' }
-      end_time { '24:00' }
+      start_time { "6:00" }
+      end_time { "24:00" }
     end
 
     trait :short_rest_rate do
-      plan { '休憩60分' }
+      plan { "休憩60分" }
       rate { 3280 }
-      start_time { '6:00' }
-      end_time { '24:00' }
+      start_time { "6:00" }
+      end_time { "24:00" }
     end
 
     trait :morning_rest_rate do
-      plan { '早朝休憩90分' }
+      plan { "早朝休憩90分" }
       rate { 4980 }
-      start_time { '4:00' }
-      end_time { '11:00' }
+      start_time { "4:00" }
+      end_time { "11:00" }
     end
 
     trait :midnight_rest_rate do
-      plan { '深夜休憩90分' }
+      plan { "深夜休憩90分" }
       rate { 4980 }
-      start_time { '0:00' }
-      end_time { '5:00' }
+      start_time { "0:00" }
+      end_time { "5:00" }
     end
 
-    factory :day_off_rest_rate, class: 'RestRate' do
+    factory :day_off_rest_rate, class: "RestRate" do
       trait :normal_rest_rate do
-        plan { '休憩90分' }
+        plan { "休憩90分" }
         rate { 5980 }
-        start_time { '6:00' }
-        end_time { '24:00' }
+        start_time { "6:00" }
+        end_time { "24:00" }
       end
 
       trait :midnight_rest_rate do
-        plan { '深夜休憩90分' }
+        plan { "深夜休憩90分" }
         rate { 6980 }
-        start_time { '0:00' }
-        end_time { '5:00' }
+        start_time { "0:00" }
+        end_time { "5:00" }
       end
     end
 
-    factory :special_rest_rate, class: 'RestRate' do
+    factory :special_rest_rate, class: "RestRate" do
       trait :midnight_rest_rate do
-        plan { '深夜休憩90分' }
+        plan { "深夜休憩90分" }
         rate { 6980 }
-        start_time { '0:00' }
-        end_time { '5:00' }
+        start_time { "0:00" }
+        end_time { "5:00" }
       end
 
       trait :normal_rest_rate do
-        plan { '休憩90分' }
+        plan { "休憩90分" }
         rate { 5980 }
-        start_time { '6:00' }
-        end_time { '23:00' }
+        start_time { "6:00" }
+        end_time { "23:00" }
       end
     end
   end

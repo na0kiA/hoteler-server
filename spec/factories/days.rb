@@ -55,31 +55,31 @@ FactoryBot.define do
     end
 
     trait :monday_through_thursday do
-      day { '月曜から木曜' }
+      day { "月曜から木曜" }
     end
 
     trait :friday do
-      day { '金曜' }
+      day { "金曜" }
     end
 
     trait :saturday do
-      day { '土曜' }
+      day { "土曜" }
     end
 
     trait :sunday do
-      day { '日曜' }
+      day { "日曜" }
     end
 
     trait :holiday do
-      day { '祝日' }
+      day { "祝日" }
     end
 
     trait :day_before_a_holiday do
-      day { '祝前日' }
+      day { "祝前日" }
     end
 
     trait :special_days do
-      day { '特別期間' }
+      day { "特別期間" }
     end
   end
 end
