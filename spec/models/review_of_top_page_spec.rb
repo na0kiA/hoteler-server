@@ -7,14 +7,12 @@ RSpec.describe ReviewOfTopPage, type: :model do
     let_it_be(:user) { create(:user) }
 
     context "口コミが5つある場合" do
-      let_it_be(:hotel) { create(:with_five_reviews_and_helpfulnesses, user_id: user.id) }
+      let_it_be(:hotel) { create(:completed_profile_hotel, :with_reviews, :with_user) }
 
       it "参考になったの多い順に4つ抽出できていること" do
         reviews = described_class.new(reviews_of_a_hotel: hotel.reviews)
-        sorted_reviews_id = reviews.extract_top_reviews.pluck(:id)
-        most_helped_count = Helpfulness.where(review_id: sorted_reviews_id.first).length
-        expect(most_helped_count).to eq(5)
-        expect(reviews.extract_top_reviews.length).to eq(4)
+        expect(reviews.extract_top_reviews.count).to eq(4)
+        expect(reviews.extract_top_reviews.first.helpfulnesses_count).to eq(5)
       end
     end
 

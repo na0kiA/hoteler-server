@@ -9,7 +9,7 @@ class ReviewIndexSerializer < ActiveModel::Serializer
              :created_at
 
   def helpfulnesses
-    object.helpfulnesses.length
+    object.helpfulnesses_count
   end
 
   def user_name
