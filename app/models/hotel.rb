@@ -37,7 +37,6 @@ class Hotel < ApplicationRecord
   #   end
   # end
 
-
   private
 
     def create_days
