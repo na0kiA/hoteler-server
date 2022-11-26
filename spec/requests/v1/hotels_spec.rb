@@ -183,7 +183,7 @@ RSpec.describe "V1::Hotels", type: :request do
       end
 
       it "ホテルを複数個取得できること" do
-        create_list(:completed_profile_hotel, 2, :with_days_and_service_rates, user_id: client_user.id)
+        create_list(:completed_profile_hotel, 2, :with_days_and_service_rates,  :with_user)
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)

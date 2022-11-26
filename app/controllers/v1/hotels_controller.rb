@@ -6,7 +6,7 @@ module V1
     before_action :set_hotel, only: %i[show update destroy]
 
     def index
-      hotel = Hotel.accepted
+      hotel = Hotel.preload(:hotel_images).accepted
       render json: hotel, each_serializer: HotelIndexSerializer
     end
 
