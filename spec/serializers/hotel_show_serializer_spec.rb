@@ -4,8 +4,9 @@ require "rails_helper"
 
 RSpec.describe HotelShowSerializer, type: :serializer do
   describe HotelShowSerializer do
+    let_it_be(:user) { create(:user) }
+
     context "ホテル詳細が取得できる場合" do
-      let_it_be(:user) { create(:user) }
       let_it_be(:hotel) { create(:with_five_reviews_and_helpfulnesses, user_id: user.id) }
       let_it_be(:hotel_images) { create_list(:hotel_image, 3, hotel_id: hotel.id) }
 
@@ -29,21 +30,28 @@ RSpec.describe HotelShowSerializer, type: :serializer do
     end
 
     context "口コミが5個ある場合" do
-      let_it_be(:user) { create(:user) }
-      let_it_be(:other_user) { create(:user) }
       let_it_be(:hotel) { create(:with_five_reviews_and_helpfulnesses, user_id: user.id) }
       let_it_be(:hotel_images) { create(:hotel_image, hotel_id: hotel.id) }
 
       it "口コミは参考になったが多い順に4個までに絞り込まれていること" do
         json_serializer = HotelShowSerializer.new(hotel).as_json
         expect(json_serializer[:top_four_reviews].count).to eq(4)
-        expect(json_serializer[:top_four_reviews].first[:helpfulnesses]).to eq(5)
-        expect(json_serializer[:top_four_reviews].last[:helpfulnesses]).to eq(2)
+        expect(json_serializer[:top_four_reviews].first[:helpfulnesses_count]).to eq(5)
+        expect(json_serializer[:top_four_reviews].last[:helpfulnesses_count]).to eq(2)
+      end
+    end
+
+    context "口コミに参考になったが押された場合" do
+      let_it_be(:hotel) { create(:completed_profile_hotel, :with_user) }
+      let_it_be(:helpfulness) { create(:helpfulness, review: create(:review, hotel:, user:)) }
+
+      it "helpfulnesses_countが1になっていること" do
+        json_serializer = HotelShowSerializer.new(hotel).as_json
+        expect(json_serializer[:top_four_reviews][0][:helpfulnesses_count]).to eq(1)
       end
     end
 
     context "口コミが一つもない場合" do
-      let_it_be(:user) { create(:user) }
       let_it_be(:hotel) { create(:completed_profile_hotel, user_id: user.id) }
       let_it_be(:hotel_images) { create(:hotel_image, hotel_id: hotel.id) }
 

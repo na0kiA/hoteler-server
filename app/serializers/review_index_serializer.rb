@@ -4,13 +4,9 @@ class ReviewIndexSerializer < ActiveModel::Serializer
   attributes :title,
              :content,
              :five_star_rate,
-             :helpfulnesses,
+             :helpfulnesses_count,
              :user_name,
              :created_at
-
-  def helpfulnesses
-    object.helpfulnesses_count
-  end
 
   def user_name
     object.user.name
