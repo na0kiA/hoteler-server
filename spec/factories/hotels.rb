@@ -49,10 +49,10 @@ FactoryBot.define do
     trait :with_reviews_and_helpfulnesses do
       after(:build) do |hotel|
         hotel.reviews << FactoryBot.build(:review, :five_star_rated_review)
-        hotel.reviews << FactoryBot.build(:review, :four_star_rated_review, helpfulnesses_count: 4)
-        hotel.reviews << FactoryBot.build(:review, :three_star_rated_review, helpfulnesses_count: 3)
-        hotel.reviews << FactoryBot.build(:review, :two_star_rated_review, helpfulnesses_count: 2)
-        hotel.reviews << FactoryBot.build(:review, :one_star_rated_review, helpfulnesses_count: 1)
+        hotel.reviews << FactoryBot.build(:review, :four_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :three_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :two_star_rated_review)
+        hotel.reviews << FactoryBot.build(:review, :one_star_rated_review)
       end
     end
 
