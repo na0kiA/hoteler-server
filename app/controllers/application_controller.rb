@@ -3,6 +3,7 @@
 class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::RoutingError, with: :path_not_found
+  # rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
 
   include DeviseTokenAuth::Concerns::SetUserByToken
   skip_before_action :verify_authenticity_token
@@ -22,4 +23,8 @@ class ApplicationController < ActionController::Base
     def render_json_bad_request_with_custom_errors(title:, body:)
       render json: { errors: { title:, body: } }, status: :bad_request
     end
+
+    # def unsafe_path
+    #   redirect_to root_url
+    # end
 end

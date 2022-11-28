@@ -3,7 +3,6 @@
 module V1
   module Auth
     class RegistrationsController < DeviseTokenAuth::RegistrationsController
-      # before_action :sign_up_params,                only: :create
 
       private
 
