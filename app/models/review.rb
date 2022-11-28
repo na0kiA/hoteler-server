@@ -16,6 +16,8 @@ class Review < ApplicationRecord
   private
 
     def update_reviews_count_and_rating
+      return unless Hotel.find_by(id: hotel_id)
+
       Hotel.update!(hotel_id, average_rating: average)
     end
 

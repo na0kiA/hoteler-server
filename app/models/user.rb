@@ -9,6 +9,7 @@ class User < ApplicationRecord
 
   has_many :hotels, dependent: :destroy
   has_many :helpfulnesses, dependent: :destroy
+  has_many :reviews, dependent: :destroy
   has_many :days, through: :hotels
   has_many :favorites, dependent: :destroy
   has_many :notifications, dependent: :destroy
