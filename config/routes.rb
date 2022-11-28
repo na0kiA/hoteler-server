@@ -37,12 +37,11 @@ Rails.application.routes.draw do
 
     resources :notifications, only: %i[index]
 
+    resources :images, only: %i[index]
+
     namespace :auth do
       resources :sessions, only: %i[index]
     end
 
-    get "images", to: "images#signed_url"
-    post "images/hotel", to: "images#save_hotel_key"
-    post "images/user", to: "images#save_user_key"
   end
 end
