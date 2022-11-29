@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::RoutingError, with: :path_not_found
-  # rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
+  rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
 
   include DeviseTokenAuth::Concerns::SetUserByToken
   skip_before_action :verify_authenticity_token
@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
       render json: { errors: { title:, body: } }, status: :bad_request
     end
 
-    # def unsafe_path
-    #   redirect_to root_url
-    # end
+    def unsafe_path
+      render json: { errors: { title: "404 NOT FOUND", body: "安全ではないURLです。URLの打ち間違いがないか確認してください" } }, status: :not_found
+    end
 end
