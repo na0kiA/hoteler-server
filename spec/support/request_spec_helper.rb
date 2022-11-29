@@ -7,8 +7,8 @@ module RequestSpecHelper
 
   def sign_up(account)
     post v1_user_registration_path, params: {
-      password: 'password123',
-      password_confirmation: 'password123',
+      password: "password123",
+      password_confirmation: "password123",
       email: "#{account}@example.com"
     }
   end
