@@ -14,16 +14,12 @@ class ReviewIndexSerializer < ActiveModel::Serializer
   end
 
   def user_image
-    if object.user.image.blank?
-      "blank-profile-picture-g89cfeb4dc_640.png"
-    else
-      file_url
-    end
+    file_url
   end
 
   private
 
-    def file_url(key:)
-      Aws::S3::Object.new(ENV.fetch("S3_BUCKET", nil), key).public_url
+    def file_url
+      Aws::S3::Object.new(ENV.fetch("S3_BUCKET", nil), object.user.image).public_url
     end
 end
