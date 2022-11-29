@@ -6,10 +6,19 @@ class ReviewIndexSerializer < ActiveModel::Serializer
              :five_star_rate,
              :helpfulnesses_count,
              :user_name,
+             :user_image,
              :created_at
 
   def user_name
     object.user.name
+  end
+
+  def user_image
+    if object.user.image.blank?
+      "blank-profile-picture-g89cfeb4dc_640.png"
+    else
+      file_url
+    end
   end
 
   private

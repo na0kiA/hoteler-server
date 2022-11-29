@@ -33,5 +33,16 @@ RSpec.describe "V1::Users", type: :request do
         expect(symbolized_body(response)[:image]).to include("https://")
       end
     end
+
+    context "ユーザーの口コミがある場合" do
+      let_it_be(:client_user) { create(:user) }
+      let_it_be(:review) { create(:review, user: client_user, hotel: create(:completed_profile_hotel, :with_user)) }
+
+      it "口コミが全て表示されること" do
+        get v1_user_path(client_user.id)
+        p symbolized_body(response)
+        expect(symbolized_body(response)[:reviews]).to eq("https://")
+      end
+    end
   end
 end
