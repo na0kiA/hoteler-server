@@ -10,6 +10,12 @@ RSpec.describe "V1::Auth::Registrations", type: :request do
         post v1_user_registration_path, params: params
         expect(response.status).to eq(200)
       end
+
+      it "登録時にimageにデフォルトの画像のkeyがセットされていること" do
+        params = { name: "渋谷太郎", email: "test12@example.com", password: "12345678", password_confirmation: "12345678", confirm_success_url: "http://example.com" }
+        post v1_user_registration_path, params: params
+        expect(User.first.image).to include("hoteler")
+      end
     end
   end
 
