@@ -13,6 +13,26 @@ RSpec.describe "V1::Auth::Registrations", type: :request do
     end
   end
 
+  describe "describe patch /v1/auth - v1/auth/registrations#update" do
+    let_it_be(:auth_tokens) { create(:user).create_new_auth_token }
+
+    context "ユーザー画像の更新ができる場合" do
+      it "200を返すこと" do
+        params = { image: "aws/s3/keys/" }
+        patch v1_user_registration_path, params: params, headers: auth_tokens
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "emailの更新ができる場合" do
+      it "200を返すこと" do
+        params = { email: "test@example.com" }
+        patch v1_user_registration_path, params: params, headers: auth_tokens
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
   describe "describe delete /v1/auth - v1/auth/registrations#destroy" do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
