@@ -14,7 +14,7 @@ RSpec.describe "V1::Users", type: :request do
 
       it "デフォルトの画像が表示されること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response)[:image]).to eq("blank-profile-picture-g89cfeb4dc_640.png")
+        expect(symbolized_body(response)[:image]).to eq("https://hoteler-image.s3.ap-northeast-1.amazonaws.com/uploads/hoteler/b0e2987c-016e-4ce6-8099-fb8ae43115fc/blank-profile-picture-g89cfeb4dc_640.png")
       end
     end
 
@@ -36,12 +36,13 @@ RSpec.describe "V1::Users", type: :request do
 
     context "ユーザーの口コミがある場合" do
       let_it_be(:client_user) { create(:user) }
-      let_it_be(:review) { create(:review, user: client_user, hotel: create(:completed_profile_hotel, :with_user)) }
+      let_it_be(:hotel) { create(:completed_profile_hotel, :with_user) }
+      let_it_be(:review) { create_list(:review, 2, user: client_user, hotel:) }
 
       it "口コミが全て表示されること" do
         get v1_user_path(client_user.id)
-        p symbolized_body(response)
-        expect(symbolized_body(response)[:reviews]).to eq("https://")
+        expect(symbolized_body(response)[:reviews][0][:user_image]).to include("https://")
+        expect(symbolized_body(response)[:reviews].length).to eq(2)
       end
     end
   end
