@@ -4,7 +4,8 @@ class UserShowSerializer < ActiveModel::Serializer
   attributes :id,
              :name,
              :image,
-             :reviews
+             :reviews,
+             :favorites
 
   def reviews
     return "口コミはまだありません。" if object.reviews.blank?
@@ -18,6 +19,16 @@ class UserShowSerializer < ActiveModel::Serializer
 
   def image
     file_url
+  end
+
+  def favorites
+    return if object != instance_options[:current_user]
+
+    ActiveModelSerializers::SerializableResource.new(
+      object.favorites,
+      each_serializer: UserFavoriteSerializer,
+      adapter: :attributes
+    ).serializable_hash
   end
 
   private

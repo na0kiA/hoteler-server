@@ -7,9 +7,9 @@ RSpec.describe "V1::Users", type: :request do
     context "ユーザーが存在する場合" do
       let_it_be(:client_user) { create(:user) }
 
-      it "ユーザーのJSONのキーを4つ返すこと" do
+      it "フロントに返すJSONのキーは5つであること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response).length).to eq(4)
+        expect(symbolized_body(response).length).to eq(5)
       end
 
       it "デフォルトの画像が表示されること" do
@@ -43,6 +43,30 @@ RSpec.describe "V1::Users", type: :request do
         get v1_user_path(client_user.id)
         expect(symbolized_body(response)[:reviews][0][:user_image]).to include("https://")
         expect(symbolized_body(response)[:reviews].length).to eq(2)
+      end
+    end
+
+    context "自身のプロフィールを見る場合" do
+      let_it_be(:client_user) { create(:user) }
+      let_it_be(:auth_tokens) { client_user.create_new_auth_token }
+      let_it_be(:hotel) { create(:completed_profile_hotel, :with_user) }
+      let_it_be(:favorite) { create(:favorite, hotel:, user: client_user) }
+
+      it "お気に入り一覧が表示されること" do
+        get v1_user_path(client_user.id), headers: auth_tokens
+        expect(symbolized_body(response)[:favorites][0][:hotel_name]).to eq(hotel.name)
+      end
+    end
+
+    context "他人のプロフィールを見る場合" do
+      let_it_be(:client_user) { create(:user) }
+      let_it_be(:other_user_auth_tokens) { create(:user).create_new_auth_token }
+      let_it_be(:hotel) { create(:completed_profile_hotel, :with_user) }
+      let_it_be(:favorite) { create(:favorite, hotel:, user: client_user) }
+
+      it "お気に入り一覧が表示されないこと" do
+        get v1_user_path(client_user.id), headers: other_user_auth_tokens
+        expect(symbolized_body(response)[:favorites]).to be_blank
       end
     end
   end
