@@ -1,5 +1,6 @@
-<p>Welcome <%= @email %>!</p>
+<p>ようこそ <%= @email %>さん</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>次のリンクでメールアドレスの確認が完了します。</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<%= link_to 'アカウント確認', confirmation_url(@resource, {confirmation_token: @token, config: message['client-config'].to_s, redirect_url: message['redirect-url']}).html_safe %>
+
