@@ -25,6 +25,7 @@ gem "railties", rails_version
 gem "active_model_serializers", "~> 0.10.0"
 gem "bcrypt"
 gem "bootsnap"
+gem "nokogiri", ">= 1.13.9"
 gem "holiday_japan"
 gem "importmap-rails"
 gem "jaro_winkler"

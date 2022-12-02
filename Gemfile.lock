@@ -1451,9 +1451,9 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.13.6-x86_64-darwin)
+    nokogiri (1.13.9-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.6-x86_64-linux)
+    nokogiri (1.13.9-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.22.1)
@@ -1668,6 +1668,7 @@ DEPENDENCIES
   json
   msgpack (~> 1.5, >= 1.5.2)
   mysql2
+  nokogiri (>= 1.13.9)
   puma
   rack
   rack-cors
