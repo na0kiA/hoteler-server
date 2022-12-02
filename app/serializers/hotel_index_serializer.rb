@@ -52,9 +52,9 @@ class HotelIndexSerializer < ActiveModel::Serializer
 
   def take_the_stay_rate
     if SpecialPeriod.check_that_today_is_a_last_day_of_special_periods?(hotel: object)
-      StayBusinessHour.new(date: object.stay_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: object.id).ids)).extract_the_stay_rate
+      StayBusinessHour.new(stay_rates_of_the_hotel: object.stay_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: object.id).ids)).extract_the_stay_rate
     else
-      StayBusinessHour.new(date: object.stay_rates.where(day_id: select_a_day.ids)).extract_the_stay_rate
+      StayBusinessHour.new(stay_rates_of_the_hotel: object.stay_rates.where(day_id: select_a_day.ids)).extract_the_stay_rate
     end
   end
 

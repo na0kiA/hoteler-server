@@ -28,15 +28,6 @@ class Hotel < ApplicationRecord
     end
   end
 
-  # def destroy_hotel_and_association(hotel)
-  #   ActiveRecord::Base.transaction do
-  #     hotel.in_batches.each do |target_hotel|
-  #       target_hotel.map(&:destroy!)
-  #       sleep(0.1)
-  #     end
-  #   end
-  # end
-
   private
 
     def create_days

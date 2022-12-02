@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe "V1::Images", type: :request do
-  describe "GET /v1/images - v1/images#signed_url" do
+RSpec.describe "V1::Image", type: :request do
+  describe "GET /v1/images - v1/images#index" do
     let_it_be(:client_user) { create(:user) }
     let_it_be(:auth_tokens) { client_user.create_new_auth_token }
 
