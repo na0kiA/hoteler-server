@@ -48,14 +48,14 @@ RSpec.describe "V1::Auth::SessionsController", type: :request do
 
       it "is_loginがtrueを返すこと" do
         get v1_auth_sessions_path, headers: auth_tokens
-        expect(symbolized_body(response)[:is_login]).to eq(true)
+        expect(symbolized_body(response)[:is_login]).to be(true)
       end
     end
 
     context "ログインしていない場合" do
       it "is_loginがfalseを返すこと" do
         get v1_auth_sessions_path
-        expect(symbolized_body(response)[:is_login]).to eq(false)
+        expect(symbolized_body(response)[:is_login]).to be(false)
       end
     end
   end
