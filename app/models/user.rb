@@ -24,6 +24,6 @@ class User < ApplicationRecord
   private
 
     def insart_a_default_key_when_create
-      User.update!(image: "uploads/hoteler/b0e2987c-016e-4ce6-8099-fb8ae43115fc/blank-profile-picture-g89cfeb4dc_640.png")
+      User.update!(name: "名無しさん", image: "uploads/hoteler/b0e2987c-016e-4ce6-8099-fb8ae43115fc/blank-profile-picture-g89cfeb4dc_640.png")
     end
 end
