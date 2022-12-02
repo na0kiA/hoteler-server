@@ -48,6 +48,10 @@ ja:
             days:
               required: "曜日情報"
               invalid: "無効な日時"
+        user:
+          attributes:
+            email:
+              taken: "既に存在するメールアドレスです。認証がまだの場合はメールアドレスを確認してください。"
         hotel_image:
           attributes:
             hotel:
