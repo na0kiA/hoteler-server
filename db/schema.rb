@@ -60,10 +60,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_104627) do
     t.string "prefecture", default: "", null: false
     t.string "city", default: "", null: false
     t.string "postal_code", default: "", null: false
-    t.string "street_adress", default: "", null: false
+    t.string "street_address", default: "", null: false
     t.string "phone_number", default: "", null: false
     t.string "company", default: "", null: false
-    t.index ["city", "street_adress"], name: "index_hotels_on_city_and_street_adress"
+    t.index ["city", "street_address"], name: "index_hotels_on_city_and_street_address"
     t.index ["user_id"], name: "index_hotels_on_user_id"
   end
 
