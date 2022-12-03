@@ -4,6 +4,10 @@ class HotelShowSerializer < ActiveModel::Serializer
   attributes :id,
              :name,
              :content,
+             :company,
+             :phone_number,
+             :postal_code,
+             :full_address,
              :full,
              :average_rating,
              :reviews_count,
@@ -17,6 +21,10 @@ class HotelShowSerializer < ActiveModel::Serializer
       each_serializer: HotelImageSerializer,
       adapter: :attributes
     ).serializable_hash
+  end
+
+  def full_address
+    "#{object.prefecture}#{object.city}#{object.street_adress}"
   end
 
   def day_of_the_week

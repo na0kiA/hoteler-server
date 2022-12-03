@@ -77,7 +77,7 @@ module V1
       end
 
       def hotel_params
-        params.require(:hotel).permit(:name, :content, :full).merge(user_id: current_v1_user.id)
+        params.require(:hotel).permit(:name, :content, :company, :phone_number,:postal_code,:prefecture,:city,:street_adress,:full).merge(user_id: current_v1_user.id)
       end
 
       def notification_params
