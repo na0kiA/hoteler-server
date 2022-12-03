@@ -26,8 +26,7 @@ FactoryBot.define do
     sequence(:prefecture) { |n| "東京#{n}" }
     sequence(:city) { |n| "渋谷#{n}" }
     sequence(:postal_code) { |n| "000-000#{n}" }
-    sequence(:street_adress) { |n| "2丁目174-#{n}" }
-    sequence(:content) { |n| "hotel_content#{n}" }
+    sequence(:street_address) { |n| "2丁目174-#{n}" }
     reviews_count { 0 }
     average_rating { 0.0 }
 

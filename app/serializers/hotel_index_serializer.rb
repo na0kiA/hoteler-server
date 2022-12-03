@@ -21,7 +21,7 @@ class HotelIndexSerializer < ActiveModel::Serializer
   end
 
   def full_address
-    "#{object.prefecture}#{object.city}#{object.street_adress}"
+    "#{object.prefecture}#{object.city}#{object.street_address}"
   end
 
   def day_of_the_week
