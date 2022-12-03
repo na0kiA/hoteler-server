@@ -5,14 +5,23 @@ ja:
         title: "タイトル"
         content: "内容"
         five_star_rate: "5つ星"
-      hotel_form:
-        name: "ホテル名"
-        content: "内容"
+        helpfulnesses_count: "参考になった"
       hotel_image:
         key: "ホテルの画像"
       hotel:
         name: "ホテル名"
         content: "内容"
+        company: "運営会社"
+        phone_number: "電話番号"
+        prefecture: "都道府県"
+        city: "市区町村"
+        street_address: "市区町村"
+        postal_number: "郵便番号"
+        full: "空き状況"
+        accepted: "承認状況"
+        reviews_count: "口コミ数"
+        average_rating: "平均評価"
+        favorites_count: "お気に入り"
       day:
         day: "曜日"
       rest_rate:
