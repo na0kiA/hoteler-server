@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class HotelShowSerializer < ActiveModel::Serializer
-  attributes :id,
-             :name,
+  attributes :name,
              :content,
              :company,
              :phone_number,
@@ -16,6 +15,7 @@ class HotelShowSerializer < ActiveModel::Serializer
              :top_four_reviews
 
   def hotel_images
+    return "no image" if object.hotel_images.blank?
     ActiveModelSerializers::SerializableResource.new(
       object.hotel_images,
       each_serializer: HotelImageSerializer,
