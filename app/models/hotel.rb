@@ -2,6 +2,8 @@
 
 class Hotel < ApplicationRecord
   scope :accepted, -> { where(accepted: true) }
+  scope :search_multiple, ->(search) { where(["prefecture LIKE(?) OR city LIKE(?) OR name LIKE(?) OR company LIKE(?)", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"]) }
+  scope :search_city_and_address, ->(search) { where(["city LIKE(?) OR street_address LIKE(?)", "%#{search}%", "%#{search}%"]) }
 
   belongs_to :user
   has_many :hotel_images, dependent: :destroy
@@ -26,6 +28,7 @@ class Hotel < ApplicationRecord
   after_commit :create_days, on: %i[create]
 
   DAY_OF_THE_WEEK = %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間].freeze
+
 
   def send_notification_when_update(hotel_manager:, user_id_list:, hotel_id:, message:)
     user_id_list.each do |id|
