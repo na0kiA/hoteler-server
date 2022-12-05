@@ -17,11 +17,11 @@ class Hotel < ApplicationRecord
 
   validates :name, length: { maximum: 50 }, presence: true, invalid_words: true
   validates :content, length: { minimum: 10, maximum: 2000 }, presence: true, invalid_words: true
-  validates :prefecture, length: { minimum: 2, maximum: 10 }, presence: true, invalid_words: true
-  validates :city, length: { minimum: 1, maximum: 10 }, presence: true, invalid_words: true
-  validates :street_adress, length: { minimum: 2, maximum: 50 }, presence: true, invalid_words: true
-  validates :phone_number, length: { minimum: 9, maximum: 13 }, presence: true, invalid_words: true
-  validates :company, length: { minimum: 1, maximum: 30 }, presence: true, invalid_words: true
+  validates :prefecture, length: { maximum: 10 }, presence: true, invalid_words: true
+  validates :city, length: { maximum: 10 }, presence: true, invalid_words: true
+  validates :street_address, length: { maximum: 50 }, presence: true, invalid_words: true
+  validates :phone_number, length: {  maximum: 13 }, presence: true, invalid_words: true
+  validates :company, length: { maximum: 30 }, presence: true, invalid_words: true
 
   after_commit :create_days, on: %i[create]
 
