@@ -45,6 +45,7 @@ ja:
         record_invalid: "%{errors}"
         blank: "%{attribute}を入力してください。"
         too_short: "%{attribute}は%{count}文字以上入力してください。"
+        too_long: "%{attribute}は%{count} 文字/桁 以内に入力してください。。"
         not_a_number: "%{attribute}は数値のみ入力できます。"
         contain_blacklist_words: "%{attribute}に暴力的もしくは卑猥なワードが含まれています"
         contain_same_words: "%{attribute}に同じ文字列が羅列しています"
