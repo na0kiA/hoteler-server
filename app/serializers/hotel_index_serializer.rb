@@ -43,6 +43,8 @@ class HotelIndexSerializer < ActiveModel::Serializer
   end
 
   def stay_rates
+    return "宿泊プランはございません" if StayRate.where(day_id: object.days.ids).blank?
+
     ActiveModelSerializers::SerializableResource.new(
       take_the_stay_rate,
       each_serializer: StayRateSerializer,
