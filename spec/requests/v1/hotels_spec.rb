@@ -97,10 +97,10 @@ RSpec.describe "V1::Hotels", type: :request do
     context "ホテルを空室から満室にのみ変更する場合" do
       let_it_be(:hotel) { create(:accepted_hotel, user: client_user) }
       let_it_be(:favorite) { create(:with_user_favorite, hotel:) }
+      let_it_be(:only_changed_full_param) { { hotel: {name: hotel.name, content: hotel.content, phone_number: hotel.phone_number, postal_code: hotel.postal_code, street_address: hotel.street_address, prefecture: hotel.prefecture, city: hotel.city, company: hotel.company, full: true}} }
 
       it "通知がユーザーに送信されないこと" do
-        only_patch_full_params = { hotel: { full: true }}
-        expect { patch v1_hotel_path(hotel.id), params: only_patch_full_params, headers: auth_tokens }.not_to change(Notification, :count)
+        expect { patch v1_hotel_path(hotel.id), params: only_changed_full_param, headers: auth_tokens }.not_to change(Notification, :count)
 
         get v1_hotel_path(hotel.id)
         expect(symbolized_body(response)[:full]).to eq(true)
@@ -110,20 +110,18 @@ RSpec.describe "V1::Hotels", type: :request do
       end
 
       it "満室になっていること" do
-        only_patch_full_params = { hotel: { full: true }}
-        patch v1_hotel_path(hotel.id), params: only_patch_full_params, headers: auth_tokens
+        patch v1_hotel_path(hotel.id), params: only_changed_full_param, headers: auth_tokens
         expect(symbolized_body(response)[:full]).to be(true)
       end
     end
 
-    context "何も値を更新していない場合" do
+    context "何も値を更新していないのに通知メッセージを付与した場合" do
       let_it_be(:hotel) { create(:accepted_hotel, user: client_user) }
       let_it_be(:favorite) { create(:with_user_favorite, hotel:) }
+      let_it_be(:not_changed_param) { { hotel: {name: hotel.name, content: hotel.content, phone_number: hotel.phone_number, postal_code: hotel.postal_code, street_address: hotel.street_address, prefecture: hotel.prefecture, city: hotel.city, company: hotel.company, full: false}, notification: {message: "何も変更していません"} }}
 
       it "通知がユーザーに送信されないこと" do
-        params = { hotel: {user: client_user} }
-        patch v1_hotel_path(hotel.id), params:, headers: auth_tokens
-        expect { patch v1_hotel_path(hotel.id), params:, headers: auth_tokens }.not_to change(Notification, :count)
+        expect { patch v1_hotel_path(hotel.id), params: not_changed_param, headers: auth_tokens }.not_to change(Notification, :count)
       end
     end
 
@@ -208,12 +206,11 @@ RSpec.describe "V1::Hotels", type: :request do
     end
 
     context "ホテルが満室の場合" do
-      it "ホテル一覧のfullがtrueなこと" do
-        # params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", full: true, company: "株式会社ホテルサービス", phone_number: "030-1111-1111", prefecture: "東京", city: "渋谷区", street_address: "2丁目11-1", postal_code: "332-2344", user: client_user }, notification: { message: "新しいソファーを設置しました。" } }
-        params = { hotel: {full: true, user_id: client_user.id}}
-        patch v1_hotel_path(accepted_hotel.id), params: params, headers: auth_tokens
+      let_it_be(:hotel) { create(:accepted_hotel, full: true, user: client_user) }
+
+      it "ホテル一覧の2つ目のホテルが満室になっていること" do
         get v1_hotels_path
-        expect(symbolized_body(response)[0][:full]).to be(true)
+        expect(symbolized_body(response)[1][:full]).to be(true)
       end
     end
   end

@@ -6,10 +6,10 @@ FactoryBot.define do
     sequence(:name) { |n| "ホテルラダー#{n}" }
     sequence(:content) { |n| "最高峰のラグジュアリホテルをお届けします#{n}" }
     sequence(:company) { |n| "株式会社ホテルサービス#{n}" }
-    sequence(:phone_number) { |n| "000-1234-123#{n}" }
+    sequence(:phone_number) { |n| "0001234123#{n}" }
     sequence(:prefecture) { |n| "東京#{n}" }
     sequence(:city) { |n| "渋谷#{n}" }
-    sequence(:postal_code) { |n| "000-000#{n}" }
+    sequence(:postal_code) { |n| "000000#{n}" }
     sequence(:street_address) { |n| "2丁目174-#{n}" }
   end
 
@@ -18,10 +18,10 @@ FactoryBot.define do
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
     sequence(:company) { |n| "株式会社ホテルサービス#{n}" }
-    sequence(:phone_number) { |n| "000-1234-123#{n}" }
+    sequence(:phone_number) { |n| "0001234123#{n}" }
     sequence(:prefecture) { |n| "東京#{n}" }
     sequence(:city) { |n| "渋谷#{n}" }
-    sequence(:postal_code) { |n| "000-000#{n}" }
+    sequence(:postal_code) { |n| "000000#{n}" }
     sequence(:street_address) { |n| "2丁目174-#{n}" }
 
     trait :with_user do
@@ -34,10 +34,10 @@ FactoryBot.define do
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
     sequence(:company) { |n| "株式会社ホテルサービス#{n}" }
-    sequence(:phone_number) { |n| "000-1234-123#{n}" }
+    sequence(:phone_number) { |n| "0001234123#{n}" }
     sequence(:prefecture) { |n| "東京#{n}" }
     sequence(:city) { |n| "渋谷#{n}" }
-    sequence(:postal_code) { |n| "000-000#{n}" }
+    sequence(:postal_code) { |n| "000000#{n}" }
     sequence(:street_address) { |n| "2丁目174-#{n}" }
     reviews_count { 0 }
     average_rating { 0.0 }
