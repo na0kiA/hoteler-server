@@ -3,14 +3,26 @@
 FactoryBot.define do
   factory :hotel do
     accepted { false }
-    sequence(:name) { |n| "hotel#{n}" }
-    sequence(:content) { |n| "hotel_content#{n}" }
+    sequence(:name) { |n| "ホテルラダー#{n}" }
+    sequence(:content) { |n| "最高峰のラグジュアリホテルをお届けします#{n}" }
+    sequence(:company) { |n| "株式会社ホテルサービス#{n}" }
+    sequence(:phone_number) { |n| "000-1234-123#{n}" }
+    sequence(:prefecture) { |n| "東京#{n}" }
+    sequence(:city) { |n| "渋谷#{n}" }
+    sequence(:postal_code) { |n| "000-000#{n}" }
+    sequence(:street_address) { |n| "2丁目174-#{n}" }
   end
 
   factory :accepted_hotel, class: "Hotel" do
     accepted { true }
     sequence(:name) { |n| "hotel#{n}" }
     sequence(:content) { |n| "hotel_content#{n}" }
+    sequence(:company) { |n| "株式会社ホテルサービス#{n}" }
+    sequence(:phone_number) { |n| "000-1234-123#{n}" }
+    sequence(:prefecture) { |n| "東京#{n}" }
+    sequence(:city) { |n| "渋谷#{n}" }
+    sequence(:postal_code) { |n| "000-000#{n}" }
+    sequence(:street_address) { |n| "2丁目174-#{n}" }
 
     trait :with_user do
       association :user
