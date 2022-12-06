@@ -30,7 +30,6 @@ module V1
 
     def update
       if @hotel.present? && authenticated?
-        # binding.break
         if update_only_fulled_room?(@hotel) && same_params_except_full?(@hotel)
           @hotel.update!(hotel_params)
           render json: @hotel, serializer: HotelShowSerializer, status: :ok
@@ -83,10 +82,6 @@ module V1
       def render_bad_request_with_update_message_invalid
         render_json_bad_request_with_custom_errors(title: "ホテルを編集できませんでした", body: "更新メッセージを必ず入力してください。")
       end
-
-      # def render_bad_request_with_can_not_send_notification
-      #   render_json_bad_request_with_custom_errors(title: "ホテルを編集できませんでした", body: "ホテルを何も変更していない場合、更新メッセージを送ることはできせん。")
-      # end
 
       def message_blank?
         notification_params[:message].blank?

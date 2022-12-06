@@ -54,8 +54,6 @@ FactoryBot.define do
       end
     end
 
-
-
     trait :with_expensive_rest_rates do
       after(:build) do |day|
         day.rest_rates << FactoryBot.build(:expensive_rest_rate, :normal_rest_rate)
