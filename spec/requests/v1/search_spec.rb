@@ -79,5 +79,15 @@ RSpec.describe "V1::Searches", type: :request do
         expect(response.body).to eq("にゃあの検索結果が見つかりませんでした")
       end
     end
+
+    context "安い順に絞り込む場合" do
+      let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user) }
+      let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
+
+      it "ホテルが安い順に並び替えられること" do
+        get v1_search_index_path
+        expect(symbolized_body(response)).to eq("d")
+      end
+    end
   end
 end
