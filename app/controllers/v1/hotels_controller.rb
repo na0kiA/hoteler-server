@@ -72,7 +72,8 @@ module V1
       end
 
       def same_params_except_full?(hotel)
-        hotel_params.values_at(:name, :content, :company, :phone_number,:postal_code,:prefecture,:city,:street_address, :user_id) == hotel.values_at(:name, :content, :company, :phone_number,:postal_code,:prefecture,:city,:street_address, :user_id)
+        hotel_params.values_at(:name, :content, :company, :phone_number, :postal_code, :prefecture, :city, :street_address,
+                               :user_id) == hotel.values_at(:name, :content, :company, :phone_number, :postal_code, :prefecture, :city, :street_address, :user_id)
       end
 
       def send_notification(hotel)
@@ -92,7 +93,7 @@ module V1
       end
 
       def hotel_params
-        params.require(:hotel).permit(:name, :content, :company, :phone_number,:postal_code,:prefecture,:city,:street_address,:full).merge(user_id: current_v1_user.id)
+        params.require(:hotel).permit(:name, :content, :company, :phone_number, :postal_code, :prefecture, :city, :street_address, :full).merge(user_id: current_v1_user.id)
       end
 
       def notification_params

@@ -36,9 +36,8 @@ Rails.application.routes.draw do
     end
 
     resources :notifications, only: %i[index]
-    
-    resources :search, only: %i[index]
 
+    resources :search, only: %i[index]
 
     resources :images, only: %i[index]
 
