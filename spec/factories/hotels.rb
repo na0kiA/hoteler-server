@@ -64,6 +64,18 @@ FactoryBot.define do
       end
     end
 
+    trait :with_days_and_expensive_service_rates do
+      after(:build) do |hotel|
+        hotel.days << FactoryBot.build(:day, :monday_through_thursday, :with_expensive_rest_rates, :with_expensive_stay_rates)
+        hotel.days << FactoryBot.build(:day, :friday, :with_expensive_rest_rates, :with_expensive_day_off_stay_rates)
+        hotel.days << FactoryBot.build(:day, :saturday, :with_expensive_day_off_rest_rates, :with_expensive_day_off_stay_rates)
+        hotel.days << FactoryBot.build(:day, :sunday, :with_expensive_day_off_rest_rates, :with_expensive_stay_rates)
+        hotel.days << FactoryBot.build(:day, :holiday, :with_expensive_day_off_rest_rates, :with_expensive_stay_rates)
+        hotel.days << FactoryBot.build(:day, :day_before_a_holiday, :with_expensive_day_off_rest_rates, :with_expensive_day_off_stay_rates)
+        hotel.days << FactoryBot.build(:day, :special_days, :with_expensive_special_rest_rates, :with_expensive_special_stay_rates, :with_special_period)
+      end
+    end
+
     trait :with_reviews_and_helpfulnesses do
       after(:build) do |hotel|
         hotel.reviews << FactoryBot.build(:review, :five_star_rated_review)
