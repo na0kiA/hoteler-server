@@ -85,8 +85,9 @@ RSpec.describe "V1::Searches", type: :request do
       let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
 
       it "ホテルが安い順に並び替えられること" do
-        get v1_search_index_path
-        expect(symbolized_body(response)).to eq("d")
+        get v1_search_index_path, params: { sort: "lower_rest" }
+        expect(symbolized_body(response)[0][:rest_rates][0][:rate]).to eq(4980)
+        expect(symbolized_body(response)[1][:rest_rates][0][:rate]).to eq(6980)
       end
     end
   end

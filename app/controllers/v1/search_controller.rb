@@ -4,7 +4,14 @@ class V1::SearchController < ApplicationController
   def index
     @accepted_hotel = Hotel.accepted
     @hotel = Hotel.none
-    Rails.logger.debug select_a_day
+
+    if search_params[:sort] == "lower_rest"
+      @hotel = Hotel.none
+      select_a_day.pluck(:day_id, :rate).sort_by {|_day_id, rate| rate}.reverse.each do |arr|
+        @hotel = @hotel.or(Hotel.preload(:hotel_images).where(id: Day.where(id: arr[0]).select(:hotel_id)))
+      end
+      render json: @hotel, each_serializer: HotelIndexSerializer
+    end
 
     if search_params[:keyword].present?
       search_each_params_of_keyword(split_params: split_keyword)
@@ -13,20 +20,21 @@ class V1::SearchController < ApplicationController
       else
         render json: @hotel, each_serializer: HotelIndexSerializer
       end
+    end
 
-    elsif search_params[:city_and_street_address].present?
+    if search_params[:city_and_street_address].present?
       search_each_params_of_city_or_street_address(split_params: split_city_and_street_address)
       if @hotel.blank?
         render json: render_not_match_params(search_params[:city_and_street_address])
       else
         render json: @hotel, each_serializer: HotelIndexSerializer
       end
+    end
 
-    # elsif search_params[:lower_rest].present?
-
-    else
+    if !search_params[:city_and_street_address] && !search_params[:keyword] && !search_params[:sort]
       redirect_to v1_hotels_path
     end
+
   end
 
   private
@@ -65,17 +73,17 @@ class V1::SearchController < ApplicationController
 
     def select_a_day
       result = []
-      @accepted_hotel.each do |hotel|
+      @accepted_hotel.map do |hotel|
         result << if SpecialPeriod.check_that_today_is_a_special_period?(hotel:)
-                    RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.special_day.where(hotel_id: hotel.id).ids)).extract_the_rest_rate.first
+                    RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.special_day.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
                   else
-                    RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: hotel.id).ids)).extract_the_rest_rate.first
+                    RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
                   end
       end
-      result.compact
+      result.flatten
     end
 
     def search_params
-      params.permit(:keyword, :city_and_street_address, :lower_price)
+      params.permit(:keyword, :city_and_street_address, :sort)
     end
 end
