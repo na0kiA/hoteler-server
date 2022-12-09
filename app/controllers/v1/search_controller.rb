@@ -5,13 +5,12 @@ class V1::SearchController < ApplicationController
     @accepted_hotel = Hotel.accepted
     @hotel = Hotel.none
 
-    if search_params[:sort] == "lower_rest"
-      render json: sort_by_rest, each_serializer: HotelIndexSerializer
-    end
-
     if search_params[:keyword].present?
       search_each_params_of_keyword(split_params: split_keyword)
-      if @hotel.blank?
+
+      if sort_by_low_rest?
+        render json: sorted_low_rest, each_serializer: HotelIndexSerializer
+      elsif @hotel.blank?
         render json: render_not_match_params(search_params[:keyword])
       else
         render json: @hotel, each_serializer: HotelIndexSerializer
@@ -20,7 +19,10 @@ class V1::SearchController < ApplicationController
 
     if search_params[:city_and_street_address].present?
       search_each_params_of_city_or_street_address(split_params: split_city_and_street_address)
-      if @hotel.blank?
+
+      if sort_by_low_rest?
+        render json: sorted_low_rest, each_serializer: HotelIndexSerializer
+      elsif @hotel.blank?
         render json: render_not_match_params(search_params[:city_and_street_address])
       else
         render json: @hotel, each_serializer: HotelIndexSerializer
@@ -33,6 +35,10 @@ class V1::SearchController < ApplicationController
   end
 
   private
+
+    def sort_by_low_rest?
+      search_params[:sort] == "low_rest"
+    end
 
     def search_each_params_of_city_or_street_address(split_params:)
       split_params.each do |city_and_street_address|
@@ -68,19 +74,19 @@ class V1::SearchController < ApplicationController
 
     def select_rest_rates
       rest_rate_list = RestRate.none
-      @accepted_hotel.map do |hotel|
-        rest_rate_list =  rest_rate_list.or(if SpecialPeriod.check_that_today_is_a_special_period?(hotel:)
-                            RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.special_day.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
-                          else
-                            RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
-                          end)
+      @hotel.map do |hotel|
+        rest_rate_list = rest_rate_list.or(if SpecialPeriod.check_that_today_is_a_special_period?(hotel:)
+                                             RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.special_day.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
+                                           else
+                                             RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
+                                           end)
       end
       rest_rate_list
     end
 
-    def sort_by_rest
+    def sorted_low_rest
       hotel = []
-      select_rest_rates.preload(:day, :hotel, hotel: :hotel_images).sort_by(&:rate).each do |sorted_rest| 
+      select_rest_rates.preload(:day, :hotel, hotel: :hotel_images).sort_by(&:rate).each do |sorted_rest|
         hotel << sorted_rest.hotel
       end
       hotel
