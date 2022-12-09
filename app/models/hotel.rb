@@ -31,10 +31,6 @@ class Hotel < ApplicationRecord
 
   after_commit :create_days, on: %i[create]
 
-  # def self.search_lower_rest(accepted_hotel:)
-  #   accepted_hotel.rest_rates
-  # end
-
   def send_notification_when_update(hotel_manager:, user_id_list:, hotel_id:, message:)
     user_id_list.each do |id|
       hotel_manager.send_notifications.create(kind: "hotel_updates", message:, user_id: id, hotel_id:)
