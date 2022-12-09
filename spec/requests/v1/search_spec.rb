@@ -102,15 +102,15 @@ RSpec.describe "V1::Searches", type: :request do
 
       it "ホテルの宿泊が安い順に並び替えられること" do
         get v1_search_index_path, params: { keyword: "渋谷", sort: "low_stay" }
-        expect(symbolized_body(response)[0][:stay_rates][0][:rate]).to eq(3280)
-        expect(symbolized_body(response)[1][:stay_rates][0][:rate]).to eq(4280)
+        expect(symbolized_body(response)[0][:stay_rates][0][:rate]).to eq(5980)
+        expect(symbolized_body(response)[1][:stay_rates][0][:rate]).to eq(6980)
       end
 
-      # it "ホテルが高い順に並び替えられること" do
-      #   get v1_search_index_path, params: { keyword: "渋谷", sort: "high_rest" }
-      #   expect(symbolized_body(response)[0][:rest_rates][0][:rate]).to eq(4280)
-      #   expect(symbolized_body(response)[1][:rest_rates][0][:rate]).to eq(3280)
-      # end
+      it "ホテルの宿泊が高い順に並び替えられること" do
+        get v1_search_index_path, params: { keyword: "渋谷", sort: "high_stay" }
+        expect(symbolized_body(response)[0][:stay_rates][0][:rate]).to eq(6980)
+        expect(symbolized_body(response)[1][:stay_rates][0][:rate]).to eq(5980)
+      end
     end
   end
 end
