@@ -7,13 +7,15 @@ class V1::SearchController < ApplicationController
 
     if search_params[:keyword].present?
       search_each_params_of_keyword(split_params: split_keyword)
-
+      hotels = HotelSort.new(hotels: @hotel)
       if sort_by_low_rest?
-        cheap_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_low_rest
-        render json: cheap_rest_hotels, each_serializer: HotelIndexSerializer
+        render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer
       elsif sort_by_high_rest?
-        expensive_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_high_rest
-        render json: expensive_rest_hotels, each_serializer: HotelIndexSerializer
+        render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer
+      elsif sort_by_low_stay?
+        render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer
+      elsif sort_by_high_stay?
+        render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer
       elsif @hotel.blank?
         render json: render_not_match_params(search_params[:keyword])
       else
@@ -24,12 +26,15 @@ class V1::SearchController < ApplicationController
     if search_params[:city_and_street_address].present?
       search_each_params_of_city_or_street_address(split_params: split_city_and_street_address)
 
+      hotels = HotelSort.new(hotels: @hotel)
       if sort_by_low_rest?
-        cheap_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_low_rest
-        render json: cheap_rest_hotels, each_serializer: HotelIndexSerializer
+        render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer
       elsif sort_by_high_rest?
-        expensive_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_high_rest
-        render json: expensive_rest_hotels, each_serializer: HotelIndexSerializer
+        render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer
+      elsif sort_by_low_stay?
+        render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer
+      elsif sort_by_high_stay?
+        render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer
       elsif @hotel.blank?
         render json: render_not_match_params(search_params[:city_and_street_address])
       else
@@ -54,6 +59,10 @@ class V1::SearchController < ApplicationController
 
     def sort_by_low_stay?
       search_params[:sort] == "low_stay"
+    end
+
+    def sort_by_high_stay?
+      search_params[:sort] == "high_stay"
     end
 
     def search_each_params_of_city_or_street_address(split_params:)
