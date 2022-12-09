@@ -11,6 +11,9 @@ class V1::SearchController < ApplicationController
       if sort_by_low_rest?
         cheap_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_low_rest
         render json: cheap_rest_hotels, each_serializer: HotelIndexSerializer
+      elsif sort_by_high_rest?
+        expensive_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_high_rest
+        render json: expensive_rest_hotels, each_serializer: HotelIndexSerializer
       elsif @hotel.blank?
         render json: render_not_match_params(search_params[:keyword])
       else
@@ -24,6 +27,9 @@ class V1::SearchController < ApplicationController
       if sort_by_low_rest?
         cheap_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_low_rest
         render json: cheap_rest_hotels, each_serializer: HotelIndexSerializer
+      elsif sort_by_high_rest?
+        expensive_rest_hotels = HotelSort.new(hotels: @hotel).sort_by_high_rest
+        render json: expensive_rest_hotels, each_serializer: HotelIndexSerializer
       elsif @hotel.blank?
         render json: render_not_match_params(search_params[:city_and_street_address])
       else
@@ -40,6 +46,14 @@ class V1::SearchController < ApplicationController
 
     def sort_by_low_rest?
       search_params[:sort] == "low_rest"
+    end
+
+    def sort_by_high_rest?
+      search_params[:sort] == "high_rest"
+    end
+
+    def sort_by_low_stay?
+      search_params[:sort] == "low_stay"
     end
 
     def search_each_params_of_city_or_street_address(split_params:)

@@ -21,13 +21,17 @@ class HotelSort
   def select_rest_rates
     rest_rate_list = RestRate.none
     @hotels.map do |hotel|
-      rest_rate_list = rest_rate_list.or(if SpecialPeriod.check_that_today_is_a_special_period?(hotel:)
-                                           RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.special_day.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
-                                         else
-                                           RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
-                                         end)
+      rest_rate_list = rest_rate_list.or(extract_open_rest_rate(hotel:))
     end
     rest_rate_list
+  end
+
+  def extract_open_rest_rate(hotel:)
+    if SpecialPeriod.check_that_today_is_a_special_period?(hotel:)
+      RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.special_day.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
+    else
+      RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
+    end
   end
 
   def sorted_low_rest
@@ -37,5 +41,4 @@ class HotelSort
     end
     hotel
   end
-
 end

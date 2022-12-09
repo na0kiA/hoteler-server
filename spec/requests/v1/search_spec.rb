@@ -80,7 +80,7 @@ RSpec.describe "V1::Searches", type: :request do
       end
     end
 
-    context "安い順に絞り込む場合" do
+    context "ホテルを並び替える場合" do
       let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
       let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user) }
 
@@ -88,11 +88,29 @@ RSpec.describe "V1::Searches", type: :request do
         travel_to Time.zone.local(2022, 12, 12, 12, 0, 0)
       end
 
-      it "ホテルが安い順に並び替えられること" do
+      it "ホテルの休憩が安い順に並び替えられること" do
         get v1_search_index_path, params: { keyword: "渋谷", sort: "low_rest" }
         expect(symbolized_body(response)[0][:rest_rates][0][:rate]).to eq(3280)
         expect(symbolized_body(response)[1][:rest_rates][0][:rate]).to eq(4280)
       end
+
+      it "ホテルの休憩が高い順に並び替えられること" do
+        get v1_search_index_path, params: { keyword: "渋谷", sort: "high_rest" }
+        expect(symbolized_body(response)[0][:rest_rates][0][:rate]).to eq(4280)
+        expect(symbolized_body(response)[1][:rest_rates][0][:rate]).to eq(3280)
+      end
+
+      it "ホテルの宿泊が安い順に並び替えられること" do
+        get v1_search_index_path, params: { keyword: "渋谷", sort: "low_stay" }
+        expect(symbolized_body(response)[0][:stay_rates][0][:rate]).to eq(3280)
+        expect(symbolized_body(response)[1][:stay_rates][0][:rate]).to eq(4280)
+      end
+
+      # it "ホテルが高い順に並び替えられること" do
+      #   get v1_search_index_path, params: { keyword: "渋谷", sort: "high_rest" }
+      #   expect(symbolized_body(response)[0][:rest_rates][0][:rate]).to eq(4280)
+      #   expect(symbolized_body(response)[1][:rest_rates][0][:rate]).to eq(3280)
+      # end
     end
   end
 end
