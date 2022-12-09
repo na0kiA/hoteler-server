@@ -25,7 +25,7 @@ class Hotel < ApplicationRecord
 
   scope :accepted, -> { where(accepted: true) }
   scope :search_multiple, ->(search) {
-                            where(["name LIKE(?) OR prefecture LIKE(?) OR city LIKE(?) OR company LIKE(?) OR street_address LIKE(?)", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"])
+                            where(["city LIKE(?) OR street_address LIKE(?) OR name LIKE(?) OR company LIKE(?) OR prefecture LIKE(?)", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%"])
                           }
   scope :search_city_and_street_address, ->(search) { where(["city LIKE(?) OR street_address LIKE(?)", "%#{search}%", "%#{search}%"]) }
 

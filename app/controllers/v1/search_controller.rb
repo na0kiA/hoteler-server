@@ -23,26 +23,7 @@ class V1::SearchController < ApplicationController
       end
     end
 
-    if search_params[:city_and_street_address].present?
-      search_each_params_of_city_or_street_address(split_params: split_city_and_street_address)
-
-      hotels = HotelSort.new(hotels: @hotel)
-      if sort_by_low_rest?
-        render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer
-      elsif sort_by_high_rest?
-        render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer
-      elsif sort_by_low_stay?
-        render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer
-      elsif sort_by_high_stay?
-        render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer
-      elsif @hotel.blank?
-        render json: render_not_match_params(search_params[:city_and_street_address])
-      else
-        render json: @hotel, each_serializer: HotelIndexSerializer
-      end
-    end
-
-    if search_params.blank? || (search_params[:keyword].blank? && search_params[:city_and_street_address].blank? && search_params[:sort].blank?)
+    if search_params.blank? || (search_params[:keyword].blank? && search_params[:sort].blank?)
       redirect_to v1_hotels_path
     end
   end
@@ -65,12 +46,6 @@ class V1::SearchController < ApplicationController
       search_params[:sort] == "high_stay"
     end
 
-    def search_each_params_of_city_or_street_address(split_params:)
-      split_params.each do |city_and_street_address|
-        @hotel = @hotel.or(search_city_and_street_address(city_and_street_address:))
-      end
-    end
-
     def search_each_params_of_keyword(split_params:)
       split_params.each do |keyword|
         @hotel = @hotel.or(search_keyword(keyword:))
@@ -81,10 +56,6 @@ class V1::SearchController < ApplicationController
       @accepted_hotel.search_multiple(keyword)
     end
 
-    def search_city_and_street_address(city_and_street_address:)
-      @accepted_hotel.search_city_and_street_address(city_and_street_address)
-    end
-
     def render_not_match_params(params)
       "#{params}の検索結果が見つかりませんでした"
     end
@@ -93,11 +64,7 @@ class V1::SearchController < ApplicationController
       search_params[:keyword].split(/[[:blank:]]+/).select(&:present?)
     end
 
-    def split_city_and_street_address
-      search_params[:city_and_street_address].split(/[[:blank:]]+/).select(&:present?)
-    end
-
     def search_params
-      params.permit(:keyword, :city_and_street_address, :sort)
+      params.permit(:keyword, :sort)
     end
 end

@@ -56,27 +56,20 @@ RSpec.describe "V1::Searches", type: :request do
       end
     end
 
-    context "市区町村に存在するホテルの住所のパラメーターに与えられた場合" do
+    context "キーワードに存在するホテルの住所が与えられた場合" do
       it "該当するホテルが検索されること" do
-        get v1_search_index_path, params: { city_and_street_address: "丁目" }
+        get v1_search_index_path, params: { keyword: "丁目" }
         expect(symbolized_body(response).first.length).to eq(13)
       end
 
       it "パラメーターが5つでも該当するホテルが検索されること" do
-        get v1_search_index_path, params: { city_and_street_address: "丁目　にゃあ　わん　やあ　ほげ" }
+        get v1_search_index_path, params: { keyword: "丁目　にゃあ　わん　やあ　ほげ" }
         expect(symbolized_body(response).first.length).to eq(13)
       end
 
       it "パラメーターが7つでも該当するホテルが検索されること" do
-        get v1_search_index_path, params: { city_and_street_address: "にゃあ　わん　やあ　ほげ　ふー　ばず　渋谷" }
+        get v1_search_index_path, params: { keyword: "にゃあ　わん　やあ　ほげ　ふー　ばず　渋谷" }
         expect(symbolized_body(response).first.length).to eq(13)
-      end
-    end
-
-    context "市区町村に存在しないホテルの住所のパラメーターに与えられた場合" do
-      it "該当するホテルが検索されないこと" do
-        get v1_search_index_path, params: { city_and_street_address: "にゃあ" }
-        expect(response.body).to eq("にゃあの検索結果が見つかりませんでした")
       end
     end
 
