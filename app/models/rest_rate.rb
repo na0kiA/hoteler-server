@@ -2,6 +2,7 @@
 
 class RestRate < ApplicationRecord
   belongs_to :day
+  has_one :hotel, through: :day
 
   with_options presence: true do
     validates :plan, length: { maximum: 10 }, invalid_words: true

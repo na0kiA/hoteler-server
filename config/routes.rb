@@ -30,14 +30,18 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: %i[index show] do
-      member do
+      # member do
         resources :favorites, only: %i[index], controller: "user_favorites"
-      end
+      # end
     end
 
     resources :notifications, only: %i[index]
 
-    resources :search, only: %i[index]
+    resources :search, only: %i[index] do
+      resources :filter, only: %i[index]
+    end
+
+    # resources :filter, only: %i[index]
 
     resources :images, only: %i[index]
 
