@@ -20,9 +20,9 @@ class V1::SearchController < ApplicationController
     end
 
     def should_sort(hotels:)
-      return render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer if sort_by_high_rest?
       return render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer if sort_by_low_rest?
       return render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer if sort_by_low_stay?
+      return render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer if sort_by_high_rest?
       return render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer if sort_by_high_stay?
     end
 

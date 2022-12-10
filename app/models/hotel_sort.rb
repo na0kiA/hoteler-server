@@ -11,31 +11,39 @@ class HotelSort
   end
 
   def sort_by_low_rest
-    sorted_low_rest
+    sort_rest_or_stay(rest_or_stay: select_rest_rates)
   end
 
   def sort_by_high_rest
-    sorted_low_rest.reverse
+    sort_rest_or_stay(rest_or_stay: select_rest_rates).reverse
   end
 
   def sort_by_low_stay
-    sorted_low_stay
+    sort_rest_or_stay(rest_or_stay: select_stay_rates)
   end
 
   def sort_by_high_stay
-    sorted_low_stay.reverse
+    sort_rest_or_stay(rest_or_stay: select_stay_rates).reverse
   end
 
   private
 
-    def select_rest_rates
-      rest_rate_list = RestRate.none
-      hotels.eager_load(:days, :rest_rates, :hotel_images).map do |hotel|
-        next if hotel.rest_rates.blank?
+    def sort_rest_or_stay(rest_or_stay:)
+      rest_or_stay.eager_load(:hotel, :day).sort_by(&:rate).map(&:hotel)
+    end
 
-        rest_rate_list = rest_rate_list.or(extract_open_rest_rate(hotel:))
+    def select_rest_rates(rest_rate_box: RestRate.none)
+      hotels.eager_load(:days, :rest_rates, :hotel_images).select { |hotel| hotel.rest_rates.present? }.map do |hotel|
+        rest_rate_box = rest_rate_box.or(extract_open_rest_rate(hotel:))
       end
-      rest_rate_list
+      rest_rate_box
+    end
+
+    def select_stay_rates(stay_rates_box: StayRate.none)
+      hotels.eager_load(:days, :stay_rates, :hotel_images).select { |hotel| hotel.stay_rates.present? }.map do |hotel|
+        stay_rates_box = stay_rates_box.or(extract_open_stay_rate(hotel:))
+      end
+      stay_rates_box
     end
 
     def extract_open_rest_rate(hotel:)
@@ -44,24 +52,6 @@ class HotelSort
       else
         RestBusinessHour.new(date: hotel.rest_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: hotel.id).ids)).extract_the_rest_rate
       end
-    end
-
-    def sorted_low_rest
-      hotel = []
-      select_rest_rates.eager_load(:day, :hotel).sort_by(&:rate).each do |sorted_rest|
-        hotel << sorted_rest.hotel
-      end
-      hotel
-    end
-
-    def select_stay_rates
-      stay_rate_list = StayRate.none
-      hotels.eager_load(:days, :stay_rates, :hotel_images).map do |hotel|
-        next if hotel.stay_rates.blank?
-
-        stay_rate_list = stay_rate_list.or(extract_open_stay_rate(hotel:))
-      end
-      stay_rate_list
     end
 
     def extract_open_stay_rate(hotel:)
@@ -78,13 +68,5 @@ class HotelSort
       else
         Day.select_a_day_of_the_week.where(hotel_id: hotel.id)
       end
-    end
-
-    def sorted_low_stay
-      hotel = []
-      select_stay_rates.eager_load(:hotel, :day).sort_by(&:rate).each do |sorted_stay|
-        hotel << sorted_stay.hotel
-      end
-      hotel
     end
 end
