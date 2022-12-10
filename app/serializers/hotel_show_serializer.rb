@@ -2,6 +2,7 @@
 
 class HotelShowSerializer < ActiveModel::Serializer
   attributes :name,
+             :favorites_count,
              :content,
              :company,
              :phone_number,
