@@ -67,18 +67,24 @@ RSpec.describe "V1::Searches", type: :request do
         expect(symbolized_body(response).first.length).to eq(13)
       end
 
-      it "パラメーターが7つでも該当するホテルが検索されること" do
-        get v1_search_index_path, params: { keyword: "にゃあ　わん　やあ　ほげ　ふー　ばず　渋谷" }
+      it "パラメーターがいくつでも該当するホテルがあれば検索されること" do
+        get v1_search_index_path, params: { keyword: "にゃあ　わん　やあ　ほげ　ふー　ばず　渋谷　やっほー　こんばん　わ" }
         expect(symbolized_body(response).first.length).to eq(13)
       end
     end
 
-    context "ホテルを料金で並び替える場合" do
+    context "ホテルを並び替える場合" do
       let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
-      let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user) }
+      let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
 
       before do
         travel_to Time.zone.local(2022, 12, 12, 12, 0, 0)
+      end
+
+      it "sortの値がおかしいときは404を返すこと" do
+        get v1_search_index_path, params: { keyword: "渋谷", sort: "aiu" }
+        expect(response.status).to eq(404)
+        expect(response.body).to include("存在しない検索対象です")
       end
 
       it "ホテルの休憩が安い順に並び替えられること" do
@@ -104,16 +110,20 @@ RSpec.describe "V1::Searches", type: :request do
         expect(symbolized_body(response)[0][:stay_rates][0][:rate]).to eq(6980)
         expect(symbolized_body(response)[1][:stay_rates][0][:rate]).to eq(5980)
       end
-    end
-
-    context "ホテルの口コミで並び替える場合" do
-      let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
-      let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
 
       it "ホテルの口コミの数が多い順に並び替えられること" do
         get v1_search_index_path, params: { keyword: "渋谷", sort: "reviews_count" }
         expect(symbolized_body(response)[0][:reviews_count]).to eq(5)
         expect(symbolized_body(response)[1][:reviews_count]).to eq(0)
+      end
+
+      it "ホテルをお気に入りの数が多い順に並び替えられること" do
+        favorite = create(:favorite, :with_user, hotel: cheap_hotel)
+        get v1_search_index_path, params: { keyword: "渋谷", sort: "favorites_count" }
+        expect(symbolized_body(response)[0][:name]).to eq(favorite.hotel.name)
+
+        get v1_hotel_path(cheap_hotel.id)
+        expect(symbolized_body(response)[:favorites_count]).to eq(1)
       end
     end
   end
