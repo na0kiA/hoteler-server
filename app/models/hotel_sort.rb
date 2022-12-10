@@ -30,7 +30,7 @@ class HotelSort
 
     def select_rest_rates
       rest_rate_list = RestRate.none
-      hotels.map do |hotel|
+      hotels.eager_load(:days, :rest_rates, :hotel_images).map do |hotel|
         next if hotel.rest_rates.blank?
 
         rest_rate_list = rest_rate_list.or(extract_open_rest_rate(hotel:))
@@ -48,7 +48,7 @@ class HotelSort
 
     def sorted_low_rest
       hotel = []
-      select_rest_rates.preload(:day, :hotel, hotel: :hotel_images).sort_by(&:rate).each do |sorted_rest|
+      select_rest_rates.eager_load(:day, :hotel).sort_by(&:rate).each do |sorted_rest|
         hotel << sorted_rest.hotel
       end
       hotel
