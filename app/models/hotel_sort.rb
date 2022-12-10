@@ -4,8 +4,6 @@ class HotelSort
   attr_reader :hotels
   private :hotels
 
-  # 現在営業中の休憩料金と宿泊料金から安い順と高い順に並び替える
-
   def initialize(hotels:)
     @hotels = hotels
   end
@@ -24,6 +22,10 @@ class HotelSort
 
   def sort_by_high_stay
     sort_rest_or_stay(rest_or_stay: select_stay_rates).reverse
+  end
+
+  def sort_by_reviews_count
+    hotels.eager_load(:hotel_images).sort_by(&:reviews_count)
   end
 
   private
