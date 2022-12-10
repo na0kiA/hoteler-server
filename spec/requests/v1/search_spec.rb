@@ -73,7 +73,7 @@ RSpec.describe "V1::Searches", type: :request do
       end
     end
 
-    context "ホテルを並び替える場合" do
+    context "ホテルを料金で並び替える場合" do
       let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
       let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user) }
 
@@ -103,6 +103,17 @@ RSpec.describe "V1::Searches", type: :request do
         get v1_search_index_path, params: { keyword: "渋谷", sort: "high_stay" }
         expect(symbolized_body(response)[0][:stay_rates][0][:rate]).to eq(6980)
         expect(symbolized_body(response)[1][:stay_rates][0][:rate]).to eq(5980)
+      end
+    end
+
+    context "ホテルの口コミで並び替える場合" do
+      let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
+      let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
+
+      it "ホテルの口コミの数が多い順に並び替えられること" do
+        get v1_search_index_path, params: { keyword: "渋谷", sort: "reviews_count" }
+        expect(symbolized_body(response)[0][:reviews_count]).to eq(5)
+        expect(symbolized_body(response)[1][:reviews_count]).to eq(0)
       end
     end
   end

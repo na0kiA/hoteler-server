@@ -15,15 +15,20 @@ class V1::SearchController < ApplicationController
       searched_hotel_list = search_each_params_of_keyword(box_for_searched_list: Hotel.none, split_params: split_keyword, accepted_hotel: Hotel.accepted)
       hotels = HotelSort.new(hotels: searched_hotel_list)
 
-      should_sort(hotels:)
+      should_sort_by_price(hotels:)
+      should_sort_by_review_count(hotels: searched_hotel_list)
       no_sort(searched_hotel_list:)
     end
 
-    def should_sort(hotels:)
+    def should_sort_by_price(hotels:)
       return render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer if sort_by_low_rest?
       return render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer if sort_by_low_stay?
       return render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer if sort_by_high_rest?
       return render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer if sort_by_high_stay?
+    end
+
+    def should_sort_by_review_count(hotels:)
+      return render json: hotels.eager_load(:hotel_images).sort_by(&:reviews_count).reverse, each_serializer: HotelIndexSerializer if sort_by_reviews_count?
     end
 
     def no_sort(searched_hotel_list:)
@@ -60,6 +65,10 @@ class V1::SearchController < ApplicationController
 
     def sort_by_high_stay?
       search_params[:sort] == "high_stay"
+    end
+
+    def sort_by_reviews_count?
+      search_params[:sort] == "reviews_count"
     end
 
     def split_keyword
