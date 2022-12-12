@@ -8,6 +8,7 @@ class HotelShowSerializer < ActiveModel::Serializer
              :phone_number,
              :postal_code,
              :full_address,
+             :hotel_facilities,
              :full,
              :average_rating,
              :reviews_count,
@@ -43,6 +44,14 @@ class HotelShowSerializer < ActiveModel::Serializer
     ActiveModelSerializers::SerializableResource.new(
       select_top_four_reviews,
       each_serializer: ReviewIndexSerializer,
+      adapter: :attributes
+    ).serializable_hash
+  end
+
+  def hotel_facilities
+    ActiveModelSerializers::SerializableResource.new(
+      object.hotel_facility,
+      each_serializer: HotelFacilitySerializer,
       adapter: :attributes
     ).serializable_hash
   end
