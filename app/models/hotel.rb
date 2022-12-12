@@ -4,6 +4,7 @@ class Hotel < ApplicationRecord
   DAY_OF_THE_WEEK = %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間].freeze
 
   belongs_to :user
+  has_one :hotel_facility, primary_key: :hotel_id, dependent: :destroy
   has_many :hotel_images, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :days, dependent: :destroy
