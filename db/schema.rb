@@ -39,14 +39,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_10_183647) do
   end
 
   create_table "hotel_facilities", primary_key: "hotel_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.boolean "parking", default: false, null: false
-    t.boolean "more_than_3_people", default: false, null: false
-    t.boolean "secret_payment", default: false, null: false
-    t.boolean "credit", default: false, null: false
-    t.boolean "phone_reservation", default: false, null: false
-    t.boolean "net_reservation", default: false, null: false
-    t.boolean "cooking", default: false, null: false
-    t.boolean "morning", default: false, null: false
+    t.boolean "parking_enabled", default: false, null: false
+    t.boolean "triple_rooms_enabled", default: false, null: false
+    t.boolean "secret_payment_enabled", default: false, null: false
+    t.boolean "credit_card_enabled", default: false, null: false
+    t.boolean "phone_reservation_enabled", default: false, null: false
+    t.boolean "net_reservation_enabled", default: false, null: false
+    t.boolean "cooking_enabled", default: false, null: false
+    t.boolean "breakfast_enabled", default: false, null: false
+    t.boolean "wifi_enabled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["hotel_id"], name: "index_hotel_facilities_on_hotel_id"
