@@ -4,7 +4,7 @@ class Hotel < ApplicationRecord
   DAY_OF_THE_WEEK = %w[月曜から木曜 金曜 土曜 日曜 祝日 祝前日 特別期間].freeze
 
   belongs_to :user
-  has_one :hotel_facility, primary_key: :hotel_id, dependent: :destroy
+  has_one :hotel_facility, primary_key: :id, dependent: :destroy
   has_many :hotel_images, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :days, dependent: :destroy
@@ -31,6 +31,7 @@ class Hotel < ApplicationRecord
   scope :search_city_and_street_address, ->(search) { where(["city LIKE(?) OR street_address LIKE(?)", "%#{search}%", "%#{search}%"]) }
 
   after_commit :create_days, on: %i[create]
+  after_commit :create_hotel_facilities, on: %i[create]
 
   def send_notification_when_update(hotel_manager:, user_id_list:, hotel_id:, message:)
     user_id_list.each do |id|
@@ -42,6 +43,10 @@ class Hotel < ApplicationRecord
 
     def create_days
       Day.create(generate_days_hash)
+    end
+
+    def create_hotel_facilities
+      HotelFacility.create(hotel_id: id)
     end
 
     def generate_days_hash
