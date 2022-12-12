@@ -42,18 +42,12 @@ class Hotel < ApplicationRecord
   private
 
     def create_days
-      Day.create(generate_days_hash)
+      DAY_OF_THE_WEEK.each do |val|
+        days.create(day: val)
+      end
     end
 
     def create_hotel_facilities
       HotelFacility.create(hotel_id: id)
-    end
-
-    def generate_days_hash
-      hash = {}
-      DAY_OF_THE_WEEK.each do |val|
-        hash = { day: val, hotel_id: id }
-      end
-      hash
     end
 end
