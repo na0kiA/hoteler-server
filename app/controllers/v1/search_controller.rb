@@ -3,9 +3,11 @@
 class V1::SearchController < ApplicationController
   def index
     if search_params[:keyword].present?
-      searched_hotel_list = search_each_params_of_keyword(box_for_searched_list: Hotel.none, split_params: split_keyword, accepted_hotel: Hotel.accepted).eager_load(:hotel_facility, :hotel_images)
+      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: Hotel.none, split_params: split_keyword, accepted_hotel: Hotel.accepted).eager_load(:hotel_facility, :hotel_images)
+      filterd_hotel_list = filterd_hotels(searched_by_keyword_hotel_list:)
 
-      sort_or_not(searched_hotel_list: filterd_hotels(searched_hotel_list:))
+      sorting_not_nedded(searched_by_keyword_hotel_list: filterd_hotel_list)
+      sort_hotel_list(searched_by_keyword_hotel_list: filterd_hotel_list)
     else
       redirect_to v1_hotels_path
     end
@@ -13,42 +15,47 @@ class V1::SearchController < ApplicationController
 
   private
 
-    def filterd_hotels(searched_hotel_list:)
-      return searched_hotel_list if search_params[:hotel_facilities].blank?
+    def filterd_hotels(searched_by_keyword_hotel_list:)
+      return searched_by_keyword_hotel_list if search_params[:hotel_facilities].blank?
 
-      HotelFilter.new(hotel_list: searched_hotel_list, filter_conditions: search_params[:hotel_facilities]).filter
+      filterd_hotel_list = HotelFilter.new(hotel_list: searched_by_keyword_hotel_list, filter_conditions: search_params[:hotel_facilities]).filter
+
+      filterd_hotel_list.presence || render_not_match_filters
     end
 
-    def sort_or_not(searched_hotel_list:)
-      no_sort(searched_hotel_list:)
-      should_sort_by_price(hotels: HotelSort.new(hotels: searched_hotel_list))
-      should_sort_by_reviews_count(hotels: searched_hotel_list)
-      should_sort_by_favorites_count?(hotels: searched_hotel_list)
+    def sort_hotel_list(searched_by_keyword_hotel_list:)
+      sort_by_price(hotels: HotelSort.new(hotels: searched_by_keyword_hotel_list))
+      sort_by_reviews_count(hotels: searched_by_keyword_hotel_list)
+      sort_by_favorites_count(hotels: searched_by_keyword_hotel_list)
     end
 
-    def should_sort_by_price(hotels:)
+    def sort_by_price(hotels:)
       return render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer if sort_by_low_rest?
       return render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer if sort_by_low_stay?
       return render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer if sort_by_high_rest?
       return render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer if sort_by_high_stay?
     end
 
-    def should_sort_by_reviews_count(hotels:)
+    def sort_by_reviews_count(hotels:)
       return render json: hotels.eager_load(:hotel_images).sort_by(&:reviews_count).reverse, each_serializer: HotelIndexSerializer if sort_by_reviews_count?
     end
 
-    def should_sort_by_favorites_count?(hotels:)
+    def sort_by_favorites_count(hotels:)
       return render json: hotels.eager_load(:hotel_images).sort_by(&:favorites_count).reverse, each_serializer: HotelIndexSerializer if sort_by_favorites_count?
     end
 
-    def no_sort(searched_hotel_list:)
-      return render json: render_not_match_params(search_params[:keyword]), each_serializer: HotelIndexSerializer if searched_hotel_list.blank?
-      return render json: searched_hotel_list, each_serializer: HotelIndexSerializer if search_params[:sort].blank?
+    def sorting_not_nedded(searched_by_keyword_hotel_list:)
+      return render json: render_not_match_params(search_params[:keyword]), each_serializer: HotelIndexSerializer if searched_by_keyword_hotel_list.blank?
+      return render json: searched_by_keyword_hotel_list, each_serializer: HotelIndexSerializer if search_params[:sort].blank?
       return search_not_found if not_match_any_sort_params?
     end
 
     def not_match_any_sort_params?
       !sort_by_low_rest? && !sort_by_high_rest? && !sort_by_low_stay? && !sort_by_high_stay? && !sort_by_reviews_count? && !sort_by_favorites_count?
+    end
+
+    def not_match_any_filter_params?
+      search_params[:hotel_facilities].include?(HotelFacility)
     end
 
     def search_each_params_of_keyword(box_for_searched_list:, split_params:, accepted_hotel:)
@@ -64,6 +71,10 @@ class V1::SearchController < ApplicationController
 
     def render_not_match_params(params)
       "#{params}の検索結果が見つかりませんでした"
+    end
+
+    def render_not_match_filters
+      "絞り込み条件で一致するホテルがありませんでした。違う条件と検索キーワードでお試しください。"
     end
 
     def sort_by_low_rest?
