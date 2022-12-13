@@ -108,6 +108,13 @@ FactoryBot.define do
       end
     end
 
+    # trait :with_all_facilities_enabled do
+    #   after(:build) do |hotel|
+
+    #     hotel.hotel_facility = FactoryBot.build(:hotel_facility, wifi_enabled: true, parking_enabled: true, triple_rooms_enabled: true, secret_payment_enabled: true, credit_card_enabled: true, phone_reservation_enabled: true, net_reservation_enabled: true, cooking_enabled: true, breakfast_enabled: true)
+    #   end
+    # end
+
     factory :with_five_reviews_and_helpfulnesses, traits: %i[with_days_and_service_rates with_reviews_and_helpfulnesses]
     factory :with_user_and_hotel_images, traits: %i[with_user with_hotel_images]
     factory :with_user_completed_hotel, traits: %i[with_user]
