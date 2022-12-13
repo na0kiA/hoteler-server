@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class HotelIndexSerializer < ActiveModel::Serializer
-  attributes :id,
-             :name,
+  attributes :name,
              :content,
+             :company,
+             :phone_number,
+             :postal_code,
+             :full_address,
              :full,
              :average_rating,
              :reviews_count,
@@ -13,11 +16,17 @@ class HotelIndexSerializer < ActiveModel::Serializer
              :stay_rates
 
   def hotel_images
+    return "no image" if object.hotel_images.blank?
+
     ActiveModelSerializers::SerializableResource.new(
       object.hotel_images,
       each_serializer: HotelImageSerializer,
       adapter: :attributes
     ).serializable_hash
+  end
+
+  def full_address
+    "#{object.prefecture}#{object.city}#{object.street_address}"
   end
 
   def day_of_the_week
@@ -39,6 +48,8 @@ class HotelIndexSerializer < ActiveModel::Serializer
   end
 
   def stay_rates
+    return "宿泊プランはございません" if StayRate.where(day_id: object.days.ids).blank?
+
     ActiveModelSerializers::SerializableResource.new(
       take_the_stay_rate,
       each_serializer: StayRateSerializer,

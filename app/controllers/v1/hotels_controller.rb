@@ -30,8 +30,10 @@ module V1
 
     def update
       if @hotel.present? && authenticated?
-        if update_only_fulled_room?(@hotel)
+        if update_only_fulled_room?(@hotel) && same_params_except_full?(@hotel)
           @hotel.update!(hotel_params)
+          render json: @hotel, serializer: HotelShowSerializer, status: :ok
+        elsif not_changed_param?(@hotel)
           render json: @hotel, serializer: HotelShowSerializer, status: :ok
         elsif message_blank?
           render_bad_request_with_update_message_invalid
@@ -60,8 +62,17 @@ module V1
         @hotel.user.id == current_v1_user.id
       end
 
+      def not_changed_param?(hotel)
+        !update_only_fulled_room?(hotel) && same_params_except_full?(hotel)
+      end
+
       def update_only_fulled_room?(hotel)
-        hotel_params[:full] != hotel.full && hotel_params.values_at(:name, :content) == [hotel.name, set_hotel.content]
+        hotel_params[:full] != hotel.full.to_s
+      end
+
+      def same_params_except_full?(hotel)
+        hotel_params.values_at(:name, :content, :company, :phone_number, :postal_code, :prefecture, :city, :street_address,
+                               :user_id) == hotel.values_at(:name, :content, :company, :phone_number, :postal_code, :prefecture, :city, :street_address, :user_id)
       end
 
       def send_notification(hotel)
@@ -69,7 +80,7 @@ module V1
       end
 
       def render_bad_request_with_update_message_invalid
-        render_json_bad_request_with_custom_errors(title: "ホテルを編集できませんでした", body: "更新メッセージを必ず入力してください")
+        render_json_bad_request_with_custom_errors(title: "ホテルを編集できませんでした", body: "更新メッセージを必ず入力してください。")
       end
 
       def message_blank?
@@ -77,7 +88,7 @@ module V1
       end
 
       def hotel_params
-        params.require(:hotel).permit(:name, :content, :full).merge(user_id: current_v1_user.id)
+        params.require(:hotel).permit(:name, :content, :company, :phone_number, :postal_code, :prefecture, :city, :street_address, :full).merge(user_id: current_v1_user.id)
       end
 
       def notification_params

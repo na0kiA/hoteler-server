@@ -64,12 +64,12 @@ RSpec.describe "V1::Auth::Registrations", type: :request do
     end
 
     context "ユーザーがホテルを持っている場合" do
-      let_it_be(:hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user: client_user) }
+      let_it_be(:hotel) { create(:completed_profile_hotel, user: client_user) }
 
-      it "ユーザー削除時にホテルとdaysとratesが合わせて削除されること" do
+      it "ユーザー削除時にホテルとdaysとhoetel_facilityが合わせて削除されること" do
         expect {
           delete v1_user_registration_path, headers: auth_tokens
-        }.to change(Hotel, :count).by(-1).and change(Day, :count).by(-8).and change(RestRate, :count).by(-16)
+        }.to change(Hotel, :count).by(-1).and change(Day, :count).by(-7).and change(HotelFacility, :count).by(-1)
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_23_181229) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_10_183647) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
@@ -38,6 +38,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_181229) do
     t.index ["user_id"], name: "index_helpfulnesses_on_user_id"
   end
 
+  create_table "hotel_facilities", primary_key: "hotel_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "parking_enabled", default: false, null: false
+    t.boolean "triple_rooms_enabled", default: false, null: false
+    t.boolean "secret_payment_enabled", default: false, null: false
+    t.boolean "credit_card_enabled", default: false, null: false
+    t.boolean "phone_reservation_enabled", default: false, null: false
+    t.boolean "net_reservation_enabled", default: false, null: false
+    t.boolean "cooking_enabled", default: false, null: false
+    t.boolean "breakfast_enabled", default: false, null: false
+    t.boolean "wifi_enabled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hotel_id"], name: "index_hotel_facilities_on_hotel_id"
+  end
+
   create_table "hotel_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id"
     t.datetime "created_at", null: false
@@ -57,6 +72,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_181229) do
     t.decimal "average_rating", precision: 2, scale: 1, default: "0.0", null: false
     t.integer "favorites_count", default: 0, null: false
     t.boolean "full", default: false, null: false
+    t.string "prefecture", default: "", null: false
+    t.string "city", default: "", null: false
+    t.string "postal_code", default: "", null: false
+    t.string "street_address", default: "", null: false
+    t.string "phone_number", default: "", null: false
+    t.string "company", default: "", null: false
+    t.index ["city", "street_address"], name: "index_hotels_on_city_and_street_address"
     t.index ["user_id"], name: "index_hotels_on_user_id"
   end
 
@@ -168,6 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_181229) do
   add_foreign_key "favorites", "users"
   add_foreign_key "helpfulnesses", "reviews"
   add_foreign_key "helpfulnesses", "users"
+  add_foreign_key "hotel_facilities", "hotels"
   add_foreign_key "hotel_images", "hotels"
   add_foreign_key "hotels", "users"
   add_foreign_key "notifications", "hotels"

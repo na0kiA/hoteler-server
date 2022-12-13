@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         resources :reviews, shallow: true
         resources :images, only: %i[index show create], controller: "hotel_images"
         resources :days, only: %i[index]
+        resource :hotel_facilities, only: %i[update]
         resource :favorites, only: %i[create destroy]
       end
     end
@@ -36,6 +37,8 @@ Rails.application.routes.draw do
     end
 
     resources :notifications, only: %i[index]
+
+    resources :search, only: %i[index]
 
     resources :images, only: %i[index]
 
