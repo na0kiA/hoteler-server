@@ -3,7 +3,9 @@
 class V1::SearchController < ApplicationController
   def index
     if search_params[:keyword].present?
-      sort_or_not
+      searched_hotel_list = search_each_params_of_keyword(box_for_searched_list: Hotel.none, split_params: split_keyword, accepted_hotel: Hotel.accepted).eager_load(:hotel_facility, :hotel_images)
+
+      sort_or_not(searched_hotel_list: filterd_hotels(searched_hotel_list:))
     else
       redirect_to v1_hotels_path
     end
@@ -11,13 +13,15 @@ class V1::SearchController < ApplicationController
 
   private
 
-    def sort_or_not
-      searched_hotel_list = search_each_params_of_keyword(box_for_searched_list: Hotel.none, split_params: split_keyword, accepted_hotel: Hotel.accepted)
-      hotels = HotelSort.new(hotels: searched_hotel_list)
+    def filterd_hotels(searched_hotel_list:)
+      return searched_hotel_list if search_params[:hotel_facilities].blank?
 
+      HotelFilter.new(hotel_list: searched_hotel_list, filter_conditions: search_params[:hotel_facilities]).filter
+    end
+
+    def sort_or_not(searched_hotel_list:)
       no_sort(searched_hotel_list:)
-
-      should_sort_by_price(hotels:)
+      should_sort_by_price(hotels: HotelSort.new(hotels: searched_hotel_list))
       should_sort_by_reviews_count(hotels: searched_hotel_list)
       should_sort_by_favorites_count?(hotels: searched_hotel_list)
     end
@@ -91,6 +95,6 @@ class V1::SearchController < ApplicationController
     end
 
     def search_params
-      params.permit(:keyword, :sort)
+      params.permit(:keyword, :sort, hotel_facilities: [])
     end
 end
