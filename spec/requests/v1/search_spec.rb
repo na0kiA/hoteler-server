@@ -133,7 +133,7 @@ RSpec.describe "V1::Searches", type: :request do
         expensive_hotel = create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user)
         create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses)
         create(:accepted_hotel, user: create(:user))
-        expensive_hotel.hotel_facility.update(wifi_enabled: true, parking_enabled: true)
+        expensive_hotel.hotel_facility.update(wifi_enabled: true, parking_enabled: true, secret_payment_enabled: true)
       end
 
       it "wifiのあるホテルを絞込めること" do
@@ -142,7 +142,7 @@ RSpec.describe "V1::Searches", type: :request do
       end
 
       it "wifiと駐車場のあるホテルを絞込めること" do
-        get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: %w[wifi_enabled parking_enabled] }
+        get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: %w[wifi_enabled parking_enabled secret_payment] }
         expect(symbolized_body(response).length).to eq(1)
       end
 

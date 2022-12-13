@@ -2,8 +2,11 @@
 
 class V1::SearchController < ApplicationController
   def index
+    box_for_searched_list = Hotel.none
+    accepted_hotel = Hotel.accepted
+
     if search_params[:keyword].present?
-      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: Hotel.none, split_params: split_keyword, accepted_hotel: Hotel.accepted).eager_load(:hotel_facility, :hotel_images)
+      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list:, accepted_hotel:).eager_load(:hotel_facility, :hotel_images)
       filterd_hotel_list = filterd_hotels(searched_by_keyword_hotel_list:)
 
       sorting_not_nedded(searched_by_keyword_hotel_list: filterd_hotel_list)
@@ -54,12 +57,8 @@ class V1::SearchController < ApplicationController
       !sort_by_low_rest? && !sort_by_high_rest? && !sort_by_low_stay? && !sort_by_high_stay? && !sort_by_reviews_count? && !sort_by_favorites_count?
     end
 
-    def not_match_any_filter_params?
-      search_params[:hotel_facilities].include?(HotelFacility)
-    end
-
-    def search_each_params_of_keyword(box_for_searched_list:, split_params:, accepted_hotel:)
-      split_params.each do |keyword|
+    def search_each_params_of_keyword(box_for_searched_list:, accepted_hotel:)
+      split_keyword.each do |keyword|
         box_for_searched_list = box_for_searched_list.or(search_keyword(keyword:, accepted_hotel:))
       end
       box_for_searched_list
