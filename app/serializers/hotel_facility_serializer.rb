@@ -28,4 +28,7 @@ class HotelFacilitySerializer < ActiveModel::Serializer
   attribute :breakfast_enabled do
     "朝食あり" if object.breakfast_enabled
   end
+  attribute :coupon_enabled do
+    "クーポンあり" if object.coupon_enabled
+  end
 end
