@@ -64,6 +64,36 @@ FactoryBot.define do
       end
     end
 
+    trait :with_rest_rates do
+      after(:create) do |hotel|
+        hotel.days[0].rest_rates << FactoryBot.build(:rest_rate, :normal_rest_rate, :short_rest_rate, :morning_rest_rate, :midnight_rest_rate)
+        hotel.days[1].rest_rates << FactoryBot.build(:rest_rate, :normal_rest_rate, :midnight_rest_rate)
+        hotel.days[2].rest_rates << FactoryBot.build(:day_off_rest_rate, :normal_rest_rate, :midnight_rest_rate)
+        hotel.days[3].rest_rates << FactoryBot.build(:day_off_rest_rate, :normal_rest_rate, :midnight_rest_rate)
+        hotel.days[4].rest_rates << FactoryBot.build(:day_off_rest_rate, :normal_rest_rate, :midnight_rest_rate)
+        hotel.days[5].rest_rates << FactoryBot.build(:day_off_rest_rate, :normal_rest_rate, :midnight_rest_rate)
+        hotel.days[6].rest_rates << FactoryBot.build(:special_rest_rate, :normal_rest_rate, :midnight_rest_rate)
+      end
+    end
+
+    trait :with_stay_rates do
+      after(:create) do |hotel|
+        hotel.days[0].stay_rates << FactoryBot.build(:stay_rate, :long_stay_rate, :midnight_stay_rate)
+        hotel.days[1].stay_rates << FactoryBot.build(:stay_rate, :long_stay_rate, :midnight_stay_rate)
+        hotel.days[2].stay_rates << FactoryBot.build(:day_off_stay_rate, :normal_stay_rate, :midnight_stay_rate)
+        hotel.days[3].stay_rates << FactoryBot.build(:day_off_stay_rate, :normal_stay_rate, :midnight_stay_rate)
+        hotel.days[4].stay_rates << FactoryBot.build(:day_off_stay_rate, :normal_stay_rate, :midnight_stay_rate)
+        hotel.days[5].stay_rates << FactoryBot.build(:day_off_stay_rate, :normal_stay_rate, :midnight_stay_rate)
+        hotel.days[6].stay_rates << FactoryBot.build(:special_stay_rate, :normal_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_special_periods do
+      after(:create) do |hotel|
+        hotel.days[6].special_periods << FactoryBot.build(:normal_special_periods)
+      end
+    end
+
     trait :with_days_and_expensive_service_rates do
       after(:build) do |hotel|
         hotel.days << FactoryBot.build(:day, :monday_through_thursday, :with_expensive_rest_rates, :with_expensive_stay_rates)
@@ -108,15 +138,9 @@ FactoryBot.define do
       end
     end
 
-    # trait :with_all_facilities_enabled do
-    #   after(:build) do |hotel|
-
-    #     hotel.hotel_facility = FactoryBot.build(:hotel_facility, wifi_enabled: true, parking_enabled: true, triple_rooms_enabled: true, secret_payment_enabled: true, credit_card_enabled: true, phone_reservation_enabled: true, net_reservation_enabled: true, cooking_enabled: true, breakfast_enabled: true)
-    #   end
-    # end
-
     factory :with_five_reviews_and_helpfulnesses, traits: %i[with_days_and_service_rates with_reviews_and_helpfulnesses]
     factory :with_user_and_hotel_images, traits: %i[with_user with_hotel_images]
     factory :with_user_completed_hotel, traits: %i[with_user]
+    factory :with_service_completed_hotel, traits: %i[with_user with_rest_rates with_stay_rates with_special_periods]
   end
 end
