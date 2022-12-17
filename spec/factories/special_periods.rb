@@ -19,7 +19,5 @@ FactoryBot.define do
       start_date { "2023-12-15" }
       end_date { "2024-1-5" }
     end
-
-    factory :normal_special_periods, traits: %i[golden_week obon the_new_years_holiday]
   end
 end

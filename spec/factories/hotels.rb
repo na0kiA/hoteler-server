@@ -90,7 +90,9 @@ FactoryBot.define do
 
     trait :with_special_periods do
       after(:create) do |hotel|
-        hotel.days[6].special_periods << FactoryBot.build(:normal_special_periods)
+        hotel.days[6].special_periods << FactoryBot.build(:special_period, :golden_week, :obon, :the_new_years_holiday)
+        hotel.days[6].special_periods << FactoryBot.build(:special_period, :obon)
+        hotel.days[6].special_periods << FactoryBot.build(:special_period, :the_new_years_holiday)
       end
     end
 
