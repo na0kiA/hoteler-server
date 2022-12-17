@@ -141,6 +141,6 @@ FactoryBot.define do
     factory :with_five_reviews_and_helpfulnesses, traits: %i[with_days_and_service_rates with_reviews_and_helpfulnesses]
     factory :with_user_and_hotel_images, traits: %i[with_user with_hotel_images]
     factory :with_user_completed_hotel, traits: %i[with_user]
-    factory :with_service_completed_hotel, traits: %i[with_user with_rest_rates with_stay_rates with_special_periods]
+    factory :with_service_completed_hotel, traits: %i[with_rest_rates with_stay_rates with_special_periods]
   end
 end
