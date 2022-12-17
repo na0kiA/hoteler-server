@@ -50,6 +50,7 @@ gem "rack-cors"
 gem "rails_admin"
 
 gem "sassc-rails"
+gem 'faker'
 
 group :development, :test do
   gem "bullet"

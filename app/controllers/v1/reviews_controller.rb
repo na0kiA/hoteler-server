@@ -8,7 +8,7 @@ module V1
 
     def index
       if @accepted_hotel.present?
-        reviews = @accepted_hotel.reviews
+        reviews = @accepted_hotel.reviews.eager_load(:user)
         render json: reviews, each_serializer: ReviewIndexSerializer
       else
         render json: { error: e.message }.to_json, status: :not_found
