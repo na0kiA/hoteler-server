@@ -56,16 +56,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_16_074316) do
 
   create_table "hotel_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id"
+    t.string "key", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "key", default: "", null: false
     t.index ["hotel_id"], name: "index_hotel_images_on_hotel_id"
+    t.index ["key"], name: "index_hotel_images_on_key_and_file_url", unique: true
   end
 
   create_table "hotels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name", null: false
     t.text "content", null: false
+    t.string "image"
     t.boolean "accepted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -117,9 +119,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_16_074316) do
 
   create_table "review_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "review_id"
-    t.string "key", default: ""
+    t.string "key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_review_images_on_key_and_file_url", unique: true
     t.index ["review_id"], name: "index_review_images_on_review_id"
   end
 
@@ -128,10 +131,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_16_074316) do
     t.bigint "hotel_id"
     t.string "title", null: false
     t.text "content", null: false
+    t.integer "helpful_counts", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "five_star_rate", default: 0
-    t.integer "helpfulnesses_count", default: 0, null: false
     t.index ["hotel_id"], name: "index_reviews_on_hotel_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
