@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_17_091719) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_17_100212) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
@@ -115,7 +115,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_17_091719) do
     t.bigint "hotel_id"
     t.string "title", null: false
     t.text "content", null: false
-    t.integer "helpful_counts", default: 0
+    t.integer "helpfulnesses_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "five_star_rate", default: 0
