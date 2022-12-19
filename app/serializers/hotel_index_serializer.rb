@@ -2,7 +2,6 @@
 
 class HotelIndexSerializer < ActiveModel::Serializer
   attributes :name,
-             :content,
              :company,
              :phone_number,
              :postal_code,
@@ -13,7 +12,8 @@ class HotelIndexSerializer < ActiveModel::Serializer
              :hotel_images,
              :day_of_the_week,
              :rest_rates,
-             :stay_rates
+             :stay_rates,
+             :id
 
   def hotel_images
     return "no image" if object.hotel_images.blank?
