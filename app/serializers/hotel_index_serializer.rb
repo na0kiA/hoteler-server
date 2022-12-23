@@ -2,15 +2,11 @@
 
 class HotelIndexSerializer < ActiveModel::Serializer
   attributes :name,
-             :company,
-             :phone_number,
-             :postal_code,
              :full_address,
              :full,
              :average_rating,
              :reviews_count,
              :hotel_images,
-             :day_of_the_week,
              :rest_rates,
              :stay_rates,
              :id
@@ -19,8 +15,8 @@ class HotelIndexSerializer < ActiveModel::Serializer
     return "no image" if object.hotel_images.blank?
 
     ActiveModelSerializers::SerializableResource.new(
-      object.hotel_images,
-      each_serializer: HotelImageSerializer,
+      object.hotel_images.first,
+      serializer: HotelImageSerializer,
       adapter: :attributes
     ).serializable_hash
   end
@@ -29,13 +25,12 @@ class HotelIndexSerializer < ActiveModel::Serializer
     "#{object.prefecture}#{object.city}#{object.street_address}"
   end
 
-  def day_of_the_week
-    ActiveModelSerializers::SerializableResource.new(
-      select_a_day,
-      each_serializer: DaySerializer,
-      adapter: :attributes
-    ).serializable_hash
-  end
+  # def day_of_the_week
+  #   ActiveModelSerializers::SerializableResource.new(
+  #     select_a_day,
+  #     each_serializer: DaySerializer
+  #   )
+  # end
 
   def rest_rates
     return "休憩は営業時間外です" if take_the_rest_rate.blank?
