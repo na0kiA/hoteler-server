@@ -29,7 +29,7 @@ FactoryBot.define do
       start_time { "0:00" }
       end_time { "5:00" }
     end
-    
+
     factory :day_off_rest_rate, class: "RestRate" do
       trait :normal_rest_rate do
         plan { "休憩90分" }

@@ -49,8 +49,8 @@ gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_a
 gem "rack-cors"
 gem "rails_admin"
 
+gem "faker"
 gem "sassc-rails"
-gem 'faker'
 
 group :development, :test do
   gem "bullet"

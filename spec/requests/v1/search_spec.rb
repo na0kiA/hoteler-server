@@ -128,7 +128,6 @@ RSpec.describe "V1::Searches", type: :request do
     end
 
     context "ホテルを絞り込む場合" do
-      
       before do
         expensive_hotel = create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user)
         create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses)

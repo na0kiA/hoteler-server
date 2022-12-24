@@ -107,7 +107,7 @@ FactoryBot.define do
         hotel.days[1].stay_rates << FactoryBot.build(:stay_rate, :midnight_stay_rate)
       end
     end
-    
+
     trait :with_saturday_rates do
       after(:create) do |hotel|
         hotel.days[2].rest_rates << FactoryBot.build(:day_off_rest_rate, :normal_rest_rate)
@@ -208,6 +208,8 @@ FactoryBot.define do
     factory :with_five_reviews_and_helpfulnesses, traits: %i[with_days_and_service_rates with_reviews_and_helpfulnesses]
     factory :with_user_and_hotel_images, traits: %i[with_user with_hotel_images]
     factory :with_user_completed_hotel, traits: %i[with_user]
-    factory :with_service_completed_hotel, traits: %i[with_monday_through_thursday_rates with_friday_rates with_saturday_rates with_sunday_rates with_holiday_rates with_day_before_holiday_rates with_special_day_rates  with_special_periods]
+    factory :with_service_completed_hotel,
+            traits: %i[with_monday_through_thursday_rates with_friday_rates with_saturday_rates with_sunday_rates with_holiday_rates with_day_before_holiday_rates with_special_day_rates
+                       with_special_periods]
   end
 end

@@ -14,9 +14,9 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def convert_to_snake_case_params
-    params.deep_transform_keys!(&:underscore)
-  end
+    def convert_to_snake_case_params
+      params.deep_transform_keys!(&:underscore)
+    end
 
     def record_not_found
       render json: { errors: { title: "404 NOT FOUND", body: "既に削除されてあるか、存在しないページです" } }, status: :not_found
