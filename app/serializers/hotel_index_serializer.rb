@@ -26,22 +26,32 @@ class HotelIndexSerializer < ActiveModel::Serializer
   end
 
   def rest_rates
-    return "休憩は営業時間外です" if (object.rest_rates & @instance_options[:services]).blank?
+    return "休憩は営業時間外です" if today_rest_rate.blank?
 
     ActiveModelSerializers::SerializableResource.new(
-      object.rest_rates & @instance_options[:services],
-      each_serializer: RestRateSerializer,
+      today_rest_rate.first,
+      serializer: RestRateSerializer,
       adapter: :attributes
     ).serializable_hash
   end
 
   def stay_rates
-    return "宿泊プランはございません" if (object.stay_rates & @instance_options[:services]).blank?
+    return "宿泊プランはございません" if today_stay_rate.blank?
 
     ActiveModelSerializers::SerializableResource.new(
-      object.stay_rates & @instance_options[:services],
-      each_serializer: StayRateSerializer,
+      today_stay_rate.first,
+      serializer: StayRateSerializer,
       adapter: :attributes
     ).serializable_hash
+  end
+
+  private
+
+  def today_rest_rate
+    object.rest_rates & @instance_options[:services]
+  end
+
+  def today_stay_rate
+    object.stay_rates & @instance_options[:services]
   end
 end
