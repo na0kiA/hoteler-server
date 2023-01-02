@@ -62,6 +62,8 @@ ja:
           attributes:
             email:
               taken: "既に存在するメールアドレスです。認証がまだの場合はメールアドレスを確認してください。"
+            password_confirmation:
+              confirmation: "パスワード確認用を正しく入力してください。"
         hotel_image:
           attributes:
             hotel:
