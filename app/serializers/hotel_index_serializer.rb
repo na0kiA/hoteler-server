@@ -48,10 +48,14 @@ class HotelIndexSerializer < ActiveModel::Serializer
   private
 
   def today_rest_rate
+    return [] if @instance_options[:services].blank?
+
     object.rest_rates & @instance_options[:services]
   end
 
   def today_stay_rate
+    return [] if @instance_options[:services].blank?
+    
     object.stay_rates & @instance_options[:services]
   end
 end
