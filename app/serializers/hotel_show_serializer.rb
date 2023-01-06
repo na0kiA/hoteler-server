@@ -13,7 +13,6 @@ class HotelShowSerializer < ActiveModel::Serializer
              :average_rating,
              :reviews_count,
              :hotel_images,
-             :day_of_the_week,
              :top_four_reviews
 
   def hotel_images

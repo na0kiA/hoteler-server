@@ -20,8 +20,8 @@ RSpec.describe HotelShowSerializer, type: :serializer do
         expect(json_serializer.keys).to include :hotel_images
       end
 
-      it "day_of_the_weekが含めれていること" do
-        expect(json_serializer.keys).to include :day_of_the_week
+      it "day_of_the_weekが含めれていないこと" do
+        expect(json_serializer.keys).not_to include :day_of_the_week
       end
 
       it "top_four_reviewsが含めれていること" do
@@ -36,8 +36,8 @@ RSpec.describe HotelShowSerializer, type: :serializer do
       it "口コミは参考になったが多い順に4個までに絞り込まれていること" do
         json_serializer = HotelShowSerializer.new(hotel).as_json
         expect(json_serializer[:top_four_reviews].count).to eq(4)
-        expect(json_serializer[:top_four_reviews].first[:helpfulnesses_count]).to eq(5)
-        expect(json_serializer[:top_four_reviews].last[:helpfulnesses_count]).to eq(2)
+        expect(json_serializer[:top_four_reviews].first[:helpfulnessesCount]).to eq(5)
+        expect(json_serializer[:top_four_reviews].last[:helpfulnessesCount]).to eq(2)
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe HotelShowSerializer, type: :serializer do
 
       it "helpfulnesses_countが1になっていること" do
         json_serializer = HotelShowSerializer.new(hotel).as_json
-        expect(json_serializer[:top_four_reviews][0][:helpfulnesses_count]).to eq(1)
+        expect(json_serializer[:top_four_reviews][0][:helpfulnessesCount]).to eq(1)
       end
     end
 
