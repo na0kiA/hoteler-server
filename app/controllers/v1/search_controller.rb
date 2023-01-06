@@ -2,15 +2,21 @@
 
 class V1::SearchController < ApplicationController
   def index
-    box_for_searched_list = Hotel.none
+    empty_hotel_box_for_searched_list = Hotel.none
     accepted_hotel = Hotel.accepted
 
     if search_params[:keyword].present?
-      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list:, accepted_hotel:).eager_load(:hotel_facility, :hotel_images)
+      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: empty_hotel_box_for_searched_list, accepted_hotel:).eager_load(:hotel_facility, :hotel_images)
+
       filterd_hotel_list = filterd_hotels(searched_by_keyword_hotel_list:)
 
-      sorting_not_nedded(searched_by_keyword_hotel_list: filterd_hotel_list)
-      sort_hotel_list(searched_by_keyword_hotel_list: filterd_hotel_list)
+      sorting_not_needed(searched_by_keyword_hotel_list: filterd_hotel_list)
+
+      if filterd_hotel_list.instance_of?(Array) || filterd_hotel_list.instance_of?(String)
+        sort_hotel_list(searched_by_keyword_hotel_list: filterd_hotel_list)
+      else
+        sort_hotel_list(searched_by_keyword_hotel_list: filterd_hotel_list.eager_load(:stay_rates, :rest_rates))
+      end
     else
       redirect_to v1_hotels_path
     end
@@ -33,10 +39,13 @@ class V1::SearchController < ApplicationController
     end
 
     def sort_by_price(hotels:)
-      return render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer if sort_by_low_rest?
-      return render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer if sort_by_low_stay?
-      return render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer if sort_by_high_rest?
-      return render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer if sort_by_high_stay?
+      return render json: hotels.sort_by_low_rest, each_serializer: HotelIndexSerializer, services: hotels.select_services(sorted_hotels: hotels.sort_by_low_rest) if sort_by_low_rest?
+
+      return render json: hotels.sort_by_low_stay, each_serializer: HotelIndexSerializer, services: hotels.select_services(sorted_hotels: hotels.sort_by_low_stay) if sort_by_low_stay?
+
+      return render json: hotels.sort_by_high_rest, each_serializer: HotelIndexSerializer, services: hotels.select_services(sorted_hotels: hotels.sort_by_high_rest)  if sort_by_high_rest?
+
+      return render json: hotels.sort_by_high_stay, each_serializer: HotelIndexSerializer, services: hotels.select_services(sorted_hotels: hotels.sort_by_high_stay)  if sort_by_high_stay?
     end
 
     def sort_by_reviews_count(hotels:)
@@ -47,7 +56,7 @@ class V1::SearchController < ApplicationController
       return render json: hotels.eager_load(:hotel_images).sort_by(&:favorites_count).reverse, each_serializer: HotelIndexSerializer if sort_by_favorites_count?
     end
 
-    def sorting_not_nedded(searched_by_keyword_hotel_list:)
+    def sorting_not_needed(searched_by_keyword_hotel_list:)
       return render json: render_not_match_params(search_params[:keyword]), each_serializer: HotelIndexSerializer if searched_by_keyword_hotel_list.blank?
       return render json: searched_by_keyword_hotel_list, each_serializer: HotelIndexSerializer if search_params[:sort].blank?
       return search_not_found if not_match_any_sort_params?
