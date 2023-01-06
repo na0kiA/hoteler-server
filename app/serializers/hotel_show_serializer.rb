@@ -29,14 +29,6 @@ class HotelShowSerializer < ActiveModel::Serializer
     "#{object.prefecture}#{object.city}#{object.street_address}"
   end
 
-  def day_of_the_week
-    ActiveModelSerializers::SerializableResource.new(
-      select_a_day,
-      each_serializer: DaySerializer,
-      adapter: :attributes
-    ).serializable_hash
-  end
-
   def top_four_reviews
     return "口コミはまだありません。" if select_top_four_reviews.blank?
 
@@ -59,13 +51,5 @@ class HotelShowSerializer < ActiveModel::Serializer
 
     def select_top_four_reviews
       ReviewOfTopPage.new(reviews_of_a_hotel: object.reviews).extract_top_reviews
-    end
-
-    def select_a_day
-      if SpecialPeriod.check_that_today_is_a_special_period?(hotel: object)
-        Day.special_day.where(hotel_id: object.id).take(1)
-      else
-        Day.select_a_day_of_the_week.where(hotel_id: object.id)
-      end
     end
 end
