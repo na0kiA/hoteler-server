@@ -11,13 +11,13 @@ RSpec.describe "V1::HotelFacilities", type: :request do
 
       it "wifiを利用可能にできること" do
         patch v1_hotel_hotel_facilities_path(hotel.id), params: { hotel_facilities: { wifi_enabled: true } }, headers: auth_tokens
-        expect(symbolized_body(response)[:hotel_facilities][:wifi_enabled]).to eq("Wi-Fiあり")
+        expect(symbolized_body(response)[:hotelFacilities][:wifiEnabled]).to eq("Wi-Fiあり")
       end
 
       it "全ての設備を利用可能にできること" do
         patch v1_hotel_hotel_facilities_path(hotel.id),
               params: { hotel_facilities: { wifi_enabled: true, parking_enabled: true, triple_rooms_enabled: true, secret_payment_enabled: true, credit_card_enabled: true, phone_reservation_enabled: true, net_reservation_enabled: true, cooking_enabled: true, breakfast_enabled: true } }, headers: auth_tokens
-        expect(symbolized_body(response)[:hotel_facilities][:breakfast_enabled]).to eq("朝食あり")
+        expect(symbolized_body(response)[:hotelFacilities][:breakfastEnabled]).to eq("朝食あり")
       end
     end
   end

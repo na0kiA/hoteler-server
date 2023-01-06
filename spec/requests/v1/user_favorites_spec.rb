@@ -26,7 +26,7 @@ RSpec.describe "V1::UserFavorites", type: :request do
 
       it "お気に入り一覧にホテル画像が含まれていること" do
         get v1_favorites_path(client_user.id), headers: auth_tokens
-        expect(symbolized_body(response)[0][:hotel_top_image][:id]).to eq(with_hotel_and_image_favorite_two.hotel.hotel_images.pick(:id))
+        expect(symbolized_body(response)[0][:hotelTopImage][:id]).to eq(with_hotel_and_image_favorite_two.hotel.hotel_images.pick(:id))
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe "V1::UserFavorites", type: :request do
       it "未設定であることが表示されること" do
         get v1_favorites_path(favorite.user.id), headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[0][:hotel_top_image]).to eq("ホテルの画像は未設定です")
+        expect(symbolized_body(response)[0][:hotelTopImage]).to eq("ホテルの画像は未設定です")
       end
     end
   end

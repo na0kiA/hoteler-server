@@ -41,7 +41,7 @@ RSpec.describe "V1::Users", type: :request do
 
       it "口コミが全て表示されること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response)[:reviews][0][:user_image]).to include("https://")
+        expect(symbolized_body(response)[:reviews][0][:userImage]).to include("https://")
         expect(symbolized_body(response)[:reviews].length).to eq(2)
       end
     end
@@ -54,7 +54,7 @@ RSpec.describe "V1::Users", type: :request do
 
       it "お気に入り一覧が表示されること" do
         get v1_user_path(client_user.id), headers: auth_tokens
-        expect(symbolized_body(response)[:favorites][0][:hotel_name]).to eq(hotel.name)
+        expect(symbolized_body(response)[:favorites][0][:hotelName]).to eq(hotel.name)
       end
     end
 

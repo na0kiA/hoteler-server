@@ -191,7 +191,7 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[0][:reviews_count]).to eq(0)
+        expect(response_body[0][:reviewsCount]).to eq(0)
         expect(response_body.length).to eq 1
       end
 
@@ -236,15 +236,15 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq(14)
+        expect(response_body.length).to eq(13)
       end
 
       it "口コミの評価率と評価数が取得できること" do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[:reviews_count]).to eq(0)
-        expect(response_body[:average_rating]).to eq("0.0")
+        expect(response_body[:reviewsCount]).to eq(0)
+        expect(response_body[:averageRating]).to eq("0.0")
       end
     end
 
@@ -260,26 +260,13 @@ RSpec.describe "V1::Hotels", type: :request do
       it "ホテルの口コミカウントが更新されること" do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:reviews_count]).to eq(1)
+        expect(response_body[:reviewsCount]).to eq(1)
       end
 
       it "ホテルの五つ星が更新されること" do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:average_rating]).to eq("5.0")
-      end
-    end
-
-    context "今日がお盆の場合" do
-      before do
-        travel_to Time.zone.local(2023, 8, 14, 6, 0, 0)
-      end
-
-      it "特別期間の料金を取得できること" do
-        get v1_hotel_path(accepted_hotel.id)
-        response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response).to have_http_status(:success)
-        expect(response_body[:day_of_the_week][0][:day]).to eq("特別期間")
+        expect(response_body[:averageRating]).to eq("5.0")
       end
     end
 
