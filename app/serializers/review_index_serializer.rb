@@ -7,10 +7,16 @@ class ReviewIndexSerializer < ActiveModel::Serializer
              :helpfulnesses_count,
              :user_name,
              :user_image,
-             :created_at
+             :created_at,
+             :id,
+             :user_id
 
   def user_name
     object.user.name
+  end
+
+  def user_id
+    object.user.id
   end
 
   def user_image

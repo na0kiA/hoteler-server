@@ -18,7 +18,7 @@ module V1
     def show
       review = Review.find_by(id: @review)
       if review.present?
-        render json: review
+        render json: review, serializer: ReviewIndexSerializer
       else
         render json: { error: e.message }.to_json, status: :not_found
       end
