@@ -7,7 +7,8 @@ class UserShowSerializer < ActiveModel::Serializer
              :uid,
              :reviews,
              :favorites,
-             :hotels_count
+             :hotels_count,
+             :reviews_count
 
   def reviews
     return "口コミはまだありません。" if object.reviews.blank?
@@ -23,6 +24,12 @@ class UserShowSerializer < ActiveModel::Serializer
     return 0 if object.hotels.blank?
 
     object.hotels.length
+  end
+
+  def reviews_count
+    return 0 if object.reviews.blank?
+
+    object.reviews.length
   end
 
   def image
