@@ -11,8 +11,11 @@ module V1
           title: "存在しない口コミです",
           body: "存在しない口コミに対しては「参考になった」を押せません"
         )
-      elsif Helpfulness.exists?(user_id: current_v1_user.id)
-        redirect_to(action: :destroy) and return
+      elsif review.helpfulnesses.exists?(user_id: current_v1_user.id)
+      # elsif Helpfulness.exists?(user_id: current_v1_user.id)
+        # redirect_to(action: :destroy) and return
+        Helpfulness.find_by(user_id: current_v1_user.id, review_id: params[:review_id]).destroy
+        render json: {title: "いいねを取り消しました"}, status: :ok
       else
         current_v1_user.helpfulnesses.create(review_id: review.id)
         render json: {}, status: :ok
