@@ -2,7 +2,7 @@ ja:
   devise_token_auth:
     sessions:
       not_confirmed: "'%{email}' に確認用のメールを送信しました。メール内の説明を読み、アカウントの有効化をしてください。"
-      bad_credentials: "メールアドレスかパスワードが正しくありません。"
+      bad_credentials: "メールアドレスかパスワードが間違っています。"
       not_supported: "/sign_in に GET はサポートされていません。POST をお使いください。"
       user_not_found: "ユーザーが見つからないか、ログインしていません。"
     token_validations:
