@@ -8,6 +8,8 @@ ja:
         helpfulnesses_count: "参考になった"
       hotel_image:
         key: "画像ファイル"
+      user:
+        name: "名前"
       hotel:
         name: "ホテル名"
         content: "内容"
