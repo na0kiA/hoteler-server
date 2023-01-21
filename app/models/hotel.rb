@@ -23,6 +23,7 @@ class Hotel < ApplicationRecord
   validates :street_address, length: { maximum: 50 }, presence: true, invalid_words: true
   validates :phone_number, length: {  maximum: 13 }, presence: true, invalid_words: true
   validates :company, length: { maximum: 30 }, presence: true, invalid_words: true
+  validates :postal_code, length: { maximum: 10 }, presence: true, invalid_words: true
 
   scope :accepted, -> { where(accepted: true) }
   scope :search_multiple, ->(search) {
