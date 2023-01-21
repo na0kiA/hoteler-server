@@ -13,7 +13,8 @@ class HotelShowSerializer < ActiveModel::Serializer
              :average_rating,
              :reviews_count,
              :hotel_images,
-             :top_four_reviews
+             :top_four_reviews,
+             :id
 
   def hotel_images
     return "no image" if object.hotel_images.blank?

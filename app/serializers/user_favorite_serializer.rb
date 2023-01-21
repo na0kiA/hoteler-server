@@ -4,10 +4,25 @@ class UserFavoriteSerializer < ActiveModel::Serializer
   attributes :id,
              :hotel_name,
              :hotel_top_image,
-             :five_star_rate
+             :five_star_rate,
+             :hotel_id,
+             :hotel_full_address,
+             :hotel_reviews_count
 
   def hotel_name
     object.hotel.name
+  end
+
+  def hotel_id
+    object.hotel.id
+  end
+
+  def hotel_reviews_count
+    object.hotel.reviews_count
+  end
+
+  def hotel_full_address
+    "#{object.hotel.prefecture}#{object.hotel.city}#{object.hotel.street_address}"
   end
 
   def hotel_top_image

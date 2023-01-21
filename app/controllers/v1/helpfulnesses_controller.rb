@@ -4,6 +4,14 @@ module V1
   class HelpfulnessesController < ApplicationController
     before_action :authenticate_v1_user!
 
+    def show
+      if Helpfulness.exists?(review_id: params[:review_id], user: current_v1_user)
+        render json: {helpful: true}, status: :ok
+      else
+        render json: {helpful: false}, status: :ok
+      end
+    end
+
     def create
       review = Review.find_by(id: params[:review_id])
       if review.blank?
@@ -15,10 +23,10 @@ module V1
       # elsif Helpfulness.exists?(user_id: current_v1_user.id)
         # redirect_to(action: :destroy) and return
         Helpfulness.find_by(user_id: current_v1_user.id, review_id: params[:review_id]).destroy
-        render json: {title: "いいねを取り消しました"}, status: :ok
+        render json: {title: "参考になったを取り消しました"}, status: :ok
       else
         current_v1_user.helpfulnesses.create(review_id: review.id)
-        render json: {}, status: :ok
+        render json: {user_id: current_v1_user.id}, status: :ok
       end
     end
 
@@ -33,7 +41,7 @@ module V1
         render json: {}, status: :bad_request
       else
         helpfulness.destroy
-        render json: {}, status: :ok
+        render json: {user_id: current_v1_user.id}, status: :ok
       end
     end
   end

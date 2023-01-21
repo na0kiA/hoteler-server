@@ -7,9 +7,9 @@ RSpec.describe "V1::Users", type: :request do
     context "ユーザーが存在する場合" do
       let_it_be(:client_user) { create(:user) }
 
-      it "フロントに返すJSONのキーは5つであること" do
+      it "フロントに返すJSONのキーは8つであること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response).length).to eq(5)
+        expect(symbolized_body(response).length).to eq(8)
       end
 
       it "デフォルトの画像が表示されること" do

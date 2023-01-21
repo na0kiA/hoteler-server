@@ -27,7 +27,8 @@ Rails.application.routes.draw do
     end
 
     scope "/reviews/:review_id" do
-      resource :helpfulnesses, only: %i[create destroy]
+      resource :helpfulnesses, only: %i[create destroy show]
+      # resources :helpful_or_not, only: %i[show]
     end
 
     resources :users, only: %i[index show] do

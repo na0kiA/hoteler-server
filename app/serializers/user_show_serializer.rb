@@ -6,9 +6,9 @@ class UserShowSerializer < ActiveModel::Serializer
              :image,
              :uid,
              :reviews,
-             :favorites,
              :hotels_count,
-             :reviews_count
+             :reviews_count,
+             :favorites,
 
   def reviews
     return "口コミはまだありません。" if object.reviews.blank?
@@ -37,7 +37,10 @@ class UserShowSerializer < ActiveModel::Serializer
   end
 
   def favorites
-    return if object != instance_options[:current_user]
+    # return if object != instance_options[:current_user]
+    return if object.favorites.blank?
+    p object.id
+    p instance_options[:current_user]
 
     ActiveModelSerializers::SerializableResource.new(
       object.favorites,

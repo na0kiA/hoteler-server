@@ -4,6 +4,7 @@ module V1
   module Auth
     class SessionsController < ApplicationController
       def index
+        
         if current_v1_user
           render json: { is_login: true, data: current_v1_user }
         else
