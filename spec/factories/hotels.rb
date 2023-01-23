@@ -9,7 +9,7 @@ FactoryBot.define do
     sequence(:phone_number) { |n| "0001234123#{n}" }
     sequence(:prefecture) { |n| "東京#{n}" }
     sequence(:city) { |n| "渋谷#{n}" }
-    sequence(:postal_code) { |n| "000000#{n}" }
+    sequence(:postal_code) { |n| "000666#{n}" }
     sequence(:street_address) { |n| "2丁目174-#{n}" }
   end
 
@@ -21,7 +21,7 @@ FactoryBot.define do
     sequence(:phone_number) { |n| "0001234123#{n}" }
     sequence(:prefecture) { |n| "東京#{n}" }
     sequence(:city) { |n| "渋谷#{n}" }
-    sequence(:postal_code) { |n| "000000#{n}" }
+    sequence(:postal_code) { |n| "000666#{n}" }
     sequence(:street_address) { |n| "2丁目174-#{n}" }
 
     trait :with_user do
@@ -37,7 +37,7 @@ FactoryBot.define do
     sequence(:phone_number) { |n| "0001234123#{n}" }
     sequence(:prefecture) { |n| "東京#{n}" }
     sequence(:city) { |n| "渋谷#{n}" }
-    sequence(:postal_code) { |n| "000000#{n}" }
+    sequence(:postal_code) { |n| "000111#{n}" }
     sequence(:street_address) { |n| "2丁目174-#{n}" }
     reviews_count { 0 }
     average_rating { 0.0 }

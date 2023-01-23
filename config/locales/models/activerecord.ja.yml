@@ -16,7 +16,7 @@ ja:
         prefecture: "都道府県"
         city: "市区町村"
         street_address: "住所詳細"
-        postal_number: "郵便番号"
+        postal_code: "郵便番号"
         full: "空き状況"
         accepted: "承認状況"
         reviews_count: "口コミ数"
