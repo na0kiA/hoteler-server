@@ -13,8 +13,12 @@ class ReviewShowSerializer < ActiveModel::Serializer
              :hotel_id,
              :hotel_full_address,
              :hotel_reviews_count,
-             :created_at,
+             :created_date,
              :id
+
+  def created_date
+    (I18n.l object.created_at, format: :long)
+  end
 
   def user_name
     object.user.name

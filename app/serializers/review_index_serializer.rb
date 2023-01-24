@@ -7,9 +7,13 @@ class ReviewIndexSerializer < ActiveModel::Serializer
              :helpfulnesses_count,
              :user_name,
              :user_image,
-             :created_at,
+             :created_date,
              :id,
              :user_id
+
+  def created_date
+    (I18n.l object.created_at, format: :long)
+  end
 
   def user_name
     object.user.name

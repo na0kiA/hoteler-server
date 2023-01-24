@@ -37,9 +37,9 @@ class UserShowSerializer < ActiveModel::Serializer
   end
 
   def favorites
-    # return if object != instance_options[:current_user]
-    return if object.favorites.blank?
-    p object.id
+    return if object != instance_options[:current_user]
+    # return if object.favorites.blank?
+    p object
     p instance_options[:current_user]
 
     ActiveModelSerializers::SerializableResource.new(
