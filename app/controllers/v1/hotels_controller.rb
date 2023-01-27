@@ -13,11 +13,15 @@ module V1
 
     def show
       accepted_hotel = Hotel.accepted.find_by(id: @hotel.id)
+      
+      return render json: @hotel, serializer: HotelShowSerializer if current_v1_user == @hotel.user
+
       if accepted_hotel.present?
         render json: accepted_hotel, serializer: HotelShowSerializer
       else
         record_not_found
       end
+
     end
 
     def create
