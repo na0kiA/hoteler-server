@@ -4,6 +4,15 @@ class V1::RestRatesController < ApplicationController
   before_action :authenticate_v1_user!
   before_action :set_rest_rate, only: %i[update destroy]
 
+  def index
+    rest_rates = RestRate.where(day_id: params[:day_id])
+    if rest_rates.present?
+      render json: rest_rates, each_serializer: RestRateSerializer
+    else
+      render json: {}, status: :no_content
+    end
+  end
+
   def create
     rest_rate = RestRate.new(rest_rate_params)
     if rest_rate.save
