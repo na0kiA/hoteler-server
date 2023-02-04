@@ -9,7 +9,8 @@ class ReviewIndexSerializer < ActiveModel::Serializer
              :user_image,
              :created_date,
              :id,
-             :user_id
+             :user_id,
+             :hotel_name
 
   def created_date
     (I18n.l object.created_at, format: :long)
@@ -17,6 +18,10 @@ class ReviewIndexSerializer < ActiveModel::Serializer
 
   def user_name
     object.user.name
+  end
+
+  def hotel_name
+    object.hotel.name
   end
 
   def user_id

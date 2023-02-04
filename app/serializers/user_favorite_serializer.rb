@@ -7,7 +7,13 @@ class UserFavoriteSerializer < ActiveModel::Serializer
              :five_star_rate,
              :hotel_id,
              :hotel_full_address,
-             :hotel_reviews_count
+             :hotel_reviews_count,
+             :created_date
+
+
+  def created_date
+    (I18n.l object.created_at, format: :long)
+  end
 
   def hotel_name
     object.hotel.name

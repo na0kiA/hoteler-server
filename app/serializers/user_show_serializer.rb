@@ -9,6 +9,7 @@ class UserShowSerializer < ActiveModel::Serializer
              :hotels_count,
              :reviews_count,
              :favorites,
+             :hotels
 
   def reviews
     return "口コミはまだありません。" if object.reviews.blank?
@@ -16,6 +17,16 @@ class UserShowSerializer < ActiveModel::Serializer
     ActiveModelSerializers::SerializableResource.new(
       object.reviews.eager_load(:hotel, hotel: [:hotel_images]),
       each_serializer: ReviewShowSerializer,
+      adapter: :attributes
+    ).serializable_hash
+  end
+
+  def hotels
+    return if object.hotels.blank?
+
+    ActiveModelSerializers::SerializableResource.new(
+      object.hotels,
+      each_serializer: HotelShowSerializer,
       adapter: :attributes
     ).serializable_hash
   end
@@ -37,10 +48,7 @@ class UserShowSerializer < ActiveModel::Serializer
   end
 
   def favorites
-    return if object != instance_options[:current_user]
-    # return if object.favorites.blank?
-    p object
-    p instance_options[:current_user]
+    return if object != instance_options[:current_user] 
 
     ActiveModelSerializers::SerializableResource.new(
       object.favorites,

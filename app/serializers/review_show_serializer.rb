@@ -5,6 +5,7 @@ class ReviewShowSerializer < ActiveModel::Serializer
              :content,
              :five_star_rate,
              :helpfulnesses_count,
+             :user_id,
              :user_name,
              :user_image,
              :hotel_name,
