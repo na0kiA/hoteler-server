@@ -6,6 +6,9 @@ class HotelShowSerializer < ActiveModel::Serializer
              :content,
              :company,
              :phone_number,
+             :prefecture,
+             :city,
+             :street_address,
              :postal_code,
              :full_address,
              :hotel_facilities,
@@ -14,7 +17,9 @@ class HotelShowSerializer < ActiveModel::Serializer
              :reviews_count,
              :hotel_images,
              :top_four_reviews,
-             :id
+             :id,
+             :user_id,
+             :accepted
 
   def hotel_images
     return "no image" if object.hotel_images.blank?
@@ -31,7 +36,7 @@ class HotelShowSerializer < ActiveModel::Serializer
   end
 
   def top_four_reviews
-    return "口コミはまだありません。" if select_top_four_reviews.blank?
+    return if select_top_four_reviews.blank?
 
     ActiveModelSerializers::SerializableResource.new(
       select_top_four_reviews,
