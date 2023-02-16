@@ -22,8 +22,8 @@ module V1
       elsif review.helpfulnesses.exists?(user_id: current_v1_user.id)
       # elsif Helpfulness.exists?(user_id: current_v1_user.id)
         # redirect_to(action: :destroy) and return
-        Helpfulness.find_by(user_id: current_v1_user.id, review_id: params[:review_id]).destroy
-        render json: {title: "参考になったを取り消しました"}, status: :ok
+        # Helpfulness.find_by(user_id: current_v1_user.id, review_id: params[:review_id]).destroy
+        render json: {title: "既に参考になったを押しています"}, status: :ok
       else
         current_v1_user.helpfulnesses.create(review_id: review.id)
         render json: {user_id: current_v1_user.id}, status: :ok
