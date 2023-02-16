@@ -26,10 +26,10 @@ module App
     config.middleware.use ActionDispatch::Flash
     config.middleware.use Rack::MethodOverride
 
-    # config.middleware.use ActionDispatch::Session::CookieStore, { key: "_app_session" }
-    config.middleware.use ActionDispatch::Session::CookieStore
+    config.middleware.use ActionDispatch::Session::CookieStore, { key: "_app_session" }
+    # config.middleware.use ActionDispatch::Session::CookieStore
     config.middleware.use ActionDispatch::ContentSecurityPolicy::Middleware
-    # config.session_store :cookie_store, same_site: :none, secure: true
+    config.session_store :cookie_store, same_site: :none, secure: true
 
     config.generators do |g|
       g.test_framework :rspec,

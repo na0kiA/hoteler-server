@@ -37,7 +37,7 @@ module V1
       if @hotel.present? && authenticated?
         if update_only_fulled_room?(@hotel) && same_params_except_full?(@hotel)
           @hotel.update!(hotel_params)
-          render json: @hotel, serializer: HotelShowSerializer, status: :ok
+          render json: @hotel, serializer: HotelShowSezrializer, status: :ok
         elsif not_changed_param?(@hotel)
           render json: @hotel, serializer: HotelShowSerializer, status: :ok
         elsif message_blank?

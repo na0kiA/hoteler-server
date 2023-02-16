@@ -16,7 +16,7 @@ Rails.application.routes.draw do
         resources :images, only: %i[index show create], controller: "hotel_images"
         resources :days, only: %i[index]
         resource :hotel_facilities, only: %i[update]
-        resource :favorites, only: %i[create destroy]
+        resource :favorites, only: %i[create destroy show]
       end
     end
 

@@ -22,7 +22,7 @@ class HotelShowSerializer < ActiveModel::Serializer
              :accepted
 
   def hotel_images
-    return "no image" if object.hotel_images.blank?
+    return if object.hotel_images.blank?
 
     ActiveModelSerializers::SerializableResource.new(
       object.hotel_images,

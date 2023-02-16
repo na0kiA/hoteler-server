@@ -2,7 +2,7 @@
 
 class ApplicationController < ActionController::Base
   # include ActionController::Cookies
-  # include ActionController::RequestForgeryProtection
+  include ActionController::RequestForgeryProtection
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   # protect_from_forgery with: :exception
@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
 
   before_action :convert_to_snake_case_params
+  # after_action :set_csrf_token
   
 
   skip_before_action :verify_authenticity_token
@@ -22,17 +23,7 @@ class ApplicationController < ActionController::Base
 
   # def set_csrf_token
   #   response.set_header('x-csrf-token', form_authenticity_token)
-    # response.headers['Set-Cookie'] = 'Secure;SameSite=None'
   # end
-
-  # def set_csrf_token
-  #   cookies['CSRF-TOKEN'] = {
-  #     domain: 'jp.ngrok.io', 
-  #     value: form_authenticity_token,
-  #     same_site: "None",
-  #     secure: true
-  #   }
-  # end  
   
     def convert_to_snake_case_params
       params.deep_transform_keys!(&:underscore)
