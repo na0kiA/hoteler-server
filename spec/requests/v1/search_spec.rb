@@ -129,7 +129,7 @@ RSpec.describe "V1::Searches", type: :request do
 
     context "ホテルを絞り込む場合" do
       let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
-      let_it_be(:with_reviews_hotel) {  create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
+      let_it_be(:with_reviews_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
       let_it_be(:accepted_hotel) { create(:accepted_hotel, user: create(:user)) }
 
       before do
@@ -156,6 +156,22 @@ RSpec.describe "V1::Searches", type: :request do
       it "存在しない条件の場合はホテルを絞込めないこと" do
         get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: %w[cooking] }
         expect(response.body).to eq("絞り込み条件で一致するホテルがありませんでした。違う条件と検索キーワードでお試しください。")
+      end
+    end
+
+    context "ホテルを絞り込み、並び替える場合" do
+      let_it_be(:expensive_hotel) { create(:completed_profile_hotel, :with_days_and_expensive_service_rates, :with_user) }
+      let_it_be(:with_reviews_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
+      let_it_be(:accepted_hotel) { create(:accepted_hotel, user: create(:user)) }
+
+      it 'wifiのホテルを絞込んで安い順に並び替えられること' do
+        expensive_hotel.hotel_facility.update(wifi_enabled: true)
+        with_reviews_hotel.hotel_facility.update(wifi_enabled: true)
+        get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: %w[wifi_enabled], sort: "low_rest"}
+        p symbolized_body(response)
+        expect(symbolized_body(response).length).to eq(2)
+        expect(symbolized_body(response)[0][:restRates][:rate]).to eq(3280)
+        expect(symbolized_body(response)[1][:restRates][:rate]).to eq(4280)
       end
     end
   end

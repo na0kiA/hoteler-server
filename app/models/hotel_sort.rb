@@ -5,7 +5,12 @@ class HotelSort
   private :hotels
 
   def initialize(hotels:)
-    @hotels = hotels
+    if hotels.instance_of?(Array)
+      @hotels = Hotel.where(id: hotels.map(&:id))
+    else
+      @hotels = hotels
+    end
+    # @hotels = hotels
   end
 
   def sort_by_low_rest
@@ -34,7 +39,6 @@ class HotelSort
     end
     hotel_and_today_services_list.flatten
   end
-
 
   private
 
