@@ -4,6 +4,9 @@ class V1::SearchController < ApplicationController
   def index
     empty_hotel_box_for_searched_list = Hotel.none
     accepted_hotel = Hotel.accepted
+    p params
+    p search_params
+    p search_params[:keyword]
 
     if search_params[:keyword].present?
       searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: empty_hotel_box_for_searched_list, accepted_hotel:).eager_load(:hotel_facility, :hotel_images)
@@ -18,7 +21,7 @@ class V1::SearchController < ApplicationController
         sort_hotel_list(searched_by_keyword_hotel_list: filterd_hotel_list.eager_load(:stay_rates, :rest_rates))
       end
     else
-      redirect_to v1_hotels_path
+      record_not_found
     end
   end
 
@@ -49,7 +52,13 @@ class V1::SearchController < ApplicationController
     end
 
     def sort_by_reviews_count(hotels:)
-      return render json: hotels.eager_load(:hotel_images).sort_by(&:reviews_count).reverse, each_serializer: HotelIndexSerializer if sort_by_reviews_count?
+
+      if sort_by_reviews_count? && hotels.instance_of?(Array)
+        return render json: hotels.sort_by(&:reviews_count).reverse, each_serializer: HotelIndexSerializer
+      else
+        return render json: hotels.eager_load(:hotel_images).sort_by(&:reviews_count).reverse, each_serializer: HotelIndexSerializer if sort_by_reviews_count?
+      end
+      # return render json: hotels.eager_load(:hotel_images).sort_by(&:reviews_count).reverse, each_serializer: HotelIndexSerializer if sort_by_reviews_count?
     end
 
     def sort_by_favorites_count(hotels:)
