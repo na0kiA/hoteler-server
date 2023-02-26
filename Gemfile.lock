@@ -1669,6 +1669,7 @@ DEPENDENCIES
   jaro_winkler
   jbuilder
   json
+  kaminari
   msgpack (~> 1.5, >= 1.5.2)
   mysql2
   nokogiri (>= 1.13.10)
