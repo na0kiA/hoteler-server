@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
 
   before_action :convert_to_snake_case_params
   # after_action :set_csrf_token
-  
 
   skip_before_action :verify_authenticity_token
 
@@ -24,7 +23,7 @@ class ApplicationController < ActionController::Base
   # def set_csrf_token
   #   response.set_header('x-csrf-token', form_authenticity_token)
   # end
-  
+
     def convert_to_snake_case_params
       params.deep_transform_keys!(&:underscore)
     end

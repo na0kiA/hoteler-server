@@ -10,7 +10,6 @@ class UserFavoriteSerializer < ActiveModel::Serializer
              :hotel_reviews_count,
              :created_date
 
-
   def created_date
     (I18n.l object.created_at, format: :long)
   end
@@ -32,7 +31,7 @@ class UserFavoriteSerializer < ActiveModel::Serializer
   end
 
   def hotel_top_image
-    return  if object.hotel.hotel_images.blank?
+    return if object.hotel.hotel_images.blank?
 
     ActiveModelSerializers::SerializableResource.new(
       object.hotel.hotel_images.first,

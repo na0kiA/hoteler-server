@@ -30,7 +30,7 @@ class UserShowSerializer < ActiveModel::Serializer
       adapter: :attributes
     ).serializable_hash
   end
-  
+
   def hotels_count
     return 0 if object.hotels.blank?
 
@@ -48,7 +48,7 @@ class UserShowSerializer < ActiveModel::Serializer
   end
 
   def favorites
-    return if object != instance_options[:current_user] 
+    return if object != instance_options[:current_user]
 
     ActiveModelSerializers::SerializableResource.new(
       object.favorites,

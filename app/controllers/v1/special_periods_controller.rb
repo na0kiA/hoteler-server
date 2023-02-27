@@ -13,7 +13,6 @@ class V1::SpecialPeriodsController < ApplicationController
     end
   end
 
-
   def create
     special_period = SpecialPeriod.new(special_period_params)
     if special_period.save

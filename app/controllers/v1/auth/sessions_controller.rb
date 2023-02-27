@@ -16,7 +16,7 @@ module V1
       private
 
         def set_csrf_token
-          response.set_header('x-csrf-token', form_authenticity_token)
+          response.set_header("x-csrf-token", form_authenticity_token)
         end
     end
   end

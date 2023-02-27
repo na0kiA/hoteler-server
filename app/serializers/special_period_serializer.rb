@@ -24,7 +24,6 @@ class SpecialPeriodSerializer < ActiveModel::Serializer
     convert_at_hour(date: object.end_date)
   end
 
-
   private
 
     def convert_at_hour(date:)

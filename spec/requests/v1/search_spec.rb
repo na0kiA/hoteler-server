@@ -144,7 +144,7 @@ RSpec.describe "V1::Searches", type: :request do
 
       it "wifiと駐車場のあるホテルを絞込めること" do
         expensive_hotel.hotel_facility.update(wifi_enabled: true, parking_enabled: true, phone_reservation_enabled: true)
-        get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: ["phone_reservation_enabled", "parking_enabled", "wifi_enabled"] }
+        get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: %w[phone_reservation_enabled parking_enabled wifi_enabled] }
         expect(symbolized_body(response).length).to eq(1)
       end
 
@@ -164,10 +164,10 @@ RSpec.describe "V1::Searches", type: :request do
       let_it_be(:with_reviews_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
       let_it_be(:accepted_hotel) { create(:accepted_hotel, user: create(:user)) }
 
-      it 'wifiのホテルを絞込んで安い順に並び替えられること' do
+      it "wifiのホテルを絞込んで安い順に並び替えられること" do
         expensive_hotel.hotel_facility.update(wifi_enabled: true)
         with_reviews_hotel.hotel_facility.update(wifi_enabled: true)
-        get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: %w[wifi_enabled], sort: "low_rest"}
+        get v1_search_index_path, params: { keyword: "渋谷", hotel_facilities: %w[wifi_enabled], sort: "low_rest" }
         p symbolized_body(response)
         expect(symbolized_body(response).length).to eq(2)
         expect(symbolized_body(response)[0][:restRates][:rate]).to eq(3280)

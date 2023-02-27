@@ -112,7 +112,7 @@ class StayBusinessHour
 
     def the_time_now_is_between_6_am_and_next_stay_time?(time = Time.current)
       return if select_today_first_stay_start_time.blank?
-      
+
       convert_at_hour(time) >= CLOSING_TIME && convert_at_hour(time) <= select_today_first_stay_start_time
     end
 

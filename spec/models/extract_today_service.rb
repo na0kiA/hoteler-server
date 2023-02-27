@@ -27,7 +27,7 @@ RSpec.describe ExtractTodayService, type: :model do
       it "ホテルの特別期間の休憩料金と宿泊料金を取得できること" do
         hotel_and_services = ExtractTodayService.new(hotels: Hotel.accepted).extract_today_services
         expect(hotel_and_services.second.day.day).to eq("特別期間")
-        expect(hotel_and_services.second.rate).to eq(12980)
+        expect(hotel_and_services.second.rate).to eq(12_980)
       end
     end
 

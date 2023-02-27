@@ -5,12 +5,12 @@ module V1
     before_action :authenticate_v1_user!
 
     def show
-      # review = Review.find_by(id: params[:review_id])
+      # REVIEW: = Review.find_by(id: params[:review_id])
       # helpfulnesses = Helpfulness.find_by(id: params[:id])
       if Helpfulness.current_v1_user.exists?(review_id: params[:review_id])
-        render json: {helpful: true}, status: :ok
+        render json: { helpful: true }, status: :ok
       else
-        render json: {helpful: false}, status: :ok
+        render json: { helpful: false }, status: :ok
       end
     end
   end

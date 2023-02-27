@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HotelFacilitySerializer < ActiveModel::Serializer
-  attribute :wifi_enabled 
+  attribute :wifi_enabled
   attribute :parking_enabled
   attribute :credit_card_enabled
   attribute :phone_reservation_enabled

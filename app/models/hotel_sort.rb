@@ -5,11 +5,11 @@ class HotelSort
   private :hotels
 
   def initialize(hotels:)
-    if hotels.instance_of?(Array)
-      @hotels = Hotel.where(id: hotels.map(&:id))
-    else
-      @hotels = hotels
-    end
+    @hotels = if hotels.instance_of?(Array)
+                Hotel.where(id: hotels.map(&:id))
+              else
+                hotels
+              end
     # @hotels = hotels
   end
 
@@ -32,7 +32,7 @@ class HotelSort
   def sort_by_reviews_count
     hotels.eager_load(:hotel_images).sort_by(&:reviews_count)
   end
-  
+
   def select_services(hotel_and_today_services_list = [], sorted_hotels:)
     sorted_hotels.map do |hotel|
       hotel_and_today_services_list << extract_open_rest_rate(hotel:) << extract_open_stay_rate(hotel:)

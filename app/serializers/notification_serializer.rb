@@ -13,16 +13,14 @@ class NotificationSerializer < ActiveModel::Serializer
              :hotel_name,
              :sender_name,
              :reviewer_rating,
-
   # def title
   #   return "#{hotel_name}がホテルを更新しました" if object.hotel_updates?
   #   return "#{reviewer_name}があなたのホテルに星#{reviewer_rating}つの口コミを投稿しました" if object.came_reviews?
   # end
-
-  def message
-    return object.message if object.hotel_updates?
-    return object.message if object.came_reviews?
-  end
+             def message
+               return object.message if object.hotel_updates?
+               return object.message if object.came_reviews?
+             end
 
   def image
     if object.kind == "hotel_updates"

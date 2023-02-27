@@ -4,12 +4,11 @@ class V1::FavoritesController < ApplicationController
   before_action :authenticate_v1_user!
   before_action :set_hotel, only: %i[create destroy]
 
-
   def show
     if Favorite.exists?(hotel_id: params[:hotel_id], user: current_v1_user)
-      render json: {favorite: true}, status: :ok
+      render json: { favorite: true }, status: :ok
     else
-      render json: {favorite: false}, status: :ok
+      render json: { favorite: false }, status: :ok
     end
   end
 

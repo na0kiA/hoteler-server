@@ -11,7 +11,7 @@ module V1
       hotels = Hotel.preload(:hotel_images, :rest_rates, :stay_rates).accepted.page(params[:page])
       pagination = resources_with_pagination(hotels)
       services = ExtractTodayService.new(hotels:).extract_today_services
-      render json: hotels, each_serializer: HotelIndexSerializer, services:, meta: { pagination:}
+      render json: hotels, each_serializer: HotelIndexSerializer, services:, meta: { pagination: }
     end
 
     def show
@@ -24,7 +24,6 @@ module V1
       else
         record_not_found
       end
-
     end
 
     def create
