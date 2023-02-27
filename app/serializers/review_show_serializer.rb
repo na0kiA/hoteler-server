@@ -52,7 +52,7 @@ class ReviewShowSerializer < ActiveModel::Serializer
   def hotel_image
     return  if object.hotel.hotel_images.blank?
 
-    file_url(object.hotel.hotel_images.first)
+    file_url(object.hotel.hotel_images.first.key)
   end
 
   private
