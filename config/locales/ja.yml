@@ -8,4 +8,4 @@ ja:
   date:
     formats:
       default: "%m/%d"
-      long: "%Y/%m/%d"
+      long: "%Y%m%d"
