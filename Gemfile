@@ -5,9 +5,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.2"
 
-gem "rails", "7.0.3.1"
+gem "rails", "7.0.4.2"
 
-rails_version = "7.0.3.1"
+rails_version = "7.0.4.2"
 
 gem "actioncable", rails_version
 gem "actionmailbox", rails_version
