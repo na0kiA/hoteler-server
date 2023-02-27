@@ -23,12 +23,11 @@ Rails.application.routes.draw do
     scope "/days/:day_id" do
       resources :rest_rates, except: %i[show]
       resources :stay_rates, except: %i[show]
-      resources :special_periods, only: %i[create update destroy]
+      resources :special_periods, except: %i[show]
     end
 
     scope "/reviews/:review_id" do
       resource :helpfulnesses, only: %i[create destroy show]
-      # resources :helpful_or_not, only: %i[show]
     end
 
     resources :users, only: %i[index show] do
@@ -38,6 +37,7 @@ Rails.application.routes.draw do
     end
 
     resources :notifications, only: %i[index]
+    resources :notification_or_not, only: %i[index]
 
     resources :search, only: %i[index]
 
