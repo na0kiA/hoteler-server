@@ -47,14 +47,14 @@ class HotelSort
     end
 
     def select_rest_rates(rest_rate_box: RestRate.none)
-      hotels.eager_load(:days, :rest_rates, :hotel_images).select { |hotel| hotel.rest_rates.present? }.map do |hotel|
+      hotels.select { |hotel| hotel.rest_rates.present? }.map do |hotel|
         rest_rate_box = rest_rate_box.or(extract_open_rest_rate(hotel:))
       end
       rest_rate_box
     end
 
     def select_stay_rates(stay_rates_box: StayRate.none)
-      hotels.eager_load(:days, :stay_rates, :hotel_images).select { |hotel| hotel.stay_rates.present? }.map do |hotel|
+      hotels.select { |hotel| hotel.stay_rates.present? }.map do |hotel|
         stay_rates_box = stay_rates_box.or(extract_open_stay_rate(hotel:))
       end
       stay_rates_box

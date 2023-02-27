@@ -6,8 +6,7 @@ class V1::SearchController < ApplicationController
     accepted_hotel = Hotel.accepted
 
     if search_params[:keyword].present?
-      binding.break
-      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: empty_hotel_box_for_searched_list, accepted_hotel:).eager_load(:hotel_facility, :stay_rates, :rest_rates)
+      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: empty_hotel_box_for_searched_list, accepted_hotel:).eager_load(:hotel_facility, :days, :rest_rates, :hotel_images, :stay_rates)
 
       filterd_hotel_list = filterd_hotels(searched_by_keyword_hotel_list:)
 

@@ -162,6 +162,10 @@ RSpec.describe "V1::Searches", type: :request do
       let_it_be(:with_reviews_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
       let_it_be(:accepted_hotel) { create(:accepted_hotel, user: create(:user)) }
 
+      before do
+        travel_to Time.zone.local(2022, 12, 12, 12, 0, 0)
+      end
+
       it "wifiのホテルを絞込んで安い順に並び替えられること" do
         expensive_hotel.hotel_facility.update(wifi_enabled: true)
         with_reviews_hotel.hotel_facility.update(wifi_enabled: true)
