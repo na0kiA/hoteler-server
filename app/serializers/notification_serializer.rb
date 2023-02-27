@@ -49,6 +49,6 @@ class NotificationSerializer < ActiveModel::Serializer
   end
 
   def reviewer_rating
-    Review.find_by(user: object.sender).five_star_rate
+    Review.find_by(user: object.sender)&.five_star_rate
   end
 end

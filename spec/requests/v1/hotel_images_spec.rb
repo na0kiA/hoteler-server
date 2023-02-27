@@ -71,7 +71,7 @@ RSpec.describe "V1::HotelImages", type: :request do
       it "ホテルの画像一覧を取得できること" do
         get v1_hotel_images_path(hotel.id), headers: nil
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(3)
+        expect(symbolized_body(response)[:hotelImages].length).to eq(3)
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe "V1::HotelImages", type: :request do
       it "ホテルの画像一覧を２つ取得できること" do
         get v1_hotel_images_path(hotel.id), headers: nil
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(2)
+        expect(symbolized_body(response)[:hotelImages].length).to eq(2)
       end
     end
 
@@ -119,7 +119,7 @@ RSpec.describe "V1::HotelImages", type: :request do
       it "ホテル運営者のみ画像一覧を取得できること" do
         get v1_hotel_images_path(hidden_hotel.id), headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(3)
+        expect(symbolized_body(response)[:hotelImages].length).to eq(3)
       end
     end
   end
@@ -133,7 +133,7 @@ RSpec.describe "V1::HotelImages", type: :request do
       it "ホテルの画像詳細を取得できること" do
         get v1_hotel_image_path(hotel.id, hotel_image[0].id)
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(2)
+        expect(symbolized_body(response)[:hotelImage].length).to eq(3)
       end
     end
 
@@ -167,7 +167,7 @@ RSpec.describe "V1::HotelImages", type: :request do
       it "ホテル運営者のみ画像詳細を取得できること" do
         get v1_hotel_image_path(hidden_hotel.id, hotel_image[0].id), headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(2)
+        expect(symbolized_body(response)[:hotelImage].length).to eq(3)
       end
     end
   end

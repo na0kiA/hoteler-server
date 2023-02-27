@@ -39,7 +39,7 @@ class HotelShowSerializer < ActiveModel::Serializer
     return if select_top_four_reviews.blank?
 
     ActiveModelSerializers::SerializableResource.new(
-      select_top_four_reviews,
+      select_top_four_reviews.eager_load(:hotel),
       each_serializer: ReviewIndexSerializer,
       adapter: :attributes
     ).serializable_hash

@@ -12,7 +12,7 @@ RSpec.describe "V1::Days", type: :request do
       it "ホテルの曜日を返すこと" do
         get v1_hotel_days_path(hotel_id: hotel.id)
         expect(response.status).to eq(200)
-        expect(symbolized_body(response).length).to eq(7)
+        expect(symbolized_body(response)[:days].length).to eq(7)
       end
     end
 

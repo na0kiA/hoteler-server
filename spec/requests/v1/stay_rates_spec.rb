@@ -32,7 +32,7 @@ RSpec.describe "V1::StayRates", type: :request do
         params = { stay_rate: { plan: "<><><>", rate: 5980, start_time: "20:00", end_time: "11:00" }, day_id: hotel.days.ids[0] }
         post v1_stay_rates_path(hotel.days.ids[0]), params:, headers: auth_tokens
         expect(response.status).to eq(400)
-        expect(symbolized_body(response)[:plan][0]).to eq("料金プランに無効な記号もしくはURLが含まれています")
+        expect(symbolized_body(response)[:plan][0]).to eq("料金プランに無効な記号もしくはURLが含まれています。")
       end
     end
 
@@ -60,7 +60,7 @@ RSpec.describe "V1::StayRates", type: :request do
         params = { stay_rate: { plan: "宿泊1部", rate: 5000, start_time: "20:00", end_time: "11:00" }, day_id: }
         patch v1_stay_rate_path(day_id, stay_rate_id), params:, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:rate]).to eq(5000)
+        expect(symbolized_body(response)[:stayRate][:rate]).to eq(5000)
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe "V1::StayRates", type: :request do
         params = { stay_rate: { plan: "<script>", rate: 1, start_time: "", end_time: "" }, day_id: }
         patch v1_stay_rate_path(day_id, stay_rate_id), params:, headers: auth_tokens
         expect(response.status).to eq(400)
-        expect(symbolized_body(response)[:plan][0]).to eq("料金プランに無効な記号もしくはURLが含まれています")
+        expect(symbolized_body(response)[:plan][0]).to eq("料金プランに無効な記号もしくはURLが含まれています。")
       end
     end
   end

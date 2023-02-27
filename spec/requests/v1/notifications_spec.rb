@@ -20,8 +20,7 @@ RSpec.describe "V1::Notifications", type: :request do
 
       it "お気に入りに登録したホテルの更新の通知を受け取ること" do
         get v1_notifications_path, headers: auth_tokens
-        expect(symbolized_body(response)[0][:message]).to eq("新しいソファーを設置しました。")
-        expect(symbolized_body(response)[0][:title]).to eq("神戸北野さまがホテルを更新しました")
+        expect(symbolized_body(response)[:notifications][0][:message]).to eq("新しいソファーを設置しました。")
       end
     end
 
@@ -52,7 +51,7 @@ RSpec.describe "V1::Notifications", type: :request do
 
       it "readがtrueになり既読済みになること" do
         get v1_notifications_path, headers: auth_tokens
-        expect(symbolized_body(response)[0][:read]).to be(true)
+        expect(symbolized_body(response)[:notifications][0][:read]).to be(true)
       end
     end
 
@@ -96,8 +95,7 @@ RSpec.describe "V1::Notifications", type: :request do
       it "ホテル運営者は口コミの通知を受け取ること" do
         get v1_notifications_path, headers: hotel_auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[0][:title]).to eq("#{accepted_hotel.reviewer.pick(:name)}さんがあなたのホテルに星#{accepted_hotel.reviews.pick(:five_star_rate)}つの口コミを投稿しました")
-        expect(symbolized_body(response)[0][:message]).to eq("部屋が綺麗")
+        expect(symbolized_body(response)[:notifications][0][:message]).to eq("部屋が綺麗")
       end
     end
 

@@ -106,8 +106,9 @@ RSpec.describe "V1::Hotels", type: :request do
       it "通知がユーザーに送信されないこと" do
         expect { patch v1_hotel_path(hotel.id), params: only_changed_full_param, headers: auth_tokens }.not_to change(Notification, :count)
 
+        
         get v1_hotel_path(hotel.id)
-        expect(symbolized_body(response)[:full]).to be(true)
+        expect(symbolized_body(response)[:hotel][:full]).to be(true)
 
         hotel.reload
         expect(hotel.full).to be(true)
@@ -115,7 +116,7 @@ RSpec.describe "V1::Hotels", type: :request do
 
       it "満室になっていること" do
         patch v1_hotel_path(hotel.id), params: only_changed_full_param, headers: auth_tokens
-        expect(symbolized_body(response)[:full]).to be(true)
+        expect(symbolized_body(response)[:hotel][:full]).to be(true)
       end
     end
 
@@ -191,8 +192,8 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[0][:reviewsCount]).to eq(0)
-        expect(response_body.length).to eq 1
+        expect(response_body[:hotels][0][:reviewsCount]).to eq(0)
+        expect(response_body[:hotels].length).to eq 1
       end
 
       it "ホテルを複数個取得できること" do
@@ -200,7 +201,7 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq 3
+        expect(response_body[:hotels].length).to eq 3
       end
     end
 
@@ -210,7 +211,7 @@ RSpec.describe "V1::Hotels", type: :request do
       it "ホテル一覧を取得できないこと" do
         get v1_hotels_path
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body.length).not_to eq 2
+        expect(response_body[:hotels].length).not_to eq 2
       end
     end
 
@@ -219,7 +220,7 @@ RSpec.describe "V1::Hotels", type: :request do
 
       it "ホテル一覧の2つ目のホテルが満室になっていること" do
         get v1_hotels_path
-        expect(symbolized_body(response)[1][:full]).to be(true)
+        expect(symbolized_body(response)[:hotels][1][:full]).to be(true)
       end
     end
   end
@@ -236,15 +237,15 @@ RSpec.describe "V1::Hotels", type: :request do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body.length).to eq(14)
+        expect(response_body[:hotel].length).to eq(19)
       end
 
       it "口コミの評価率と評価数が取得できること" do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
         expect(response).to have_http_status(:success)
-        expect(response_body[:reviewsCount]).to eq(0)
-        expect(response_body[:averageRating]).to eq("0.0")
+        expect(response_body[:hotel][:reviewsCount]).to eq(0)
+        expect(response_body[:hotel][:averageRating]).to eq("0.0")
       end
     end
 
@@ -260,13 +261,13 @@ RSpec.describe "V1::Hotels", type: :request do
       it "ホテルの口コミカウントが更新されること" do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:reviewsCount]).to eq(1)
+        expect(response_body[:hotel][:reviewsCount]).to eq(1)
       end
 
       it "ホテルの五つ星が更新されること" do
         get v1_hotel_path(accepted_hotel.id)
         response_body = JSON.parse(response.body, symbolize_names: true)
-        expect(response_body[:averageRating]).to eq("5.0")
+        expect(response_body[:hotel][:averageRating]).to eq("5.0")
       end
     end
 
