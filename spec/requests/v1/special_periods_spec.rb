@@ -69,7 +69,6 @@ RSpec.describe "V1::SpecialPeriod", type: :request do
         params = { special_period: { period: "obon", start_date: "2022-8-10", end_date: "2022-08-20" }, day_id: }
         patch v1_special_period_path(day_id, special_period_id), params:, headers: auth_tokens
         expect(response.status).to eq(200)
-        p symbolized_body(response)
         expect(symbolized_body(response)[:specialPeriod][:startDate]).to eq("20220810")
       end
     end

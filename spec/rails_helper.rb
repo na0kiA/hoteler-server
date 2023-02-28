@@ -47,7 +47,6 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include CustomValidatorHelper, type: :model
   config.include RequestSpecHelper
-  config.include RestRateSpecHelper
   config.include ActiveSupport::Testing::TimeHelpers
   # config.include SerializerExampleGroup
   # config.include Rails.application.routes.url_helpers
