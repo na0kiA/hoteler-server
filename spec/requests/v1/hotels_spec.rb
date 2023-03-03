@@ -106,7 +106,6 @@ RSpec.describe "V1::Hotels", type: :request do
       it "通知がユーザーに送信されないこと" do
         expect { patch v1_hotel_path(hotel.id), params: only_changed_full_param, headers: auth_tokens }.not_to change(Notification, :count)
 
-        
         get v1_hotel_path(hotel.id)
         expect(symbolized_body(response)[:hotel][:full]).to be(true)
 

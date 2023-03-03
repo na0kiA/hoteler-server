@@ -37,7 +37,7 @@ RSpec.describe "V1::UserFavorites", type: :request do
       it "未設定であることが表示されること" do
         get v1_favorites_path(favorite.user.id), headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:favorites][0][:hotelTopImage]).to eq(nil)
+        expect(symbolized_body(response)[:favorites][0][:hotelTopImage]).to be_nil
       end
     end
   end

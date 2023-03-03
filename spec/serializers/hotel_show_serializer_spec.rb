@@ -57,7 +57,7 @@ RSpec.describe HotelShowSerializer, type: :serializer do
 
       it "何も返さないこと" do
         json_serializer = HotelShowSerializer.new(hotel).as_json
-        expect(json_serializer[:top_four_reviews]).to eq(nil)
+        expect(json_serializer[:top_four_reviews]).to be_nil
       end
     end
   end
