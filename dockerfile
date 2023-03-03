@@ -38,6 +38,7 @@ ENV TZ=Asia/Tokyo
 RUN apk update && \
     apk add \
         mysql-dev \
+        mysql-client \
         git \
         tzdata
 

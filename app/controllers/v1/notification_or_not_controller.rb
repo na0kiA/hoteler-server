@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class V1::NotificationsController < ApplicationController
+class V1::NotificationOrNotController < ApplicationController
   before_action :authenticate_v1_user!
 
   def index

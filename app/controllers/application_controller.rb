@@ -1,28 +1,32 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  # include ActionController::Cookies
   include ActionController::RequestForgeryProtection
   include DeviseTokenAuth::Concerns::SetUserByToken
-
-  # protect_from_forgery with: :exception
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::RoutingError, with: :path_not_found
   rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
 
   before_action :convert_to_snake_case_params
-  # after_action :set_csrf_token
 
   skip_before_action :verify_authenticity_token
+
+  # CSRF対策をすること
+  # protect_from_forgery with: :exception
 
   helper_method :current_user, :user_signed_in?
 
   private
 
-  # def set_csrf_token
-  #   response.set_header('x-csrf-token', form_authenticity_token)
-  # end
+    def set_csrf_token
+      cookies["CSRF-TOKEN"] = {
+        domain: ENV.fetch("NGROK_HOST"),
+        value: form_authenticity_token,
+        same_site: :none,
+        secure: true
+      }
+    end
 
     def convert_to_snake_case_params
       params.deep_transform_keys!(&:underscore)

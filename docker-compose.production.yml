@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0.29-oracle
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 4306:3306
+    volumes:
+      - mysql-db:/var/lib/mysql
+  api:
+    tty: true
+    stdin_open: true
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3000
+    volumes:
+      - .:/app
+      - public-data:/app/public
+      - tmp-data:/app/tmp
+    command: 'bundle exec puma -t 5:5 -e production -C config/puma.rb'
+  web:
+    build: ./nginx
+    volumes:
+      - public-data:/app/public
+      - tmp-data:/app/tmp
+    ports:
+      - 80:80
+    depends_on:
+      - api
+volumes:
+  mysql-db:
+    driver: local
+  public-data:
+  tmp-data:
