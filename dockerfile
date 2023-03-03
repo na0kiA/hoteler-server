@@ -17,6 +17,7 @@ RUN apk update && \
         mysql-dev \
         mysql-client \
         git \
+        vim \
         tzdata && \
     apk add --virtual build-packs --no-cache \
         build-base \
@@ -40,6 +41,7 @@ RUN apk update && \
         mysql-dev \
         mysql-client \
         git \
+        vim \
         tzdata
 
 WORKDIR ${ROOT}
