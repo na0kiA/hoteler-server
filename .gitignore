@@ -36,3 +36,4 @@
 
 .env
 .devcontainer/coverage
+.DS_Store
