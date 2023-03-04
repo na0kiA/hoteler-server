@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - develop
-      - feature#38
+      - feature38
 
 env:
   AWS_REGION: ap-northeast-1
