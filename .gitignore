@@ -37,3 +37,8 @@
 .env
 .devcontainer/coverage
 .DS_Store
+
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
