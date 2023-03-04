@@ -26,9 +26,7 @@ test:
   database: app_test
 
 production:
-  adapter: mysql2
-  encoding: utf8mb4
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <<: *default
   database: app_production
   host: db
   username: <%= Rails.application.credentials.db[:user_name] %>
