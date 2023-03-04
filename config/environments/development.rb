@@ -4,12 +4,12 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   config.after_initialize do
-    Bullet.enable        = true
-    Bullet.alert         = true
-    Bullet.bullet_logger = true
-    Bullet.console       = true
-    Bullet.rails_logger  = true
-    Bullet.add_footer    = true
+    # Bullet.enable        = true
+    # Bullet.alert         = true
+    # Bullet.bullet_logger = true
+    # Bullet.console       = true
+    # Bullet.rails_logger  = true
+    # Bullet.add_footer    = true
   end
 
   # Settings specified here will take precedence over those in config/application.rb.
@@ -92,8 +92,13 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   # Uncomment if you wish to allow Action Cable access from any origin.
+  # config.action_controller.forgery_protection_origin_check = false
   # config.action_cable.disable_request_forgery_protection = true
-  config.hosts << ENV.fetch("API_HOST")
+  # config.hosts << ENV.fetch("API_HOST")
   config.hosts << ENV.fetch("NGROK_HOST")
-  # config.hosts << '127.0.0.1'
+  config.hosts << ENV.fetch("CLIENT_HOST")
+  config.hosts << "localhost:3000"
+  config.hosts << "localhost"
+  config.hosts << "localhost:80"
+  config.hosts << "127.0.0.1"
 end

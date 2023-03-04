@@ -7,10 +7,25 @@ class ReviewIndexSerializer < ActiveModel::Serializer
              :helpfulnesses_count,
              :user_name,
              :user_image,
-             :created_at
+             :created_date,
+             :id,
+             :user_id,
+             :hotel_name
+
+  def created_date
+    (I18n.l object.created_at, format: :long)
+  end
 
   def user_name
     object.user.name
+  end
+
+  def hotel_name
+    object.hotel.name
+  end
+
+  def user_id
+    object.user.id
   end
 
   def user_image

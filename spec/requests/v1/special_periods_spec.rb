@@ -10,7 +10,7 @@ RSpec.describe "V1::SpecialPeriod", type: :request do
 
     context "ログインしている場合" do
       it "ホテルの特別期間が投稿できること" do
-        params = { special_period: { period: "obon", start_date: "2022-08-08", end_date: "2022-08-15" }, day_id: hotel.days.ids[6] }
+        params = { special_period: { period: "obon", start_date: "20220808", end_date: "2022-08-15" }, day_id: hotel.days.ids[6] }
         expect do
           post v1_special_periods_path(hotel.days.ids[6]), params:, headers: auth_tokens
         end.to change(SpecialPeriod, :count).by(1)
@@ -69,7 +69,7 @@ RSpec.describe "V1::SpecialPeriod", type: :request do
         params = { special_period: { period: "obon", start_date: "2022-8-10", end_date: "2022-08-20" }, day_id: }
         patch v1_special_period_path(day_id, special_period_id), params:, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:start_date]).to eq("2022-08-10")
+        expect(symbolized_body(response)[:specialPeriod][:startDate]).to eq("20220810")
       end
     end
 

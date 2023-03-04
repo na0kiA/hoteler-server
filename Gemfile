@@ -5,9 +5,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.2"
 
-gem "rails", "7.0.3.1"
+gem "rails", "7.0.4.2"
 
-rails_version = "7.0.3.1"
+rails_version = "7.0.4.2"
 
 gem "actioncable", rails_version
 gem "actionmailbox", rails_version
@@ -30,6 +30,7 @@ gem "importmap-rails"
 gem "jaro_winkler"
 gem "jbuilder"
 gem "json"
+gem "kaminari"
 gem "msgpack", "~> 1.5", ">= 1.5.2"
 gem "mysql2"
 gem "nokogiri", ">= 1.13.10"
@@ -49,8 +50,8 @@ gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_a
 gem "rack-cors"
 gem "rails_admin"
 
+gem "faker"
 gem "sassc-rails"
-gem 'faker'
 
 group :development, :test do
   gem "bullet"

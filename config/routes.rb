@@ -16,18 +16,18 @@ Rails.application.routes.draw do
         resources :images, only: %i[index show create], controller: "hotel_images"
         resources :days, only: %i[index]
         resource :hotel_facilities, only: %i[update]
-        resource :favorites, only: %i[create destroy]
+        resource :favorites, only: %i[create destroy show]
       end
     end
 
     scope "/days/:day_id" do
-      resources :rest_rates, only: %i[create update destroy]
-      resources :stay_rates, only: %i[create update destroy]
-      resources :special_periods, only: %i[create update destroy]
+      resources :rest_rates, except: %i[show]
+      resources :stay_rates, except: %i[show]
+      resources :special_periods, except: %i[show]
     end
 
     scope "/reviews/:review_id" do
-      resource :helpfulnesses, only: %i[create destroy]
+      resource :helpfulnesses, only: %i[create destroy show]
     end
 
     resources :users, only: %i[index show] do
@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     end
 
     resources :notifications, only: %i[index]
+    resources :notification_or_not, only: %i[index]
 
     resources :search, only: %i[index]
 

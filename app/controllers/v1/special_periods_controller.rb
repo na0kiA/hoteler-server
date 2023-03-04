@@ -4,6 +4,15 @@ class V1::SpecialPeriodsController < ApplicationController
   before_action :authenticate_v1_user!
   before_action :set_special_period, only: %i[update destroy]
 
+  def index
+    special_period = SpecialPeriod.where(day_id: params[:day_id])
+    if special_period.present?
+      render json: special_period, each_serializer: SpecialPeriodSerializer
+    else
+      render json: {}, status: :no_content
+    end
+  end
+
   def create
     special_period = SpecialPeriod.new(special_period_params)
     if special_period.save

@@ -2,7 +2,7 @@ ja:
   devise_token_auth:
     sessions:
       not_confirmed: "'%{email}' に確認用のメールを送信しました。メール内の説明を読み、アカウントの有効化をしてください。"
-      bad_credentials: "ログイン用の認証情報が正しくありません。再度お試しください。"
+      bad_credentials: "メールアドレスかパスワードが間違っています。"
       not_supported: "/sign_in に GET はサポートされていません。POST をお使いください。"
       user_not_found: "ユーザーが見つからないか、ログインしていません。"
     token_validations:
@@ -41,7 +41,7 @@ ja:
     messages:
       validate_sign_up_params: "リクエストボディに適切なアカウント新規登録データを送信してください。"
       validate_account_update_params: "リクエストボディに適切なアカウント更新のデータを送信してください。"
-      not_email: "は有効ではありません"
+      not_email: "無効なメールアドレスです。"
   devise:
     mailer:
       confirmation_instructions:

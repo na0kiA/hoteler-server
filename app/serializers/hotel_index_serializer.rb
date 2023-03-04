@@ -2,25 +2,21 @@
 
 class HotelIndexSerializer < ActiveModel::Serializer
   attributes :name,
-             :content,
-             :company,
-             :phone_number,
-             :postal_code,
              :full_address,
              :full,
              :average_rating,
              :reviews_count,
              :hotel_images,
-             :day_of_the_week,
              :rest_rates,
-             :stay_rates
+             :stay_rates,
+             :id
 
   def hotel_images
-    return "no image" if object.hotel_images.blank?
+    return  if object.hotel_images.blank?
 
     ActiveModelSerializers::SerializableResource.new(
-      object.hotel_images,
-      each_serializer: HotelImageSerializer,
+      object.hotel_images.first,
+      serializer: HotelImageSerializer,
       adapter: :attributes
     ).serializable_hash
   end
@@ -29,52 +25,37 @@ class HotelIndexSerializer < ActiveModel::Serializer
     "#{object.prefecture}#{object.city}#{object.street_address}"
   end
 
-  def day_of_the_week
-    ActiveModelSerializers::SerializableResource.new(
-      select_a_day,
-      each_serializer: DaySerializer,
-      adapter: :attributes
-    ).serializable_hash
-  end
-
   def rest_rates
-    return "営業時間外です" if take_the_rest_rate.blank?
+    return "休憩は営業時間外です" if today_rest_rate.blank?
 
     ActiveModelSerializers::SerializableResource.new(
-      take_the_rest_rate,
-      each_serializer: RestRateSerializer,
+      today_rest_rate.first,
+      serializer: RestRateSerializer,
       adapter: :attributes
     ).serializable_hash
   end
 
   def stay_rates
-    return "宿泊プランはございません" if StayRate.where(day_id: object.days.ids).blank?
+    return "宿泊プランはございません" if today_stay_rate.blank?
 
     ActiveModelSerializers::SerializableResource.new(
-      take_the_stay_rate,
-      each_serializer: StayRateSerializer,
+      today_stay_rate.first,
+      serializer: StayRateSerializer,
       adapter: :attributes
     ).serializable_hash
   end
 
-  def take_the_rest_rate
-    RestBusinessHour.new(date: object.rest_rates.where(day_id: select_a_day.ids)).extract_the_rest_rate
-  end
+  private
 
-  def take_the_stay_rate
-    if SpecialPeriod.check_that_today_is_a_last_day_of_special_periods?(hotel: object)
-      StayBusinessHour.new(stay_rates_of_the_hotel: object.stay_rates.where(day_id: Day.select_a_day_of_the_week.where(hotel_id: object.id).ids)).extract_the_stay_rate
-    else
-      StayBusinessHour.new(stay_rates_of_the_hotel: object.stay_rates.where(day_id: select_a_day.ids)).extract_the_stay_rate
-    end
-  end
+    def today_rest_rate
+      return [] if @instance_options[:services].blank?
 
-  def select_a_day
-    # 特別期間は最終日も含んで抽出している
-    if SpecialPeriod.check_that_today_is_a_special_period?(hotel: object)
-      Day.special_day.where(hotel_id: object.id)
-    else
-      Day.select_a_day_of_the_week.where(hotel_id: object.id)
+      object.rest_rates & @instance_options[:services]
     end
-  end
+
+    def today_stay_rate
+      return [] if @instance_options[:services].blank?
+
+      object.stay_rates & @instance_options[:services]
+    end
 end

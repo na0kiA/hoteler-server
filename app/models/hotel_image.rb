@@ -17,9 +17,9 @@ class HotelImage < ApplicationRecord
     false
   end
 
-  def too_many_value?
-    HotelImage.where(hotel_id:).length > 10
-  end
+  # def too_many_value?
+  #   HotelImage.where(hotel_id:).length > 10
+  # end
 
   def too_many_value?
     return if key.blank?

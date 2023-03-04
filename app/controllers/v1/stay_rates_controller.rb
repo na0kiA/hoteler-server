@@ -4,6 +4,15 @@ class V1::StayRatesController < ApplicationController
   before_action :authenticate_v1_user!
   before_action :set_stay_rate, only: %i[update destroy]
 
+  def index
+    stay_rates = StayRate.where(day_id: params[:day_id])
+    if stay_rates.present?
+      render json: stay_rates, each_serializer: StayRateSerializer
+    else
+      render json: {}, status: :no_content
+    end
+  end
+
   def create
     stay_rate = StayRate.new(stay_rate_params)
     if stay_rate.save

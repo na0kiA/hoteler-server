@@ -5,7 +5,7 @@ services:
     image: mysql:8.0.29-oracle
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - 4306:3306
     volumes:
@@ -22,7 +22,20 @@ services:
       - 3001:3000
     volumes:
       - .:/app
-    command: bundle exec rails s -b '0.0.0.0'
+      - public-data:/app/public
+      - tmp-data:/app/tmp
+    command: 'bundle exec puma -t 5:5 -e production -C config/puma.rb'
+  web:
+    build: ./nginx
+    volumes:
+      - public-data:/app/public
+      - tmp-data:/app/tmp
+    ports:
+      - 80:80
+    depends_on:
+      - api
 volumes:
   mysql-db:
     driver: local
+  public-data:
+  tmp-data:

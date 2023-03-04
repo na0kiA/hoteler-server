@@ -4,6 +4,8 @@ ja:
       default: "%Y/%m/%d %H:%M:%S"
       short: "%m/%d %H:%M"
       hours: "%H:%M"
+      long: "%Y年%m月%d日"
   date:
     formats:
       default: "%m/%d"
+      long: "%Y%m%d"

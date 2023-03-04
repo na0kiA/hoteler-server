@@ -2,16 +2,23 @@
 
 module V1
   class HotelsController < ApplicationController
+    include Pagination
+
     before_action :authenticate_v1_user!, except: %i[index show]
     before_action :set_hotel, only: %i[show update destroy]
 
     def index
-      hotel = Hotel.preload(:hotel_images).accepted
-      render json: hotel, each_serializer: HotelIndexSerializer
+      hotels = Hotel.preload(:hotel_images, :rest_rates, :stay_rates).accepted.page(params[:page])
+      pagination = resources_with_pagination(hotels)
+      services = ExtractTodayService.new(hotels:).extract_today_services
+      render json: hotels, each_serializer: HotelIndexSerializer, services:, meta: { pagination: }
     end
 
     def show
       accepted_hotel = Hotel.accepted.find_by(id: @hotel.id)
+
+      return render json: @hotel, serializer: HotelShowSerializer if current_v1_user == @hotel.user
+
       if accepted_hotel.present?
         render json: accepted_hotel, serializer: HotelShowSerializer
       else

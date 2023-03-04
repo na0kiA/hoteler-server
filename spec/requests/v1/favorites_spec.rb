@@ -43,10 +43,10 @@ RSpec.describe "V1::Favorites", type: :request do
     end
 
     context "お気に入りを既に登録している場合" do
-      it "destroyアクションに内部リダイレクトされること" do
+      it "もう一度POSTしても何も返さないこと" do
         expect { post v1_hotel_favorites_path(accepted_hotel.id), headers: auth_tokens }.to change(Favorite, :count).by(1)
         post v1_hotel_favorites_path(accepted_hotel.id), headers: auth_tokens
-        expect(response.status).to eq(302)
+        expect(response.status).to eq(200)
       end
     end
   end

@@ -5,11 +5,21 @@ class ReviewShowSerializer < ActiveModel::Serializer
              :content,
              :five_star_rate,
              :helpfulnesses_count,
+             :user_id,
              :user_name,
              :user_image,
              :hotel_name,
+             :hotel_average_rating,
              :hotel_image,
-             :created_at
+             :hotel_id,
+             :hotel_full_address,
+             :hotel_reviews_count,
+             :created_date,
+             :id
+
+  def created_date
+    (I18n.l object.created_at, format: :long)
+  end
 
   def user_name
     object.user.name
@@ -23,10 +33,26 @@ class ReviewShowSerializer < ActiveModel::Serializer
     object.hotel.name
   end
 
-  def hotel_image
-    return "no image" if object.hotel.hotel_images.blank?
+  def hotel_id
+    object.hotel.id
+  end
 
-    file_url(object.hotel.hotel_images.first)
+  def hotel_reviews_count
+    object.hotel.reviews_count
+  end
+
+  def hotel_average_rating
+    object.hotel.average_rating
+  end
+
+  def hotel_full_address
+    "#{object.hotel.prefecture}#{object.hotel.city}#{object.hotel.street_address}"
+  end
+
+  def hotel_image
+    return  if object.hotel.hotel_images.blank?
+
+    file_url(object.hotel.hotel_images.first.key)
   end
 
   private

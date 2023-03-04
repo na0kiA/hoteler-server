@@ -23,6 +23,11 @@ module App
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Flash
     config.middleware.use Rack::MethodOverride
+
+    config.middleware.use ActionDispatch::ContentSecurityPolicy::Middleware
+
+    config.action_controller.forgery_protection_origin_check = false
+
     config.middleware.use ActionDispatch::Session::CookieStore, { key: "_app_session" }
 
     config.generators do |g|

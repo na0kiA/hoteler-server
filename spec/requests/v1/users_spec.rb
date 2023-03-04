@@ -7,14 +7,14 @@ RSpec.describe "V1::Users", type: :request do
     context "ユーザーが存在する場合" do
       let_it_be(:client_user) { create(:user) }
 
-      it "フロントに返すJSONのキーは5つであること" do
+      it "フロントに返すJSONのキーは9つであること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response).length).to eq(5)
+        expect(symbolized_body(response)[:user].length).to eq(9)
       end
 
       it "デフォルトの画像が表示されること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response)[:image]).to eq("https://hoteler-image.s3.ap-northeast-1.amazonaws.com/uploads/hoteler/b0e2987c-016e-4ce6-8099-fb8ae43115fc/blank-profile-picture-g89cfeb4dc_640.png")
+        expect(symbolized_body(response)[:user][:image]).to eq("https://hoteler-image.s3.ap-northeast-1.amazonaws.com/uploads/hoteler/b0e2987c-016e-4ce6-8099-fb8ae43115fc/blank-profile-picture-g89cfeb4dc_640.png")
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe "V1::Users", type: :request do
 
       it "keyが変換されたfile_urlが表示されること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response)[:image]).to include("https://")
+        expect(symbolized_body(response)[:user][:image]).to include("https://")
       end
     end
 
@@ -41,8 +41,8 @@ RSpec.describe "V1::Users", type: :request do
 
       it "口コミが全て表示されること" do
         get v1_user_path(client_user.id)
-        expect(symbolized_body(response)[:reviews][0][:user_image]).to include("https://")
-        expect(symbolized_body(response)[:reviews].length).to eq(2)
+        expect(symbolized_body(response)[:user][:reviews][0][:userImage]).to include("https://")
+        expect(symbolized_body(response)[:user][:reviews].length).to eq(2)
       end
     end
 
@@ -54,7 +54,7 @@ RSpec.describe "V1::Users", type: :request do
 
       it "お気に入り一覧が表示されること" do
         get v1_user_path(client_user.id), headers: auth_tokens
-        expect(symbolized_body(response)[:favorites][0][:hotel_name]).to eq(hotel.name)
+        expect(symbolized_body(response)[:user][:favorites][0][:hotelName]).to eq(hotel.name)
       end
     end
 
@@ -66,7 +66,7 @@ RSpec.describe "V1::Users", type: :request do
 
       it "お気に入り一覧が表示されないこと" do
         get v1_user_path(client_user.id), headers: other_user_auth_tokens
-        expect(symbolized_body(response)[:favorites]).to be_blank
+        expect(symbolized_body(response)[:user][:favorites]).to be_blank
       end
     end
   end

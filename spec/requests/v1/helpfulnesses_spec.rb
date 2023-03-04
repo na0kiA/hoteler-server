@@ -37,10 +37,10 @@ RSpec.describe "V1::Helpfulnesses", type: :request do
     end
 
     context "既に押している場合" do
-      it "destroyに内部リダイレクトされること" do
+      it "POSTがもう一度実行されること" do
         expect { post v1_helpfulnesses_path(review_id: review.id), headers: auth_tokens }.to change(Helpfulness, :count).by(1)
         post v1_helpfulnesses_path(review_id: review.id), headers: auth_tokens
-        expect(response.status).to eq(302)
+        expect(response.status).to eq(200)
       end
     end
   end

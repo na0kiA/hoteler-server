@@ -5,7 +5,12 @@ class HotelSort
   private :hotels
 
   def initialize(hotels:)
-    @hotels = hotels
+    @hotels = if hotels.instance_of?(Array)
+                Hotel.where(id: hotels.map(&:id))
+              else
+                hotels
+              end
+    # @hotels = hotels
   end
 
   def sort_by_low_rest
@@ -28,6 +33,13 @@ class HotelSort
     hotels.eager_load(:hotel_images).sort_by(&:reviews_count)
   end
 
+  def select_services(hotel_and_today_services_list = [], sorted_hotels:)
+    sorted_hotels.map do |hotel|
+      hotel_and_today_services_list << extract_open_rest_rate(hotel:) << extract_open_stay_rate(hotel:)
+    end
+    hotel_and_today_services_list.flatten
+  end
+
   private
 
     def sort_rest_or_stay(rest_or_stay:)
@@ -35,14 +47,14 @@ class HotelSort
     end
 
     def select_rest_rates(rest_rate_box: RestRate.none)
-      hotels.eager_load(:days, :rest_rates, :hotel_images).select { |hotel| hotel.rest_rates.present? }.map do |hotel|
+      hotels.select { |hotel| hotel.rest_rates.present? }.map do |hotel|
         rest_rate_box = rest_rate_box.or(extract_open_rest_rate(hotel:))
       end
       rest_rate_box
     end
 
     def select_stay_rates(stay_rates_box: StayRate.none)
-      hotels.eager_load(:days, :stay_rates, :hotel_images).select { |hotel| hotel.stay_rates.present? }.map do |hotel|
+      hotels.select { |hotel| hotel.stay_rates.present? }.map do |hotel|
         stay_rates_box = stay_rates_box.or(extract_open_stay_rate(hotel:))
       end
       stay_rates_box
