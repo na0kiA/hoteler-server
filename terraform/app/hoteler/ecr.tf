@@ -4,8 +4,8 @@ module "nginx" {
   name = "${local.service_name}-nginx"
 }
 
-module "rails" {
+module "ruby" {
   source = "../../modules/ecr"
 
-  name = "${local.service_name}-rails"
+  name = "${local.service_name}-ruby"
 }
