@@ -26,15 +26,11 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ASSUME_ROLE_ARN }}
           role-duration-seconds: 1800
-      # - name: Set env vars for prod
-        # if: github.ref == 'refs/heads/develop'
-        # run: |
-        #   echo "VPC_CIDR=172.31.0.0/16" >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
 
       - run: docker-compose -f docker-compose.production.yml up -d --build api web
-      # - run: docker-compose up -d --build app web
+      
 
       - name: Cache bundle
         id: cache-bundle
@@ -57,7 +53,7 @@ jobs:
         run: |
           docker build \
             --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
-            -f nginx/Dockerfile \
+            -f ./hoteler-server/nginx/Dockerfile \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
@@ -71,7 +67,7 @@ jobs:
         run: |
           docker build \
             --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
-            -f Dockerfile \
+            -f ./hoteler-server/Dockerfile.production \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
