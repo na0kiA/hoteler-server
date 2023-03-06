@@ -30,8 +30,7 @@ jobs:
 
         uses: actions/checkout@v2
 
-        run: |
-          cd ../ && docker-compose -f docker-compose.production.yml up -d --build api web
+      - run: cd ../ && docker-compose -f docker-compose.production.yml up -d --build api web
 
       - name: Cache bundle
         id: cache-bundle
