@@ -26,7 +26,9 @@ services:
       - tmp-data:/app/tmp
     command: 'bundle exec puma -t 5:5 -e production -C config/puma.rb'
   web:
-    build: ./nginx
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
     volumes:
       - public-data:/app/public
       - tmp-data:/app/tmp
