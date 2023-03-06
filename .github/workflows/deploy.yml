@@ -28,7 +28,10 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - run: docker-compose up -d --build api web
+      - name: Docker build
+        run: docker-compose up -d --build api web
+        with:
+          context: .
 
       - name: Cache bundle
         id: cache-bundle
@@ -37,7 +40,7 @@ jobs:
           path: vendor/bundle
           key: gems-v1-${{ hashFiles('Gemfile.lock') }}
 
-      - run: docker-compose exec -T api bundle install -n --prefer-dist --no-dev
+      - run: docker-compose exec -T api bundle
         if: ${{ !steps.cache-bundle.outputs.cache-hit }}
 
       - uses: aws-actions/amazon-ecr-login@v1

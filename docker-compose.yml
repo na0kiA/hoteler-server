@@ -17,7 +17,7 @@ services:
       - db
     build:
       context: .
-      dockerfile: ./hoteler-server/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - 3001:3000
     volumes:
