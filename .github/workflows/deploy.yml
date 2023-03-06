@@ -53,7 +53,7 @@ jobs:
         run: |
           docker build \
             --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
-            -f ./hoteler-server/nginx/Dockerfile \
+            -f nginx/Dockerfile \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
@@ -67,7 +67,7 @@ jobs:
         run: |
           docker build \
             --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
-            -f ./hoteler-server/Dockerfile.production \
+            -f ./Dockerfile.production \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
