@@ -22,20 +22,7 @@ services:
       - 3001:3000
     volumes:
       - .:/app
-      - public-data:/app/public
-      - tmp-data:/app/tmp
-    command: 'bundle exec puma -t 5:5 -e production -C config/puma.rb'
-  web:
-    build: ./nginx
-    volumes:
-      - public-data:/app/public
-      - tmp-data:/app/tmp
-    ports:
-      - 80:80
-    depends_on:
-      - api
+    command: bundle exec rails s -b '0.0.0.0'
 volumes:
   mysql-db:
     driver: local
-  public-data:
-  tmp-data:
