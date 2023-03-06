@@ -5,7 +5,7 @@ services:
     image: mysql:8.0.29-oracle
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: password
     ports:
       - 4306:3306
     volumes:
