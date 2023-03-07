@@ -1,5 +1,8 @@
 name: reviewdog
-on: [pull_request]
+on:
+  push:
+    branches:
+      - develop
 permissions:
   contents: read
   pull_request: write
