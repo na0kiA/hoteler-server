@@ -19,3 +19,9 @@ variable "azs" {
     }
   }
 }
+
+# ALBは1時間あたり0.0243USDかかるのでfalseの場合は作成されるようにする
+variable "enable_alb" {
+  type    = bool
+  default = true
+}
