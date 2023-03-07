@@ -25,3 +25,8 @@ variable "enable_alb" {
   type    = bool
   default = true
 }
+
+variable "desired_count" {
+  type    = number
+  default = 1
+}

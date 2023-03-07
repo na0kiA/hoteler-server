@@ -21,3 +21,13 @@ data "terraform_remote_state" "log_alb" {
     region = "ap-northeast-1"
   }
 }
+
+# data "terraform_remote_state" "lovehoteler_com" {
+#   backend = "s3"
+
+#   config = {
+#     bucket = "na0kia-tfstate"
+#     key    = "hoteler-infra/hoteler_v1.3.9.tfstate"
+#     region = "ap-northeast-1"
+#   }
+# }
