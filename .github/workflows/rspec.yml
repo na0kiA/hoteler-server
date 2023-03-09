@@ -30,7 +30,7 @@ jobs:
         with:
           ruby-version: "3.1.2"
           bundler-cache: true # キャッシュの設定
-          working-directory: hoteler-server # ディレクトリを指定 (ここでも指定しないとキャッシュされない)
+          working-directory: app # ディレクトリを指定 (ここでも指定しないとキャッシュされない)
       - name: Run migration
         run: |
           cp config/database.yml.ci config/database.yml
