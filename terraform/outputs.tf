@@ -2,7 +2,6 @@ output "s3_bucket_this_id" {
   value = aws_s3_bucket.this.id
 }
 
-
 # ALBの作成のためにのサブネットのIDとセキュリティグループのID
 output "security_group_web_id" {
   value = aws_security_group.web.id
