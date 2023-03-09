@@ -1,0 +1,40 @@
+name: Run Rspec
+
+on:
+  push:
+    branches:
+      - feature38
+
+jobs:
+  rspec:
+    name: RSpec
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+    defaults:
+      run:
+        working-directory: hoteler-server
+    services:
+      mysql: # テスト用データベースの設定
+        image: mysql:8.0.29
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes # パスワード空を許可
+          BIND-ADDRESS: 0.0.0.0
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.1.2"
+          bundler-cache: true # キャッシュの設定
+          working-directory: hoteler-server # ディレクトリを指定 (ここでも指定しないとキャッシュされない)
+      - name: Run migration
+        run: |
+          cp config/database.yml.ci config/database.yml
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+      - name: Run RSpec
+        run: bundle exec rspec
