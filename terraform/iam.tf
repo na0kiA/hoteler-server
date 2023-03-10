@@ -1,3 +1,6 @@
+# -------------------------------------------
+# S3: デプロイ用のユーザー
+# -------------------------------------------
 resource "aws_iam_user" "github" {
   name = "${local.service_name}-github"
 
@@ -120,4 +123,20 @@ resource "aws_iam_role_policy" "ecs_task_ssm" {
       ]
     }
   )
+}
+
+# -------------------------------------------
+# S3: 画像アップロード用のユーザー
+# -------------------------------------------
+resource "aws_iam_user" "hoteler-s3-uploader" {
+  name = "${local.service_name}-s3-uploader"
+
+  tags = {
+    Name = "${local.service_name}-s3-uploader"
+  }
+}
+
+resource "aws_iam_user_policy_attachment" "s3_fullaccess_user_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  user = aws_iam_user.hoteler-s3-uploader.name
 }

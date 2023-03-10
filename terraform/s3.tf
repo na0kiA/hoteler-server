@@ -65,3 +65,67 @@ resource "aws_s3_bucket_policy" "this" {
     }
   )
 }
+
+# -------------------------------------------
+# S3: クライアントサイドアップロードの画像用S3
+# -------------------------------------------
+resource "aws_s3_bucket" "hoteler_image_list" {
+  bucket = "hoteler-image-list"
+
+  tags = {
+    Name = "hoteler-image-list"
+  }
+}
+
+resource "aws_s3_bucket_policy" "hoteler_image_list_policy" {
+  bucket = aws_s3_bucket.hoteler_image_list.id
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "DenyPublicAccess",
+          "Effect" : "Deny",
+          "Principal" : "*",
+          "Action" : "s3:*",
+          "Resource" : [
+            "arn:aws:s3:::hoteler-image-list/*"
+          ],
+          # "Condition" : {
+          #   "Bool" : {
+          #     "aws:SecureTransport" : "false"
+          #   }
+          # }
+        },
+        {
+          "Sid" : "AllowSignedUrls",
+          "Effect" : "Allow",
+          "Principal" : "*",
+          "Action" : [
+            "s3:GetObject"
+          ],
+          "Resource" : [
+            "arn:aws:s3:::hoteler-image-list/*"
+          ]
+        }
+      ]
+    }
+  )
+}
+
+resource "aws_s3_bucket_cors_configuration" "hoteler_image_list_cors" {
+  bucket = aws_s3_bucket.hoteler_image_list.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["https://lovehoteler.com", "http://localhost:3000"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+  }
+}

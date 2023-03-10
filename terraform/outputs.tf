@@ -31,6 +31,6 @@ output "vpc_this_id" {
 #   value = aws_db_subnet_group.this.id
 # }
 
-output "lb_target_group_foobar_arn" {
-  value = aws_lb_target_group.hoteler.arn
-}
+# output "lb_target_group_foobar_arn" {
+#   value = aws_lb_target_group.hoteler.arn
+# }
