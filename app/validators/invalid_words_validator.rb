@@ -15,7 +15,7 @@ class InvalidWordsValidator < ActiveModel::EachValidator
 
     def url_and_sign_validator(value)
       invalid_regex = {
-        url_regex: %r{https?://[\w/:%#{Regexp.last_match(0)}?()~.=+\-]+},
+        url_regex: %r{https?://[\w/:%#{Regexp.last_match(0)}?()~.=+-]+},
         html_regex: /<(".*?"|'.*?'|[^'"])*?>/
       }
       invalid_regex.any? { |_invalid_key, invalid_value| invalid_value.match?(value) }

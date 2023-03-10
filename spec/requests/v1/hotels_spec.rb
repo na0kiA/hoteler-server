@@ -22,7 +22,7 @@ RSpec.describe "V1::Hotels", type: :request do
 
     context "ログインしていない場合" do
       it "ホテルの投稿ができないこと" do
-        post v1_hotels_path, params: params, headers: nil
+        post v1_hotels_path, params:, headers: nil
         expect(response).to have_http_status(:unauthorized)
         expect(response.message).to include("Unauthorized")
       end
@@ -31,7 +31,7 @@ RSpec.describe "V1::Hotels", type: :request do
     context "ホテルの投稿ができない場合" do
       it "400を返すこと" do
         params = { hotel: { name: "", content: "hotelContent" } }
-        post v1_hotels_path, params: params, headers: auth_tokens
+        post v1_hotels_path, params:, headers: auth_tokens
         expect(response).to have_http_status(:bad_request)
         expect(response.message).to include("Bad Request")
       end
@@ -57,7 +57,7 @@ RSpec.describe "V1::Hotels", type: :request do
         other_user = create(:user)
         hotel = create(:accepted_hotel, user_id: other_user.id)
         params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user.id } }
-        patch v1_hotel_path(hotel.id), params: params, headers: auth_tokens
+        patch v1_hotel_path(hotel.id), params:, headers: auth_tokens
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -65,7 +65,7 @@ RSpec.describe "V1::Hotels", type: :request do
     context "ログインしていない場合" do
       it "ホテルの編集ができないこと" do
         params = { hotel: { name: "神戸北野", content: "最高峰のラグジュアリーホテルをお届けします", user_id: client_user.id } }
-        patch v1_hotel_path(accepted_hotel.id), params: params
+        patch(v1_hotel_path(accepted_hotel.id), params:)
         expect(response).to have_http_status(:unauthorized)
       end
     end

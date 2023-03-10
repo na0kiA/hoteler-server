@@ -10,7 +10,7 @@ RSpec.describe "V1::Auth::Passwords", type: :request do
     context "パスワードの変更ができる場合" do
       it "200を返すこと" do
         params = { email: client_user.email, redirect_url: "http://localhost:3001/" }
-        post v1_user_password_path, params: params, headers: auth_tokens
+        post v1_user_password_path, params:, headers: auth_tokens
         expect(response.status).to eq(200)
         expect(symbolized_body(response)[:message]).to eq("'#{client_user.email}' にパスワードリセットの案内が送信されました。")
       end
