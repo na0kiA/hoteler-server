@@ -27,12 +27,10 @@ class InvalidWordsValidator < ActiveModel::EachValidator
     end
 
     def blacklist_words_validator(value)
-      blacklist = YAML.load_file("./config/blacklist.yml")
-      blacklist_for_github_action = YAML.load_file("./config/blacklist.yaml")
-      if blacklist.blank?
-        blacklist_for_github_action.any? { |word| value.include?(word) }
+      if File.exist?("./config/blacklist.yml")
+        YAML.load_file("./config/blacklist.yml").any? { |word| value.include?(word) }
       else
-        blacklist.any? { |word| value.include?(word) }
+        YAML.load_file("./config/blacklist.yaml").any? { |word| value.include?(word) }
       end
     end
 end
