@@ -7,7 +7,7 @@ class V1::StayRatesController < ApplicationController
   def index
     stay_rates = StayRate.where(day_id: params[:day_id])
     if stay_rates.present?
-      render json: stay_rates, each_serializer: StayRateSerializer
+      render json: stay_rates.eager_load(:day), each_serializer: StayRateSerializer
     else
       render json: {}, status: :no_content
     end

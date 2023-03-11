@@ -7,7 +7,7 @@ class V1::RestRatesController < ApplicationController
   def index
     rest_rates = RestRate.where(day_id: params[:day_id])
     if rest_rates.present?
-      render json: rest_rates, each_serializer: RestRateSerializer
+      render json: rest_rates.eager_load(:day), each_serializer: RestRateSerializer
     else
       render json: {}, status: :no_content
     end

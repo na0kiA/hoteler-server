@@ -3,6 +3,28 @@
 require "rails_helper"
 
 RSpec.describe "V1::SpecialPeriod", type: :request do
+  describe "GET /v1/day/:day_id/special_periods - v1/day/:day_id/special_periods#index" do
+    let_it_be(:client_user)  { create(:user) }
+    let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
+    let_it_be(:hotel) { create(:completed_profile_hotel, :with_days,  user_id: client_user.id) }
+  
+    context "特別期間がある場合" do
+      it "特別期間を取得できること" do
+        get v1_special_periods_path(hotel.days.ids[6]), headers: auth_tokens
+        expect(response.status).to eq(200)
+      end
+    end
+  
+    context "特別期間がない場合" do
+      it "特別期間の宿泊料金を取得できないこと" do
+        no_special_periods_hotel = create(:completed_profile_hotel, :with_days, user_id: client_user.id)
+        SpecialPeriod.destroy_all
+        get v1_special_periods_path(no_special_periods_hotel.days.ids[6]), headers: auth_tokens
+        expect(response.status).to eq(204)
+      end
+    end
+  end
+
   describe "POST /v1/day/:day_id/special_periods - v1/day/:day_id/special_periods#create" do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
