@@ -43,7 +43,8 @@ resource "aws_security_group" "ecs" {
   ingress {
     from_port = 443
     to_port   = 443
-    protocol  = "-1"
+    protocol  = "tcp"
+    security_groups = [aws_security_group.web.id]
     self      = true
   }
 

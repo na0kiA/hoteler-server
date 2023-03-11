@@ -13,10 +13,10 @@ variable "azs" {
       public_cidr  = "171.32.0.0/20"
       private_cidr = "171.32.48.0/20"
     },
-    c = {
-      public_cidr  = "171.32.16.0/20"
-      private_cidr = "171.32.64.0/20"
-    }
+    # c = {
+    #   public_cidr  = "171.32.16.0/20"
+    #   private_cidr = "171.32.64.0/20"
+    # }
   }
 }
 
