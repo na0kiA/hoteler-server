@@ -7,8 +7,12 @@ output "security_group_web_id" {
   value = aws_security_group.web.id
 }
 
-output "security_group_vpc_id" {
-  value = aws_security_group.vpc.id
+# output "security_group_vpc_id" {
+#   value = aws_security_group.vpc.id
+# }
+
+output "security_group_ecs_id" {
+  value = aws_security_group.ecs.id
 }
 
 # output "security_group_db_hoteler_id" {
@@ -31,6 +35,6 @@ output "vpc_this_id" {
 #   value = aws_db_subnet_group.this.id
 # }
 
-# output "lb_target_group_foobar_arn" {
+# output "lb_target_group_hoteler_arn" {
 #   value = aws_lb_target_group.hoteler.arn
 # }

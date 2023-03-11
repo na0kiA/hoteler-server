@@ -14,7 +14,7 @@
 
 #   security_groups = [
 #     data.terraform_remote_state.network_main.outputs.security_group_web_id,
-#     data.terraform_remote_state.network_main.outputs.security_group_vpc_id
+#     data.terraform_remote_state.network_main.outputs.security_group_ecs_id
 #   ]
 
 #   subnets = [
@@ -38,7 +38,7 @@
 # default_action {
 #   type = "forward"
 
-#   target_group_arn = aws_lb_target_group.foobar.arn
+#   target_group_arn = aws_lb_target_group.hoteler.arn
 # }
 # }
 
