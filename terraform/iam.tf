@@ -102,6 +102,37 @@ resource "aws_iam_role" "ecs_task" {
   }
 }
 
+# -------------------------------------------
+# パラメータストア
+# -------------------------------------------
+resource "aws_iam_policy" "ssm" {
+  name = "${local.service_name}-ssm"
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "ssm:GetParameters",
+            "ssm:GetParameter"
+          ],
+          "Resource" : "arn:aws:ssm:${data.aws_region.current.id}:${data.aws_caller_identity.self.account_id}:parameter/${local.service_name}"
+        }
+      ]
+    }
+  )
+
+  tags = {
+    Name = "${local.service_name}-ssm"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_ssm" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = aws_iam_policy.ssm.arn
+}
+
 resource "aws_iam_role_policy" "ecs_task_ssm" {
   name = "ssm"
   role = aws_iam_role.ecs_task.id
@@ -124,6 +155,8 @@ resource "aws_iam_role_policy" "ecs_task_ssm" {
     }
   )
 }
+
+
 
 # -------------------------------------------
 # S3: 画像アップロード用のユーザー
