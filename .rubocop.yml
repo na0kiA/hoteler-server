@@ -28,20 +28,20 @@ Style/AsciiComments:
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods
 
-Lint/SuppressedException:
-  Enabled: true
+# Lint/SuppressedException:
+#   Enabled: true
 
-Lint/RedundantStringCoercion:
-  Enabled: true
+# Lint/RedundantStringCoercion:
+#   Enabled: true
 
-Naming/MethodParameterName:
-  Enabled: true
+# Naming/MethodParameterName:
+#   Enabled: true
 
-Style/RedundantPercentQ:
-  Enabled: true
+# Style/RedundantPercentQ:
+#   Enabled: true
 
-Layout/TrailingEmptyLines:
-  Enabled: true
+# Layout/TrailingEmptyLines:
+#   Enabled: true
 
 Layout/CommentIndentation:
   Enabled: false

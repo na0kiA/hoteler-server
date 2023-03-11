@@ -66,7 +66,7 @@ RSpec.describe "V1::Notifications", type: :request do
       it "通知を受け取らないこと" do
         get v1_notifications_path, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:title]).to eq("まだ通知はありません。")
+        expect(symbolized_body(response)).to eq([])
       end
     end
 
@@ -103,7 +103,7 @@ RSpec.describe "V1::Notifications", type: :request do
       it "通知を受け取らないこと" do
         get v1_notifications_path, headers: hotel_auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)[:title]).to eq("まだ通知はありません。")
+        expect(symbolized_body(response)).to eq([])
       end
     end
   end

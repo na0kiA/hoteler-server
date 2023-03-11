@@ -25,10 +25,10 @@ class NotificationSerializer < ActiveModel::Serializer
   def image
     if object.kind == "hotel_updates"
       if object.hotel.hotel_images.first&.key.present?
-        Aws::S3::Object.new(ENV.fetch("S3_BUCKET", nil), object.hotel.hotel_images.first&.key).public_url
+        Aws::S3::Object.new(Rails.application.credentials.aws[:s3_bucket], object.hotel.hotel_images.first&.key).public_url
       end
     else
-      Aws::S3::Object.new(ENV.fetch("S3_BUCKET", nil), object.sender.image).public_url
+      Aws::S3::Object.new(Rails.application.credentials.aws[:s3_bucket], object.sender.image).public_url
     end
   end
 
