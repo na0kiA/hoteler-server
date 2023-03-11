@@ -84,23 +84,23 @@ resource "aws_s3_bucket_policy" "hoteler_image_list_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect    = "Allow"
-        Action    = [
+        Effect = "Allow"
+        Action = [
           "s3:GetObject",
           "s3:GetObjectAcl",
         ]
         Principal = {
           AWS = "*"
         }
-        Resource  = "${aws_s3_bucket.hoteler_image_list.arn}/*"
+        Resource = "${aws_s3_bucket.hoteler_image_list.arn}/*"
       },
       {
-        Effect    = "Allow"
-        Action    = "s3:ListBucket"
+        Effect = "Allow"
+        Action = "s3:ListBucket"
         Principal = {
           AWS = "*"
         }
-        Resource  = aws_s3_bucket.hoteler_image_list.arn
+        Resource = aws_s3_bucket.hoteler_image_list.arn
       }
     ]
   })
