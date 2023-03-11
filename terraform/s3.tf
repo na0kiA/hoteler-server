@@ -79,38 +79,31 @@ resource "aws_s3_bucket" "hoteler_image_list" {
 
 resource "aws_s3_bucket_policy" "hoteler_image_list_policy" {
   bucket = aws_s3_bucket.hoteler_image_list.id
-  policy = jsonencode(
-    {
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Sid" : "DenyPublicAccess",
-          "Effect" : "Deny",
-          "Principal" : "*",
-          "Action" : "s3:*",
-          "Resource" : [
-            "arn:aws:s3:::hoteler-image-list/*"
-          ],
-          # "Condition" : {
-          #   "Bool" : {
-          #     "aws:SecureTransport" : "false"
-          #   }
-          # }
-        },
-        {
-          "Sid" : "AllowSignedUrls",
-          "Effect" : "Allow",
-          "Principal" : "*",
-          "Action" : [
-            "s3:GetObject"
-          ],
-          "Resource" : [
-            "arn:aws:s3:::hoteler-image-list/*"
-          ]
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Action    = [
+          "s3:GetObject",
+          "s3:GetObjectAcl",
+        ]
+        Principal = {
+          AWS = "*"
         }
-      ]
-    }
-  )
+        Resource  = "${aws_s3_bucket.hoteler_image_list.arn}/*"
+      },
+      {
+        Effect    = "Allow"
+        Action    = "s3:ListBucket"
+        Principal = {
+          AWS = "*"
+        }
+        Resource  = aws_s3_bucket.hoteler_image_list.arn
+      }
+    ]
+  })
 }
 
 resource "aws_s3_bucket_cors_configuration" "hoteler_image_list_cors" {

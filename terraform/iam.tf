@@ -138,5 +138,5 @@ resource "aws_iam_user" "hoteler-s3-uploader" {
 
 resource "aws_iam_user_policy_attachment" "s3_fullaccess_user_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  user = aws_iam_user.hoteler-s3-uploader.name
+  user       = aws_iam_user.hoteler-s3-uploader.name
 }

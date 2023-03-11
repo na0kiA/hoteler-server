@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
     def set_csrf_token
       cookies["CSRF-TOKEN"] = {
-        domain: ENV.fetch("NGROK_HOST"),
+        domain: "2f7d-180-26-103-7.jp.ngrok.io",
         value: form_authenticity_token,
         same_site: :none,
         secure: true
