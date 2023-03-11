@@ -22,7 +22,7 @@
 #   family = local.service_name
 
 #   # iamに 
-#   # task_role_arn = aws_iam_role.ecs_task.arn
+#   task_role_arn = aws_iam_role.ecs_task.arn
 
 #   network_mode = "awsvpc"
 #   requires_compatibilities = [
@@ -125,16 +125,17 @@
 #   load_balancer {
 #     container_name   = "nginx"
 #     container_port   = 80
-#     target_group_arn = data.terraform_remote_state.lovehoteler_com.outputs.lb_target_group_foobar_arn
+#     target_group_arn = data.terraform_remote_state.lovehoteler_com.outputs.lb_target_group_hoteler_arn
 #   }
 #   health_check_grace_period_seconds = 60
 #   network_configuration {
 #     assign_public_ip = true
 #     security_groups = [
-#       data.terraform_remote_state.network_main.outputs.security_group_vpc_id
+#       data.terraform_remote_state.network_main.outputs.security_group_ecs_id
 #     ]
 #     subnets = [
 #       for s in data.terraform_remote_state.network_main.outputs.subnet_public : s.id
+#       # data.terraform_remote_state.network_main.outputs.subnet_public["a"].id
 #     ]
 #   }
 #   enable_execute_command = true
