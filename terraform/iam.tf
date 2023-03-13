@@ -120,7 +120,7 @@ resource "aws_iam_policy" "codedeploy" {
           "codedeploy:CreateDeploymentGroup"
         ]
         "Resource" : [
-          "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.self.account_id}:deploymentgroup:${local.service_name}-codedeploy-app/${local.service_name}-codedeploy-dg"
+          "*"
         ]
       },
     ]
