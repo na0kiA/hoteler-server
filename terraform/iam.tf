@@ -59,11 +59,6 @@ resource "aws_iam_policy" "ecs_task_describe" {
           "Action" : ["ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition", "ecs:DescribeTasks", "ecs:ListTasks"]
           "Resource" : "*"
         },
-        {
-            "Effect": "Allow",
-            "Action": ["iam:GetRole", "iam:PassRole"],
-            "Resource": "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/**"
-        }
       ]
     }
   )
@@ -78,6 +73,30 @@ resource "aws_iam_role_policy_attachment" "role_deployer_policy_ecs_task_describ
   policy_arn = aws_iam_policy.ecs_task_describe.arn
 }
 
+resource "aws_iam_policy" "ecs_pass_role" {
+  name        = "${local.service_name}-ecs-pass-role"
+  description = "Policy to allow IAM role pass role permission"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = "iam:PassRole"
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+
+  tags = {
+    Name = "${local.service_name}-ecs-pass-role"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "deployer-ecs-pass-role" {
+  policy_arn = aws_iam_policy.ecs_pass_role.arn
+  role       = aws_iam_role.deployer.name
+}
 
 # -------------------------------------------
 # ECSタスク実行ロール
