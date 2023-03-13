@@ -33,29 +33,29 @@ resource "aws_security_group" "ecs" {
   vpc_id = aws_vpc.this.id
 
   ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
     # security_groups = [aws_security_group.web.id]
   }
 
   ingress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
     # security_groups = [aws_security_group.web.id]
-    self            = true
+    self = true
   }
 
   ingress {
-    from_port       = 10080
-    to_port         = 10080
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 10080
+    to_port     = 10080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
     # security_groups = [aws_security_group.web.id]
-    self            = true
+    self = true
   }
 
   egress {
@@ -75,9 +75,9 @@ resource "aws_security_group" "db" {
   vpc_id = aws_vpc.this.id
 
   ingress {
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
     # security_groups = [aws_security_group.ecs.id]
   }
 
