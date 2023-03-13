@@ -71,12 +71,12 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Deploy to Amazon ECS
-          uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-          with:
-              task-definition: ${{ steps.task-def.outputs.task-definition }}
-              service: ${{ env.ECS_SERVICE_NAME }}
-              cluster: ${{ env.ECS_CLUSTER_NAME }} 
-              wait-for-service-stability: false
-              codedeploy-appspec: appspec.yaml
-              codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION }}
-              codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP }}
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_NAME }}
+          cluster: ${{ env.ECS_CLUSTER_NAME }} 
+          wait-for-service-stability: false
+          codedeploy-appspec: appspec.yaml
+          codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION }}
+          codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP }}
