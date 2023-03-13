@@ -70,13 +70,16 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition $SERVICE_NAME --query taskDefinition > task-definition.json
+
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE_NAME }}
-          cluster: ${{ env.ECS_CLUSTER_NAME }} 
-          wait-for-service-stability: false
-          codedeploy-appspec: appspec.yaml
-          codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION }}
-          codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP }}
+          task-definition: task-definition.json
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.SERVICE_NAME }}
+          codedeploy-appspec: appspec.yml
+          codedeploy-application: hoteler-codedeploy-app
+          codedeploy-deployment-group: hoteler-codedeploy-dg
