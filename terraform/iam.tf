@@ -83,7 +83,11 @@ resource "aws_iam_policy" "ecs_pass_role" {
       {
         Action   = "iam:PassRole"
         Effect   = "Allow"
-        Resource = ["arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task-execution", "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task"]
+        Resource = [
+          "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task-execution",
+          "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task",
+          "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/*"
+          ]
       },
     ]
   })
