@@ -20,11 +20,11 @@ resource "aws_iam_role" "deployer" {
           "Effect" : "Allow",
           "Action" : [
             "sts:AssumeRole",
-            "sts:TagSession",
+            "sts:TagSession"
           ],
           "Principal" : {
             "AWS" : aws_iam_user.github.arn
-          }
+          },
         }
       ]
     }
@@ -83,7 +83,7 @@ resource "aws_iam_policy" "ecs_pass_role" {
       {
         Action   = "iam:PassRole"
         Effect   = "Allow"
-        Resource = "*"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task-execution"
       },
     ]
   })
