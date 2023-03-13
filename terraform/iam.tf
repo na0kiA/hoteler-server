@@ -110,21 +110,28 @@ resource "aws_iam_policy" "codedeploy" {
 
   policy = jsonencode({
     "Version" : "2012-10-17"
-    "Statement" : [
-      {
-        "Effect"   : "Allow"
-        "Action"   : [
-          "codedeploy:GetDeploymentGroup",
-          "codedeploy:GetDeployment",
-          "codedeploy:GetDeploymentConfig",
-          "codedeploy:CreateDeploymentConfig",
-          "codedeploy:CreateDeployment",
-          "codedeploy:CreateDeploymentGroup"
-        ]
-        "Resource" : [
-          "*"
-        ]
-      },
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "codedeploy:Get*",
+                "codedeploy:BatchGet*",
+                "codedeploy:List*"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "codedeploy:*"
+            ],
+            "Resource": [
+              "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.self.account_id}:deploymentgroup:${local.service_name}-codedeploy-app/${local.service_name}-codedeploy-dg",
+              "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.self.account_id}:application:${local.service_name}-codedeploy-app"
+            ]
+        }
     ]
   })
 
