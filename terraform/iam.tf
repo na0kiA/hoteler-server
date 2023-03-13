@@ -133,7 +133,7 @@ resource "aws_iam_policy" "codedeploy" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "codedeploy_role" {
+resource "aws_iam_role_policy_attachment" "codedeploy" {
   role       = aws_iam_role.deployer.name
   policy_arn = aws_iam_policy.codedeploy.arn
 }
