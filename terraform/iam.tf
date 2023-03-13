@@ -56,7 +56,7 @@ resource "aws_iam_policy" "ecs_task_describe" {
       "Statement" : [
         {
           "Effect" : "Allow",
-          "Action" : ["ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition", "ecs:DescribeTasks", "ecs:ListTasks"]
+          "Action" : ["ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition", "ecs:DescribeTasks", "ecs:ListTasks", "ecs:DescribeServices", "ecs:UpdateService", "ecs:ListClusters", "ecs:ListTasks"]
           "Resource" : "*"
         },
       ]
