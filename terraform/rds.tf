@@ -11,7 +11,7 @@ resource "aws_db_subnet_group" "this" {
 }
 
 resource "aws_db_parameter_group" "this" {
-  name = "${local.service_name}"
+  name = local.service_name
 
   family = "mysql8.0"
 
@@ -101,7 +101,7 @@ resource "aws_db_instance" "this" {
 
   iam_database_authentication_enabled = false
 
-  db_name                 = "hoteler_server_db"
+  db_name              = "hoteler_server_db"
   parameter_group_name = aws_db_parameter_group.this.name
 
   backup_retention_period  = 1

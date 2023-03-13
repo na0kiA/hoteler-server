@@ -45,7 +45,9 @@ resource "aws_iam_role_policy_attachment" "role_deployer_policy_ecr_power_user" 
 }
 
 
+# -------------------------------------------
 # ECSタスク実行ロール
+# -------------------------------------------
 resource "aws_iam_role" "ecs_task_execution" {
   name = "${local.service_name}-ecs-task-execution"
 
@@ -58,7 +60,7 @@ resource "aws_iam_role" "ecs_task_execution" {
           "Principal" : {
             "Service" : "ecs-tasks.amazonaws.com"
           },
-          "Action" : "sts:AssumeRole"
+          "Action" : ["sts:AssumeRole"]
         }
       ]
     }
@@ -78,7 +80,63 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = data.aws_iam_policy.ecs_task_execution.arn
 }
 
-#ECS Execを利用するためのロール
+# -------------------------------------------
+# ECSからパラメータストア取得用のポリシー
+# -------------------------------------------
+resource "aws_iam_policy" "ssm" {
+  name = "${local.service_name}-ssm"
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "ssm:GetParameters",
+            "ssm:GetParameter"
+          ],
+          "Resource" : "arn:aws:ssm:${data.aws_region.current.id}:${data.aws_caller_identity.self.account_id}:parameter/*"
+        }
+      ]
+    }
+  )
+
+  tags = {
+    Name = "${local.service_name}-ssm"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_ssm" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = aws_iam_policy.ssm.arn
+}
+
+# -------------------------------------------
+# ECS Execを利用するためのロール
+# -------------------------------------------
+resource "aws_iam_role_policy" "ecs_task_ssm" {
+  name = "ssm"
+  role = aws_iam_role.ecs_task.id
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "ssmmessages:CreateControlChannel",
+            "ssmmessages:CreateDataChannel",
+            "ssmmessages:OpenControlChannel",
+            "ssmmessages:OpenDataChannel"
+          ],
+          "Resource" : "*"
+        }
+      ]
+    }
+  )
+}
+
 resource "aws_iam_role" "ecs_task" {
   name = "${local.service_name}-ecs-task"
 
@@ -103,60 +161,24 @@ resource "aws_iam_role" "ecs_task" {
 }
 
 # -------------------------------------------
-# パラメータストア
+# CodeDeploy用のロール
 # -------------------------------------------
-resource "aws_iam_policy" "ssm" {
-  name = "${local.service_name}-ssm"
-  policy = jsonencode(
-    {
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Effect" : "Allow",
-          "Action" : [
-            "ssm:GetParameters",
-            "ssm:GetParameter"
-          ],
-          "Resource" : "arn:aws:ssm:${data.aws_region.current.id}:${data.aws_caller_identity.self.account_id}:parameter/${local.service_name}"
-        }
-      ]
-    }
-  )
+# resource "aws_iam_role" "ecs_code_deploy" {
+#   name = "ecs-code-deploy"
 
-  tags = {
-    Name = "${local.service_name}-ssm"
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_ssm" {
-  role       = aws_iam_role.ecs_task_execution.name
-  policy_arn = aws_iam_policy.ssm.arn
-}
-
-resource "aws_iam_role_policy" "ecs_task_ssm" {
-  name = "ssm"
-  role = aws_iam_role.ecs_task.id
-
-  policy = jsonencode(
-    {
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Effect" : "Allow",
-          "Action" : [
-            "ssmmessages:CreateControlChannel",
-            "ssmmessages:CreateDataChannel",
-            "ssmmessages:OpenControlChannel",
-            "ssmmessages:OpenDataChannel"
-          ],
-          "Resource" : "*"
-        }
-      ]
-    }
-  )
-}
-
-
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = "sts:AssumeRole"
+#         Effect = "Allow"
+#         Principal = {
+#           Service = "codedeploy.amazonaws.com"
+#         }
+#       }
+#     ]
+#   })
+# }
 
 # -------------------------------------------
 # S3: 画像アップロード用のユーザー

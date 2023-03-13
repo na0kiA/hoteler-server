@@ -27,9 +27,9 @@ output "vpc_this_id" {
   value = aws_vpc.this.id
 }
 
-# output "lb_target_group_hoteler_arn" {
-#   value = aws_lb_target_group.hoteler.arn
-# }
+output "lb_target_group_blue_tg_arn" {
+  value = aws_lb_target_group.blue_tg.arn
+}
 
 output "db_subnet_group_this_id" {
   value = aws_db_subnet_group.this.id
