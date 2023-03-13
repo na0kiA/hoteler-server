@@ -58,6 +58,16 @@ resource "aws_iam_policy" "ecs_task_describe" {
           "Effect" : "Allow",
           "Action" : ["ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition", "ecs:DescribeTasks", "ecs:ListTasks"]
           "Resource" : "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "iam:GetRole",
+            "Resource": "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task"
         }
       ]
     }
