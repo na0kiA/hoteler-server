@@ -20,7 +20,7 @@ resource "aws_iam_role" "deployer" {
           "Effect" : "Allow",
           "Action" : [
             "sts:AssumeRole",
-            "sts:TagSession"
+            "sts:TagSession",
           ],
           "Principal" : {
             "AWS" : aws_iam_user.github.arn
@@ -42,6 +42,35 @@ data "aws_iam_policy" "ecr_power_user" {
 resource "aws_iam_role_policy_attachment" "role_deployer_policy_ecr_power_user" {
   role       = aws_iam_role.deployer.name
   policy_arn = data.aws_iam_policy.ecr_power_user.arn
+}
+
+# -------------------------------------------
+# github actionsでタスク定義ファイルを作成するための権限
+# -------------------------------------------
+resource "aws_iam_policy" "ecs_task_describe" {
+  name = "${local.service_name}-ecs-task-describe"
+
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : "ecs:DescribeTaskDefinition",
+          "Resource": "*"
+        }
+      ]
+    }
+  )
+
+  tags = {
+    Name = "${local.service_name}-ecs-task-describe"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "role_deployer_policy_ecs_task_describe" {
+  role       = aws_iam_role.deployer.name
+  policy_arn = aws_iam_policy.ecs_task_describe.arn
 }
 
 
@@ -160,25 +189,6 @@ resource "aws_iam_role" "ecs_task" {
   }
 }
 
-# -------------------------------------------
-# CodeDeploy用のロール
-# -------------------------------------------
-# resource "aws_iam_role" "ecs_code_deploy" {
-#   name = "ecs-code-deploy"
-
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole"
-#         Effect = "Allow"
-#         Principal = {
-#           Service = "codedeploy.amazonaws.com"
-#         }
-#       }
-#     ]
-#   })
-# }
 
 # -------------------------------------------
 # S3: 画像アップロード用のユーザー
