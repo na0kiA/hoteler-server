@@ -77,20 +77,22 @@ resource "aws_iam_policy" "ecs_pass_role" {
   name        = "${local.service_name}-ecs-pass-role"
   description = "Policy to allow IAM role pass role permission"
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = "iam:PassRole"
-        Effect   = "Allow"
-        Resource = [
-          "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task-execution",
-          "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task",
-          "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/*"
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17"
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : "iam:PassRole",
+          "Resource" : [
+            "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task-execution",
+            "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/hoteler-ecs-task",
+            "arn:aws:iam::${data.aws_caller_identity.self.account_id}:role/*"
           ]
-      },
-    ]
-  })
+        },
+      ]
+    }
+  )
 
   tags = {
     Name = "${local.service_name}-ecs-pass-role"
@@ -98,8 +100,8 @@ resource "aws_iam_policy" "ecs_pass_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "deployer-ecs-pass-role" {
-  policy_arn = aws_iam_policy.ecs_pass_role.arn
   role       = aws_iam_role.deployer.name
+  policy_arn = aws_iam_policy.ecs_pass_role.arn
 }
 
 # -------------------------------------------
