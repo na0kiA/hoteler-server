@@ -31,9 +31,9 @@ output "vpc_this_id" {
 #   value = aws_lb_target_group.hoteler.arn
 # }
 
-# output "db_subnet_group_this_id" {
-#   value = aws_db_subnet_group.this.id
-# }
+output "db_subnet_group_this_id" {
+  value = aws_db_subnet_group.this.id
+}
 
 # output "rds_endpoint" {
 #   value = aws_db_instance.this.address
