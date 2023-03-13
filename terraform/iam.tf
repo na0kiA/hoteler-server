@@ -56,7 +56,7 @@ resource "aws_iam_policy" "ecs_task_describe" {
       "Statement" : [
         {
           "Effect" : "Allow",
-          "Action" : ["ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition", "ecs:DescribeTasks", "ecs:ListTasks", "ecs:DescribeServices", "ecs:UpdateService", "ecs:ListClusters", "ecs:ListTasks", "codedeploy:GetDeploymentGroup"]
+          "Action" : ["ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition", "ecs:DescribeTasks", "ecs:ListTasks", "ecs:DescribeServices", "ecs:UpdateService", "ecs:ListClusters", "ecs:ListTasks"]
           "Resource" : "*"
         },
       ]
@@ -102,6 +102,35 @@ resource "aws_iam_policy" "ecs_pass_role" {
 resource "aws_iam_role_policy_attachment" "deployer-ecs-pass-role" {
   role       = aws_iam_role.deployer.name
   policy_arn = aws_iam_policy.ecs_pass_role.arn
+}
+
+resource "aws_iam_policy" "codedeploy" {
+  name        = "${local.service_name}-codedeploy"
+  description = "IAM policy for CodeDeploy"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17"
+    "Statement" : [
+      {
+        "Effect"   : "Allow"
+        "Action"   : [
+          "codedeploy:GetDeploymentGroup",
+        ]
+        "Resource" : [
+          "arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.self.account_id}:deploymentgroup:${local.service_name}-codedeploy-app/${local.service_name}-codedeploy-dg"
+        ]
+      },
+    ]
+  })
+
+  tags = {
+    Name = "${local.service_name}-codedeploy"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "codedeploy_role" {
+  role       = aws_iam_role.deployer.name
+  policy_arn = aws_iam_policy.codedeploy.arn
 }
 
 # -------------------------------------------
