@@ -116,6 +116,8 @@ resource "aws_iam_policy" "codedeploy" {
         "Action"   : [
           "codedeploy:GetDeploymentGroup",
           "codedeploy:GetDeployment",
+          "codedeploy:GetDeploymentConfig",
+          "codedeploy:CreateDeploymentConfig",
           "codedeploy:CreateDeployment",
           "codedeploy:CreateDeploymentGroup"
         ]
