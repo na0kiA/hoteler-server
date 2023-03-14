@@ -54,11 +54,16 @@ RUN apk update && \
 
 WORKDIR ${ROOT}
 
+RUN mkdir -p tmp/sockets
+
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY . ${ROOT}
 COPY entrypoint.prod.sh /usr/bin/
 
 RUN chmod +x /usr/bin/entrypoint.prod.sh
 ENTRYPOINT ["entrypoint.prod.sh"]
+
+VOLUME /${ROOT}/public
+VOLUME /${ROOT}/tmp
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
