@@ -8,6 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - mysql-db:/var/lib/mysql
+      - ./db:/var/lib/mysql
   api:
     tty: true
     stdin_open: true
@@ -19,8 +20,8 @@ services:
     ports:
       - 3001:3000
     volumes:
-      # - public-data:/app/public
-      # - tmp-data:/app/tmp
+      - public-data:/app/public
+      - tmp-data:/app/tmp
       - .:/app
   web:
     build:
@@ -29,15 +30,15 @@ services:
     volumes:
       - ./nginx:/app/public
       - ./tmp/sockets:/app/tmp/sockets
+      - public-data:/app/public
+      - tmp-data:/app/tmp
     # volumes:
-    #   - public-data:/app/public
-    #   - tmp-data:/app/tmp
     ports:
       - 80:80
     depends_on:
       - api
-# volumes:
-#   mysql-db:
-#     driver: local
-#   public-data:
-#   tmp-data:
+volumes:
+  mysql-db:
+    driver: local
+  public-data:
+  tmp-data:
