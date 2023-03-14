@@ -6,6 +6,6 @@ RUN rm -f /etc/nginx/conf.d/*
 # Nginxの設定ファイルをコンテナにコピー
 COPY nginx/nginx.conf /etc/nginx/conf.d/nginx.conf
 
-COPY ./tmp/sockets/puma.sock /tmp/sockets/puma.sock
+# COPY ./tmp/sockets/puma.sock /tmp/sockets/puma.sock
 
 EXPOSE 80
