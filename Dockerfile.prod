@@ -10,6 +10,8 @@ ENV RAILS_MASTER_KEY ${RAILS_MASTER_KEY}
 
 WORKDIR ${ROOT}
 
+RUN mkdir -p tmp/sockets
+
 RUN apk update && \
     apk add --no-cache \
         gcc \
@@ -29,6 +31,9 @@ RUN apk update && \
 
 COPY Gemfile ${ROOT}
 COPY Gemfile.lock ${ROOT}
+
+VOLUME /${ROOT}/public
+VOLUME /${ROOT}/tmp
 
 RUN bundle install
 RUN apk del build-packs

@@ -25,8 +25,8 @@ services:
       context: .
       dockerfile: ./nginx/Dockerfile
     volumes:
-      - .:/app/public
-      - .:/app/tmp/sockets
+      - ./nginx:/app/public
+      - ./tmp/sockets:/app/tmp/sockets
     ports:
       - 80:80
     depends_on:
