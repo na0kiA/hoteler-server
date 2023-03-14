@@ -70,7 +70,8 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_options = { from: Rails.application.credentials.email[:address] }
-  config.action_mailer.default_url_options = { host: "localhost" }
+  # config.action_mailer.default_url_options = { host: "localhost" }
+  config.action_mailer.default_url_options = { host: "lovehoteler.com" }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
@@ -107,6 +108,7 @@ Rails.application.configure do
 
   config.hosts << "2f7d-180-26-103-7.jp.ngrok.io"
   config.hosts << "localhost"
+  config.hosts << "lovehoteler.com"
   config.hosts << "localhost:80"
   config.hosts << "127.0.0.1"
 end

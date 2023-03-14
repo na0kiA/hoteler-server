@@ -9,4 +9,4 @@ COPY nginx/nginx.conf /etc/nginx/conf.d/nginx.conf
 # ビルド完了後にNginxを起動
 # CMD /usr/sbin/nginx -g 'daemon off;' -c /etc/nginx/nginx.conf
 
-# EXPOSE 80
+EXPOSE 80
