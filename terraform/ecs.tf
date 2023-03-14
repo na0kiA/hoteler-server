@@ -51,6 +51,12 @@ resource "aws_ecs_task_definition" "this" {
             condition     = "START"
           }
         ]
+        mountPoints = [
+          {
+            sourceVolume = "tmp-data"
+            containerPath = "/app/tmp"
+          }
+        ],
         logConfiguration = {
           logDriver = "awslogs"
           options = {
@@ -96,6 +102,10 @@ resource "aws_ecs_task_definition" "this" {
       }
     ]
   )
+
+  volume {
+    name = "tmp-data"
+  }
 
   tags = {
     Name = "${local.service_name}"
