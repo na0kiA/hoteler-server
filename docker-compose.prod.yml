@@ -6,8 +6,6 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-    ports:
-      - 4306:3306
     volumes:
       - mysql-db:/var/lib/mysql
   api:
@@ -17,7 +15,7 @@ services:
       - db
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.prod
     ports:
       - 3001:3000
     volumes:

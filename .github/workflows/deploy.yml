@@ -27,48 +27,48 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      # - run: docker-compose up -d --build api web
+      - run: docker-compose -f docker-compose.prod.yml up -d --build api web
 
-      # - name: Cache bundle
-      #   id: cache-bundle
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: vendor/bundle
-      #     key: gems-v1-${{ hashFiles('Gemfile.lock') }}
+      - name: Cache bundle
+        id: cache-bundle
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: gems-v1-${{ hashFiles('Gemfile.lock') }}
 
-      # - run: docker-compose exec -T api bundle
-      #   if: ${{ !steps.cache-bundle.outputs.cache-hit }}
+      - run: docker-compose -f docker-compose.prod.yml exec -T api bundle
+        if: ${{ !steps.cache-bundle.outputs.cache-hit }}
 
-      # - uses: aws-actions/amazon-ecr-login@v1
-      #   id: amazon-ecr-login
+      - uses: aws-actions/amazon-ecr-login@v1
+        id: amazon-ecr-login
 
-      # - name: Push nginx image to ecr
-      #   env:
-      #     DOCKER_BUILDKIT: 1
-      #     ECR_REGISTRY: ${{ steps.amazon-ecr-login.outputs.registry }}
-      #     ECR_REPOSITORY: ${{ env.SERVICE_NAME }}-nginx
-      #   run: |
-      #     docker build \
-      #       --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
-      #       -f nginx/Dockerfile \
-      #       -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
-      #       -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Push nginx image to ecr
+        env:
+          DOCKER_BUILDKIT: 1
+          ECR_REGISTRY: ${{ steps.amazon-ecr-login.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.SERVICE_NAME }}-nginx
+        run: |
+          docker build \
+            --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
+            -f nginx/Dockerfile \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      # - name: Push ruby image to ecr
-      #   env:
-      #     DOCKER_BUILDKIT: 1
-      #     ECR_REGISTRY: ${{ steps.amazon-ecr-login.outputs.registry }}
-      #     ECR_REPOSITORY: ${{ env.SERVICE_NAME }}-ruby
-      #   run: |
-      #     docker build \
-      #       --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
-      #       -f Dockerfile \
-      #       -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
-      #       -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Push ruby image to ecr
+        env:
+          DOCKER_BUILDKIT: 1
+          ECR_REGISTRY: ${{ steps.amazon-ecr-login.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.SERVICE_NAME }}-ruby
+        run: |
+          docker build \
+            --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
+            -f Dockerfile.prod \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Download task definition
         run: |
