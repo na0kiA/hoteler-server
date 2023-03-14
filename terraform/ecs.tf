@@ -36,6 +36,12 @@ resource "aws_ecs_task_definition" "this" {
         memory    = 512
         essential = true
         image     = "${module.nginx.ecr_repository_this_repository_url}:latest"
+        volumesFrom = [
+            {
+              readonly        = null,
+              sourceContainer = "ruby"
+            }
+          ]
         portMappings = [
           {
             containerPort = 80
@@ -51,12 +57,12 @@ resource "aws_ecs_task_definition" "this" {
             condition     = "START"
           }
         ]
-        mountPoints = [
-          {
-            sourceVolume = "tmp-data"
-            containerPath = "/app/tmp"
-          }
-        ],
+        # mountPoints = [
+        #   {
+        #     sourceVolume = "tmp-data"
+        #     containerPath = "/app/tmp"
+        #   }
+        # ],
         logConfiguration = {
           logDriver = "awslogs"
           options = {
@@ -103,9 +109,10 @@ resource "aws_ecs_task_definition" "this" {
     ]
   )
 
-  volume {
-    name = "tmp-data"
-  }
+  # volume {
+  #   name = "tmp-data"
+  #   host_path = "/var/lib/docker/volumes/hoteler-server_tmp-data/_data"
+  # }
 
   tags = {
     Name = "${local.service_name}"
