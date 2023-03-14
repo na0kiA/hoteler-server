@@ -8,7 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - mysql-db:/var/lib/mysql
-      - ./db:/var/lib/mysql
+      # - ./db:/var/lib/mysql
   api:
     tty: true
     stdin_open: true
