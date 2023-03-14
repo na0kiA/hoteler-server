@@ -7,5 +7,6 @@ RUN rm -f /etc/nginx/conf.d/*
 COPY nginx/nginx.conf /etc/nginx/conf.d/nginx.conf
 
 # COPY ./tmp/sockets/puma.sock /tmp/sockets/puma.sock
+RUN mkdir -p app/tmp/sockets
 
 EXPOSE 80
