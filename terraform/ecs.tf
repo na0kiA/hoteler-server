@@ -69,21 +69,21 @@ resource "aws_ecs_task_definition" "this" {
         environment  = []
         secrets = [
           {
-            name      = "hoteler"
-            valueFrom = "/${local.service_name}"
+            name      = "RAILS_MASTER_KEY"
+            valueFrom = "/${local.service_name}/RAILS_MASTER_KEY"
           },
-          # {
-          #   name      = "DB_USERNAME",
-          #   valueFrom = "/container-param/db-username"
-          # },
+          {
+            name      = "DB_USERNAME",
+            valueFrom = "/${local.service_name}/DB_USERNAME"
+          },
           {
             name      = "DB_PASSWORD",
             valueFrom = "/${local.service_name}/DB_PASSWORD"
           },
-          # {
-          #   name      = "DB_HOST",
-          #   valueFrom = "/container-param/db-host"
-          # }
+          {
+            name      = "DB_HOST",
+            valueFrom = "/${local.service_name}/DB_HOST"
+          }
         ]
         logConfiguration = {
           logDriver = "awslogs"
