@@ -20,19 +20,18 @@ services:
     ports:
       - 3001:3000
     volumes:
-      # - public-data:/app/public
-      # - tmp-data:/app/tmp
-      - .:/app
+      # - .:/app
+      - public-data:/app/public
+      - tmp-data:/app/tmp
   web:
     build:
       context: .
       dockerfile: ./nginx/Dockerfile
     volumes:
-      - ./nginx:/app/public
-      - ./tmp/sockets:/app/tmp/sockets
-      # - public-data:/app/public
-      # - tmp-data:/app/tmp
-    # volumes:
+      # - ./nginx:/app/public
+      # - ./tmp/sockets:/app/tmp/sockets
+      - public-data:/app/public
+      - tmp-data:/app/tmp
     ports:
       - 80:80
     depends_on:
@@ -40,5 +39,5 @@ services:
 volumes:
   mysql-db:
     driver: local
-#   public-data:
-#   tmp-data:
+  public-data:
+  tmp-data:
