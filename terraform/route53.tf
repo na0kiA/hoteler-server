@@ -28,4 +28,10 @@ resource "aws_route53_record" "root_a" {
     name                   = aws_lb.this.dns_name
     zone_id                = aws_lb.this.zone_id
   }
+
+  geolocation_routing_policy {
+    country = "JP"
+  }
+
+  set_identifier = "allow-from-japan-and-us"
 }

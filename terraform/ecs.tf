@@ -37,11 +37,11 @@ resource "aws_ecs_task_definition" "this" {
         essential = true
         image     = "${module.nginx.ecr_repository_this_repository_url}:latest"
         volumesFrom = [
-            {
-              readonly        = null,
-              sourceContainer = "ruby"
-            }
-          ]
+          {
+            readonly        = null,
+            sourceContainer = "ruby"
+          }
+        ]
         portMappings = [
           {
             containerPort = 80
