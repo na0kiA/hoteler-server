@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => "/admin", as: "rails_admin"
 
   namespace :v1 do
-    resources :healthcheck, only: [:index]
+    resources :healthcheck, only: %i[index]
+    resources :test, only: %i[index]
 
     mount_devise_token_auth_for "User", at: "auth", controllers: {
       registrations: "v1/auth/registrations"
