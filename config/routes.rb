@@ -2,10 +2,8 @@
 
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => "/admin", as: "rails_admin"
-  
-  namespace :v1 do
-    root to: "home#index", as: :home
 
+  namespace :v1 do
     resources :healthcheck, only: [:index]
 
     mount_devise_token_auth_for "User", at: "auth", controllers: {
