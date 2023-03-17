@@ -67,40 +67,44 @@ resource "aws_lb_listener" "custom_10080" {
 
 resource "aws_lb_target_group" "blue_tg" {
   name                 = "${local.service_name}-blue-tg"
-  deregistration_delay = 60
+  deregistration_delay = 300
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.terraform_remote_state.network_main.outputs.vpc_this_id
 
   health_check {
-    healthy_threshold   = 2
-    interval            = 30
+    healthy_threshold   = 3
+    interval            = 60
     matcher             = 200
-    path                = "/"
+    path                = "/v1/hotels"
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = 5
     unhealthy_threshold = 2
   }
+
+  depends_on = [aws_lb.this]
 }
 
 resource "aws_lb_target_group" "green_tg" {
   name                 = "${local.service_name}-green-tg"
-  deregistration_delay = 60
+  deregistration_delay = 300
   port                 = 10080
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.terraform_remote_state.network_main.outputs.vpc_this_id
 
   health_check {
-    healthy_threshold   = 2
-    interval            = 30
+    healthy_threshold   = 3
+    interval            = 60
     matcher             = 200
-    path                = "/"
+    path                = "/v1/hotels"
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = 5
     unhealthy_threshold = 2
   }
+
+  depends_on = [aws_lb.this]
 }

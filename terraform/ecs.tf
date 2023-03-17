@@ -122,6 +122,7 @@
 #   task_definition  = aws_ecs_task_definition.this.arn
 #   desired_count    = 1
 
+#   # ローリングアップデートの設定
 #   # deployment_minimum_healthy_percent = 100
 #   # deployment_maximum_percent         = 200
 
@@ -131,7 +132,7 @@
 #     target_group_arn = data.terraform_remote_state.lovehoteler_com.outputs.lb_target_group_blue_tg_arn
 #   }
 
-#   health_check_grace_period_seconds = 60
+#   health_check_grace_period_seconds = 3600
 
 #   network_configuration {
 #     assign_public_ip = true
