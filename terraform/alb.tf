@@ -77,7 +77,7 @@ resource "aws_lb_target_group" "blue_tg" {
     healthy_threshold   = 3
     interval            = 60
     matcher             = 200
-    path                = "/v1/hotels"
+    path                = "/v1/healthcheck"
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = 5
@@ -99,7 +99,7 @@ resource "aws_lb_target_group" "green_tg" {
     healthy_threshold   = 3
     interval            = 60
     matcher             = 200
-    path                = "/v1/hotels"
+    path                = "/v1/healthcheck"
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = 5
