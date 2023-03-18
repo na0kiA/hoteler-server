@@ -106,7 +106,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.hosts << "2f7d-180-26-103-7.jp.ngrok.io"
+  config.hosts << "20e1-180-26-103-7.jp.ngrok.io"
   config.hosts << "localhost"
   config.hosts << "lovehoteler.com"
   config.hosts << "localhost:80"
