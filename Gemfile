@@ -53,11 +53,12 @@ gem "rails_admin"
 gem "faker"
 gem "sassc-rails"
 
+gem "factory_bot_rails"
+
 group :development, :test do
   gem "bullet"
   gem "debug", platforms: %i[mri mingw x64_mingw]
   gem "dotenv-rails"
-  gem "factory_bot_rails"
   gem "rspec-rails"
 end
 
