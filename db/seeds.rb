@@ -1,51 +1,20 @@
 require 'factory_bot'
+require_relative "./samples.rb"
 include FactoryBot::Syntax::Methods
 
-2.times do |i|
+
+one_to_nine = (1..9).to_a.sample
+
+
+10.times do |i|
   hotel = create(
     :with_service_completed_hotel,
     :with_user,
-    name: Faker::JapaneseMedia::StudioGhibli.unique.character,
-    content: "【お客様各位】
-    当ホテルへのご来店誠にありがとうございます。
-    日曜日～木曜日・祝日】
-1部　19時～翌12時
-2部　21時～翌14時
-￥5,600～￥7,500
+    name: hotel_names.sample,
+    content: "
+#{hotel_content.sample}
 
-【金曜日】
-21時～翌12時
-￥7,500～￥9,500
-
-【土曜日・祝前日】
-21時～翌12時
-￥ 11,000～￥13,000
-
-
-休憩
-休憩60分
-【月曜日～金曜日】
-￥2,700～￥3,100
-【土曜日・日曜日・祝日】
-￥3,700～￥4,100
-
-休憩3時間
-【月曜日～金曜日】
-￥3,600～￥4,000
-【土曜日・日曜日・祝日】
-￥5,100～￥5,500
-
-※6時～24時の間の利用に限る
-サービスタイム
-【月曜日～金曜日】
-1部　6:00～18:00
-2部　15:00～21:00
-￥4,600～￥5,100
-
-【土曜日・日曜日・祝日】
-1部　6:00～18:00
-2部　15:00～21:00
-￥6,600～7,100
+#{hotel_fee.sample}
 ",
     accepted: true,
     created_at: Faker::Time.between(from: DateTime.now - 1, to: DateTime.now, format: :default),
@@ -60,17 +29,25 @@ include FactoryBot::Syntax::Methods
     company: Faker::Name.first_name + Faker::Company.suffix
   )
 
-  # (1..2).to_a.sample.times do
-  #   create(:hotel_image , hotel_id: hotel.id, key: "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/hoteler_demo_photo.jpg")
-  # end
+  (5..8).to_a.sample.times do
+    create(:hotel_image , hotel_id: hotel.id, key: "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/hotel-top-#{(0..119).to_a.sample}.jpg")
+  end
+
+  other_user = create_list(:other_user, 20)
+  p other_user
+  p other_user.sample
+  other_user1 = create_list(:other_user, 50)
+  other_user2 = create_list(:other_user, 80)
 
   (1..2).to_a.sample.times do
-    create(:review, hotel_id: hotel.id, five_star_rate: (1..2).to_a.sample, title: "正直あまり良くなかった", content: "値段の割にはそこまででした。", user_id: create(:other_user).id)
+    create(:review, hotel_id: hotel.id, five_star_rate: (1..2).to_a.sample, title: one_or_two_reviews_title.sample, content: two_or_one_reviews_content.sample, user: other_user.sample )
   end
+
   (2..3).to_a.sample.times do
-    create(:review, hotel_id: hotel.id, five_star_rate: (3..4).to_a.sample, title: "普通に良かったです", content: "部屋が綺麗でした。また利用しようと思っています。", user_id: create(:other_user2).id)
+    create(:review, hotel_id: hotel.id, five_star_rate: 3, title: three_reviews_title.sample, content: three_reviews_content.sample, user: other_user1.sample )
   end
-  (2..6).to_a.sample.times do
-    create(:review, hotel_id: hotel.id, five_star_rate: 5, title: "最高でした", content: "フロントの対応もよくて、アメニティも豊富で良かったです。", user_id: create(:other_user3).id)
+
+  (3..9).to_a.sample.times do
+    create(:review, hotel_id: hotel.id, five_star_rate: (4..5).to_a.sample, title: five_or_four_reviews_title.sample, content: five_or_four_reviews_content.sample, user: other_user2.sample)
   end
 end
