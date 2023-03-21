@@ -55,6 +55,8 @@ gem "sassc-rails"
 
 gem "factory_bot_rails"
 
+gem 'unsplash'
+
 group :development, :test do
   gem "bullet"
   gem "debug", platforms: %i[mri mingw x64_mingw]
