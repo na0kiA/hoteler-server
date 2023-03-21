@@ -2,11 +2,11 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "http://localhost:3000", "127.0.0.1"
+    origins "http://localhost:3000", "127.0.0.1", "https://cbc5-180-26-103-7.jp.ngrok.io.io", "https://jp.lovehoteler.com"
 
     resource "*",
              headers: :any,
-             expose: %w[access-token expiry token-type uid client],
+             expose: %w[access-token expiry token-type uid client X-CSRF-Token],
              methods: %i[get post put patch delete options head],
              credentials: true
   end

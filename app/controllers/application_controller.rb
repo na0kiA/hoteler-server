@@ -9,8 +9,9 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
 
   before_action :convert_to_snake_case_params
+  before_action :set_csrf_token_header
 
-  skip_before_action :verify_authenticity_token
+  # skip_before_action :verify_authenticity_token
 
   # CSRF対策をすること
   # protect_from_forgery with: :exception
@@ -21,12 +22,15 @@ class ApplicationController < ActionController::Base
 
     # def set_csrf_token
     #   cookies["CSRF-TOKEN"] = {
-    #     domain: "2f7d-180-26-103-7.jp.ngrok.io",
+    #     domain: "cbc5-180-26-103-7.jp.ngrok.io",
     #     value: form_authenticity_token,
     #     same_site: :none,
     #     secure: true
     #   }
     # end
+    def set_csrf_token_header
+      response.set_header("X-CSRF-Token", form_authenticity_token)
+    end
 
     def convert_to_snake_case_params
       params.deep_transform_keys!(&:underscore)
