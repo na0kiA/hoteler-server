@@ -14,14 +14,14 @@ RSpec.describe "V1::Helpfulnesses", type: :request do
     context "参考になったを既に押している場合" do
       it "trueが返ること" do
         get v1_helpfulnesses_path(review_id: review.id), headers: auth_tokens
-        expect(symbolized_body(response)[:helpful]).to eq(true)
+        expect(symbolized_body(response)[:helpful]).to be(true)
       end
     end
 
     context "参考になったを押していない場合" do
       it "falseが返ること" do
         get v1_helpfulnesses_path(review_id: other_review.id), headers: auth_tokens
-        expect(symbolized_body(response)[:helpful]).to eq(false)
+        expect(symbolized_body(response)[:helpful]).to be(false)
       end
     end
   end

@@ -38,6 +38,7 @@
 .devcontainer/coverage
 .DS_Store
 *.vscode/*
+/images/*
 
 
 **/.terraform/*

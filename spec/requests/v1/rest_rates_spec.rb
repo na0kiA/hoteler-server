@@ -26,7 +26,6 @@ RSpec.describe "V1::RestRates", type: :request do
     end
   end
 
-
   describe "POST /v1/day/:day_id/rest_rates - v1/day/:day_id/rest_rates#create" do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }

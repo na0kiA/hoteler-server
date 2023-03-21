@@ -55,7 +55,7 @@ gem "sassc-rails"
 
 gem "factory_bot_rails"
 
-gem 'unsplash'
+gem "unsplash"
 
 group :development, :test do
   gem "bullet"
