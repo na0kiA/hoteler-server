@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   before_action :convert_to_snake_case_params
   before_action :set_csrf_token_header
 
-  # skip_before_action :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   # CSRF対策をすること
   # protect_from_forgery with: :exception
