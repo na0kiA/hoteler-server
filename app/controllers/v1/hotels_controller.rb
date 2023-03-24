@@ -6,6 +6,8 @@ module V1
 
     before_action :authenticate_v1_user!, except: %i[index show]
     before_action :set_hotel, only: %i[show update destroy]
+    before_action :set_hotel, only: %i[destroy]
+    before_action :prohibit_chages_to_guest_user_hotels, only: %i[destroy]
 
     def index
       hotels = Hotel.preload(:hotel_images, :rest_rates, :stay_rates).accepted.page(params[:page])
@@ -64,6 +66,10 @@ module V1
     end
 
     private
+
+    def prohibit_chages_to_guest_user
+      render_json_bad_request_with_custom_errors("削除できません", "ゲストユーザーのホテルは削除できません。") if current_v1_user.uid == "iam_guest_user@eripo.net"
+    end
 
       def authenticated?
         @hotel.user.id == current_v1_user.id
