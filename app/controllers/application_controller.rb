@@ -8,9 +8,9 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, with: :path_not_found
 
   # 別ドメインへのリダイレクトがパスするように変更
-  rescue_from ActionController::Redirecting::UnsafeRedirectError do
-    redirect_to root_url
-  end
+  # rescue_from ActionController::Redirecting::UnsafeRedirectError do
+  #   redirect_to v1_hotels_path
+  # end
 
   before_action :convert_to_snake_case_params
 
@@ -54,5 +54,9 @@ class ApplicationController < ActionController::Base
 
     def render_json_bad_request_with_custom_errors(title:, body:)
       render json: { errors: { title:, body: } }, status: :bad_request
+    end
+
+    def render_json_forbidden_with_custom_errors(message:)
+      render json: { errors: { message:} }, status: :forbidden
     end
 end
