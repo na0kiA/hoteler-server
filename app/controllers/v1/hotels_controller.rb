@@ -6,7 +6,6 @@ module V1
 
     before_action :authenticate_v1_user!, except: %i[index show]
     before_action :set_hotel, only: %i[show update destroy]
-    before_action :set_hotel, only: %i[destroy]
     before_action :prohibit_chages_to_guest_user_hotels, only: %i[destroy]
 
     def index
@@ -17,14 +16,16 @@ module V1
     end
 
     def show
+      p @hotel
       accepted_hotel = Hotel.accepted.find_by(id: @hotel.id)
-
-      return render json: @hotel, serializer: HotelShowSerializer if current_v1_user == @hotel.user
-
       if accepted_hotel.present?
         render json: accepted_hotel, serializer: HotelShowSerializer
       else
-        record_not_found
+        if current_v1_user == @hotel&.user
+          return render json: @hotel, serializer: HotelShowSerializer
+        else
+          record_not_found
+        end
       end
     end
 
@@ -67,8 +68,8 @@ module V1
 
     private
 
-      def prohibit_chages_to_guest_user
-        render_json_bad_request_with_custom_errors("削除できません", "ゲストユーザーのホテルは削除できません。") if current_v1_user.uid == "iam_guest_user@eripo.net"
+      def prohibit_chages_to_guest_user_hotels
+        render_json_forbidden_with_custom_errors(message: "ゲストユーザーのホテルは削除できません。") if current_v1_user.uid == "iam_guest_user@eripo.net"
       end
 
       def authenticated?
