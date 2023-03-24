@@ -3,7 +3,7 @@
 module V1
   module Auth
     class RegistrationsController < DeviseTokenAuth::RegistrationsController
-      before_action :prohibit_chages_to_guest_use, only: %i[update destroy]
+      before_action :prohibit_chages_to_guest_user, only: %i[update destroy]
 
       private
 
