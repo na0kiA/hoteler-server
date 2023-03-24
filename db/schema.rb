@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_17_100212) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_20_095533) do
   create_table "days", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "hotel_id", null: false
     t.string "day", default: "", null: false
@@ -60,7 +60,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_17_100212) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["hotel_id"], name: "index_hotel_images_on_hotel_id"
-    t.index ["key"], name: "index_hotel_images_on_key_and_file_url", unique: true
   end
 
   create_table "hotels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
