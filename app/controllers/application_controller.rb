@@ -6,15 +6,18 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::RoutingError, with: :path_not_found
-  rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
+
+  # 別ドメインへのリダイレクトがパスするように変更
+  rescue_from ActionController::Redirecting::UnsafeRedirectError do
+    redirect_to root_url
+  end
 
   before_action :convert_to_snake_case_params
-  before_action :set_csrf_token_header
-
-  skip_before_action :verify_authenticity_token
 
   # CSRF対策をすること
   # protect_from_forgery with: :exception
+  before_action :set_csrf_token_header
+  skip_before_action :verify_authenticity_token
 
   helper_method :current_user, :user_signed_in?
 
@@ -28,6 +31,7 @@ class ApplicationController < ActionController::Base
     #     secure: true
     #   }
     # end
+
     def set_csrf_token_header
       response.set_header("X-CSRF-Token", form_authenticity_token)
     end
@@ -50,9 +54,5 @@ class ApplicationController < ActionController::Base
 
     def render_json_bad_request_with_custom_errors(title:, body:)
       render json: { errors: { title:, body: } }, status: :bad_request
-    end
-
-    def unsafe_path
-      render json: { errors: { title: "404 NOT FOUND", body: "安全ではないURLです。URLの打ち間違いがないか確認してください" } }, status: :not_found
     end
 end
