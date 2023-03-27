@@ -112,7 +112,7 @@ resource "aws_s3_bucket_cors_configuration" "hoteler_image_list_cors" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["PUT", "POST"]
-    allowed_origins = ["https://lovehoteler.com", "http://localhost:3000"]
+    allowed_origins = ["https://lovehoteler.com", "http://localhost:3000", "https://www.hoteler.jp", "https://hoteler.jp"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }
