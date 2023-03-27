@@ -153,6 +153,71 @@ FactoryBot.define do
       end
     end
 
+    trait :with_random_monday_through_thursday_rates do
+      after(:create) do |hotel|
+        hotel.days[0].rest_rates << FactoryBot.build(:random_rest_rate, :normal_rest_rate)
+        hotel.days[0].rest_rates << FactoryBot.build(:random_rest_rate, :short_rest_rate)
+        hotel.days[0].rest_rates << FactoryBot.build(:random_rest_rate, :morning_rest_rate)
+        hotel.days[0].rest_rates << FactoryBot.build(:random_rest_rate, :midnight_rest_rate)
+        hotel.days[0].stay_rates << FactoryBot.build(:random_stay_rate, :long_stay_rate)
+        hotel.days[0].stay_rates << FactoryBot.build(:random_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_random_friday_rates do
+      after(:create) do |hotel|
+        hotel.days[1].rest_rates << FactoryBot.build(:random_rest_rate, :normal_rest_rate)
+        hotel.days[1].rest_rates << FactoryBot.build(:random_rest_rate, :midnight_rest_rate)
+        hotel.days[1].stay_rates << FactoryBot.build(:random_stay_rate, :long_stay_rate)
+        hotel.days[1].stay_rates << FactoryBot.build(:random_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_random_saturday_rates do
+      after(:create) do |hotel|
+        hotel.days[2].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :normal_rest_rate)
+        hotel.days[2].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :midnight_rest_rate)
+        hotel.days[2].stay_rates << FactoryBot.build(:random_day_off_stay_rate, :normal_stay_rate)
+        hotel.days[2].stay_rates << FactoryBot.build(:random_day_off_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_random_sunday_rates do
+      after(:create) do |hotel|
+        hotel.days[3].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :normal_rest_rate)
+        hotel.days[3].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :midnight_rest_rate)
+        hotel.days[3].stay_rates << FactoryBot.build(:random_day_off_stay_rate, :normal_stay_rate)
+        hotel.days[3].stay_rates << FactoryBot.build(:random_day_off_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_random_holiday_rates do
+      after(:create) do |hotel|
+        hotel.days[4].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :normal_rest_rate)
+        hotel.days[4].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :midnight_rest_rate)
+        hotel.days[4].stay_rates << FactoryBot.build(:random_day_off_stay_rate, :normal_stay_rate)
+        hotel.days[4].stay_rates << FactoryBot.build(:random_day_off_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_random_day_before_holiday_rates do
+      after(:create) do |hotel|
+        hotel.days[5].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :normal_rest_rate)
+        hotel.days[5].rest_rates << FactoryBot.build(:random_day_off_rest_rate, :midnight_rest_rate)
+        hotel.days[5].stay_rates << FactoryBot.build(:random_day_off_stay_rate, :normal_stay_rate)
+        hotel.days[5].stay_rates << FactoryBot.build(:day_off_stay_rate, :midnight_stay_rate)
+      end
+    end
+
+    trait :with_random_special_day_rates do
+      after(:create) do |hotel|
+        hotel.days[6].rest_rates << FactoryBot.build(:special_rest_rate, :normal_rest_rate)
+        hotel.days[6].rest_rates << FactoryBot.build(:special_rest_rate, :midnight_rest_rate)
+        hotel.days[6].stay_rates << FactoryBot.build(:special_stay_rate, :normal_stay_rate)
+        hotel.days[6].stay_rates << FactoryBot.build(:special_stay_rate, :midnight_stay_rate)
+      end
+    end
+
     trait :with_special_periods do
       after(:create) do |hotel|
         hotel.days[6].special_periods << FactoryBot.build(:special_period, :golden_week)
@@ -210,6 +275,9 @@ FactoryBot.define do
     factory :with_user_completed_hotel, traits: %i[with_user]
     factory :with_service_completed_hotel,
             traits: %i[with_monday_through_thursday_rates with_friday_rates with_saturday_rates with_sunday_rates with_holiday_rates with_day_before_holiday_rates with_special_day_rates
+                       with_special_periods]
+    factory :with_random_service_completed_hotel,
+            traits: %i[with_random_monday_through_thursday_rates with_random_friday_rates with_random_saturday_rates with_random_sunday_rates with_random_holiday_rates with_random_day_before_holiday_rates with_random_special_day_rates
                        with_special_periods]
   end
 end
