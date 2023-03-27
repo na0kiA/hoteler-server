@@ -112,7 +112,7 @@ Rails.application.configure do
   config.hosts << "jp.lovehoteler.com"
   config.hosts << "localhost"
   config.hosts << "lovehoteler.com"
-  config.hosts << "hoteler.jp"
+  config.hosts << "www.hoteler.jp"
   config.hosts << "localhost:80"
   config.hosts << "127.0.0.1"
 end
