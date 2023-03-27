@@ -16,16 +16,14 @@ module V1
     end
 
     def show
-      p @hotel
       accepted_hotel = Hotel.accepted.find_by(id: @hotel.id)
       if accepted_hotel.present?
         render json: accepted_hotel, serializer: HotelShowSerializer
       else
-        if current_v1_user == @hotel&.user
-          return render json: @hotel, serializer: HotelShowSerializer
-        else
-          record_not_found
-        end
+        return render json: @hotel, serializer: HotelShowSerializer if current_v1_user == @hotel&.user
+
+        record_not_found
+
       end
     end
 

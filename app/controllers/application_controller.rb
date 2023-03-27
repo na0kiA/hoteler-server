@@ -15,22 +15,13 @@ class ApplicationController < ActionController::Base
   before_action :convert_to_snake_case_params
 
   # CSRF対策をすること
-  # protect_from_forgery with: :exception
-  before_action :set_csrf_token_header
-  skip_before_action :verify_authenticity_token
+  protect_from_forgery with: :null_session
 
+  before_action :set_csrf_token_header
+  # skip_before_action :verify_authenticity_token
   helper_method :current_user, :user_signed_in?
 
   private
-
-    # def set_csrf_token
-    #   cookies["CSRF-TOKEN"] = {
-    #     domain: "cbc5-180-26-103-7.jp.ngrok.io",
-    #     value: form_authenticity_token,
-    #     same_site: :none,
-    #     secure: true
-    #   }
-    # end
 
     def set_csrf_token_header
       response.set_header("X-CSRF-Token", form_authenticity_token)
@@ -57,6 +48,6 @@ class ApplicationController < ActionController::Base
     end
 
     def render_json_forbidden_with_custom_errors(message:)
-      render json: { errors: { message:} }, status: :forbidden
+      render json: { errors: { message: } }, status: :forbidden
     end
 end
