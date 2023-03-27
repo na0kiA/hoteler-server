@@ -226,6 +226,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_random_hotel_facility do
+      after(:create) do |hotel|
+        hotel.hotel_facility = FactoryBot.build(:hotel_facility, :with_random_facility)
+      end
+    end
+
     trait :with_days_and_expensive_service_rates do
       after(:build) do |hotel|
         hotel.days << FactoryBot.build(:day, :monday_through_thursday, :with_expensive_rest_rates, :with_expensive_stay_rates)
@@ -278,6 +284,6 @@ FactoryBot.define do
                        with_special_periods]
     factory :with_random_service_completed_hotel,
             traits: %i[with_random_monday_through_thursday_rates with_random_friday_rates with_random_saturday_rates with_random_sunday_rates with_random_holiday_rates with_random_day_before_holiday_rates with_random_special_day_rates
-                       with_special_periods]
+                       with_special_periods with_random_hotel_facility]
   end
 end
