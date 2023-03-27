@@ -33,5 +33,5 @@ resource "aws_route53_record" "root_a" {
     country = "JP"
   }
 
-  set_identifier = "allow-from-japan-and-us"
+  set_identifier = "allow-from-japan"
 }
