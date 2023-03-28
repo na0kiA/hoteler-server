@@ -43,13 +43,13 @@ gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 # rubocopをgithub actionsで実行した際に必要なgem
-gem 'panolint', '~> 0.1.3'
+gem "panolint", "~> 0.1.3"
 
 gem "aws-sdk"
 gem "brakeman"
 gem "counter_culture"
 gem "devise"
-gem 'devise_token_auth', '~> 1.2', '>= 1.2.1'
+gem "devise_token_auth", "~> 1.2", ">= 1.2.1"
 gem "rack-cors"
 gem "rails_admin"
 

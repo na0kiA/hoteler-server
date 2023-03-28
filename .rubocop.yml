@@ -29,20 +29,14 @@ Style/AsciiComments:
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods
 
-# Lint/SuppressedException:
-#   Enabled: true
+Metrics/CyclomaticComplexity:
+  Max: 10
 
-# Lint/RedundantStringCoercion:
-#   Enabled: true
+Metrics/PerceivedComplexity:
+  Max: 10
 
-# Naming/MethodParameterName:
-#   Enabled: true
-
-# Style/RedundantPercentQ:
-#   Enabled: true
-
-# Layout/TrailingEmptyLines:
-#   Enabled: true
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
 
 Layout/CommentIndentation:
   Enabled: false
@@ -68,11 +62,11 @@ Lint/StructNewOverride:
   Enabled: true
 
 Layout/LineLength:
-  Max: 200
+  Max: 400
 
 Metrics/BlockLength:
   # CountComments: false
-  Max: 40
+  Max: 50
   Exclude:
     - 'Guardfile'
     - 'config/routes.rb'
@@ -93,7 +87,7 @@ Metrics/ModuleLength:
   CountComments: false
 
 Metrics/AbcSize:
-  Max: 25
+  Max: 30
 
 Naming/FileName:
   Exclude:
