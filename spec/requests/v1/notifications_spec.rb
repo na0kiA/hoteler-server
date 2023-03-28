@@ -66,7 +66,7 @@ RSpec.describe "V1::Notifications", type: :request do
       it "通知を受け取らないこと" do
         get v1_notifications_path, headers: auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)).to eq({})
+        expect(response.body).to eq("")
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe "V1::Notifications", type: :request do
 
       it "通知に登録されていないこと" do
         get v1_notifications_path, headers: auth_tokens
-        expect(symbolized_body(response)).to eq({})
+        expect(response.body).to eq("")
         expect(favorite.user.notifications).to be_blank
       end
     end
@@ -103,7 +103,7 @@ RSpec.describe "V1::Notifications", type: :request do
       it "通知を受け取らないこと" do
         get v1_notifications_path, headers: hotel_auth_tokens
         expect(response.status).to eq(200)
-        expect(symbolized_body(response)).to eq({})
+        expect(response.body).to eq("")
       end
     end
   end
