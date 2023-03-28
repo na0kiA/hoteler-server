@@ -42,6 +42,9 @@ gem "strscan"
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
+# rubocopをgithub actionsで実行した際に必要なgem
+gem 'panolint', '~> 0.1.3'
+
 gem "aws-sdk"
 gem "brakeman"
 gem "counter_culture"
