@@ -30,3 +30,8 @@ variable "desired_count" {
   type    = number
   default = 1
 }
+
+variable "github_token_for_amplify" {
+  type    = string
+  default = "nothing"
+}
