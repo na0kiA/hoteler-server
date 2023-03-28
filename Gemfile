@@ -46,7 +46,7 @@ gem "aws-sdk"
 gem "brakeman"
 gem "counter_culture"
 gem "devise"
-gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_auth"
+gem 'devise_token_auth', '~> 1.2', '>= 1.2.1'
 gem "rack-cors"
 gem "rails_admin"
 
