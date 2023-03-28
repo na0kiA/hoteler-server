@@ -44,6 +44,9 @@ jobs:
       - name: Run rspec
         run: bundle exec rspec
 
+      - name: Rubocop checks
+        run: bundle exec rubocop
+
       - uses: actions/checkout@v2
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
