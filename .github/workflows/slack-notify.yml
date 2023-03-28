@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - develop
+      - feature38
 name: Slack Notification Demo
 jobs:
   slackNotification:

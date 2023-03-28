@@ -3,7 +3,7 @@ name: Run rspec, rubocop
 on:
   push:
     branches:
-      - develop
+      - feature38
 env:
   RAILS_ENV: test
   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
