@@ -14,7 +14,7 @@ RSpec.describe "V1::Auth::Registrations", type: :request do
       it "登録時にimageにデフォルトの画像のkeyがセットされていないこと" do
         params = { name: "渋谷太郎", email: "test12@example.com", password: "12345678", password_confirmation: "12345678", confirm_success_url: "http://example.com" }
         post(v1_user_registration_path, params:)
-        expect(User.first.image).to eq(nil)
+        expect(User.first.image).to be_nil
       end
     end
   end

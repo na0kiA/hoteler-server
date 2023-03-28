@@ -3,14 +3,14 @@
 FactoryBot.define do
   factory :random_rest_rate, class: "RestRate" do
     trait :normal_rest_rate do
-      plan { ["休憩90分", "休憩100分", "休憩80分", "ノーマルレスト"].sample.to_s }
+      plan { %w[休憩90分 休憩100分 休憩80分 ノーマルレスト].sample.to_s }
       rate { Random.new.rand(4000..6000).ceil(-1) }
       start_time { "#{(6..15).to_a.sample}:00" }
       end_time { "24:00" }
     end
 
     trait :long_rest_rate do
-      plan { ["休憩120分", "休憩180分", "ロングタイム180分"].sample.to_s }
+      plan { %w[休憩120分 休憩180分 ロングタイム180分].sample.to_s }
       rate { Random.new.rand(6000..9000).ceil(-1) }
       start_time { "#{(6..15).to_a.sample}:00" }
       end_time { "22:00" }

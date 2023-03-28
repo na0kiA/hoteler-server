@@ -6,7 +6,7 @@ FactoryBot.define do
     sequence(:email) { |n| "tester9#{n}@example.com" }
     sequence(:password) { |n| "test#{n}#{n}#{n}#{n}111" }
     sequence(:password_confirmation) { |n| "test#{n}#{n}#{n}#{n}111" }
-    sequence(:image) { |n| "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/user-#{n}.jpg"}
+    sequence(:image) { |n| "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/user-#{n}.jpg" }
 
     trait :with_hotel_user do
       after(:build) do |user|
