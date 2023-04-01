@@ -3,7 +3,7 @@ name: deploy
 on:
   push:
     branches:
-      # - feature38
+      - feature38
       - develop
 
 env:
