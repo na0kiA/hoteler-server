@@ -6,11 +6,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::RoutingError, with: :path_not_found
-
-  # 別ドメインへのリダイレクトがパスするように変更
-  # rescue_from ActionController::Redirecting::UnsafeRedirectError do
-  #   redirect_to root_url
-  # end
+  rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :allow_redirect
 
   before_action :convert_to_snake_case_params
 
@@ -24,6 +20,10 @@ class ApplicationController < ActionController::Base
 
     def set_csrf_token_header
       response.set_header("X-CSRF-Token", form_authenticity_token)
+    end
+
+    def allow_redirect
+      redirect_to(params[:redirect_url], allow_other_host: true)
     end
 
     def convert_to_snake_case_params
