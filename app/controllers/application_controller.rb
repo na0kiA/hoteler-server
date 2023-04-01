@@ -8,17 +8,16 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, with: :path_not_found
 
   # 別ドメインへのリダイレクトがパスするように変更
-  rescue_from ActionController::Redirecting::UnsafeRedirectError do
-    redirect_to root_url
-  end
+  # rescue_from ActionController::Redirecting::UnsafeRedirectError do
+  #   redirect_to root_url
+  # end
 
   before_action :convert_to_snake_case_params
 
   # CSRF対策をすること
-  protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token
 
   before_action :set_csrf_token_header
-  # skip_before_action :verify_authenticity_token
   helper_method :current_user, :user_signed_in?
 
   private
