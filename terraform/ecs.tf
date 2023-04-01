@@ -166,7 +166,7 @@ resource "aws_ecs_service" "this" {
 # -------------------------------------------
 resource "aws_appautoscaling_target" "appautoscaling_ecs_target" {
   service_namespace  = "ecs"
-  
+
   resource_id        = "service/${aws_ecs_cluster.this.name}/${aws_ecs_service.this.name}"
   scalable_dimension = "ecs:service:DesiredCount"
 
@@ -183,7 +183,7 @@ resource "aws_appautoscaling_target" "appautoscaling_ecs_target" {
 resource "aws_appautoscaling_policy" "appautoscaling_scale_up" {
   name               = "hoteler-ecs-autoscaling-up"
   service_namespace  = "ecs"
-  
+
   resource_id        = "service/${aws_ecs_cluster.this.name}/${aws_ecs_service.this.name}"
   scalable_dimension = "ecs:service:DesiredCount"
 
@@ -202,7 +202,7 @@ resource "aws_appautoscaling_policy" "appautoscaling_scale_up" {
 resource "aws_appautoscaling_policy" "appautoscaling_scale_down" {
   name               = "hoteler-ecs-autoscaling-down"
   service_namespace  = "ecs"
-  
+
   resource_id        = "service/${aws_ecs_cluster.this.name}/${aws_ecs_service.this.name}"
   scalable_dimension = "ecs:service:DesiredCount"
 
@@ -210,7 +210,7 @@ resource "aws_appautoscaling_policy" "appautoscaling_scale_down" {
     adjustment_type         = "ChangeInCapacity"
     cooldown                = 120
     metric_aggregation_type = "Average"
- 
+
     step_adjustment {
       metric_interval_upper_bound = 0
       scaling_adjustment          = -1
@@ -220,27 +220,27 @@ resource "aws_appautoscaling_policy" "appautoscaling_scale_down" {
 
 resource "aws_cloudwatch_metric_alarm" "alarm_cpu_high" {
   alarm_name          = "hoteler_ecs_cpu_utilization_high"
-  
+
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "CPUUtilization"
   namespace           = "AWS/ECS"
   period              = "60"
   statistic           = "Average"
-  
+
   threshold           = "80"
 
   dimensions = {
     ClusterName = aws_ecs_cluster.this.name
     ServiceName = aws_ecs_service.this.name
   }
-  
+
   alarm_actions = [aws_appautoscaling_policy.appautoscaling_scale_up.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_cpu_low" {
   alarm_name          = "hoteler_ecs_cpu_utilization_low"
-  
+
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "CPUUtilization"
