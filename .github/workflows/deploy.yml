@@ -17,18 +17,17 @@ jobs:
   deploy:
     name: Deploy app to AWS Fargate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:8.0.29
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
 
     steps:
-      timeout-minutes: 10
-      services:
-        mysql:
-          image: mysql:8.0.29
-          ports:
-            - 3306:3306
-          env:
-            MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
-          
       - name: Checkout code
         uses: actions/checkout@v2
 
