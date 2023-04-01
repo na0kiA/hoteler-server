@@ -8,9 +8,9 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, with: :path_not_found
 
   # 別ドメインへのリダイレクトがパスするように変更
-  # rescue_from ActionController::Redirecting::UnsafeRedirectError do
-  #   redirect_to v1_hotels_path
-  # end
+  rescue_from ActionController::Redirecting::UnsafeRedirectError do
+    redirect_to root_url
+  end
 
   before_action :convert_to_snake_case_params
 
