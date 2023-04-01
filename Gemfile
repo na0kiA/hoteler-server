@@ -49,7 +49,7 @@ gem "aws-sdk"
 gem "brakeman"
 gem "counter_culture"
 gem "devise"
-gem "devise_token_auth", "~> 1.2", ">= 1.2.1"
+gem "devise_token_auth"
 gem "rack-cors"
 gem "rails_admin"
 
