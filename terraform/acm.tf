@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "root" {
-  domain_name = data.aws_route53_zone.this.name
+  domain_name = "api.hoteler.jp"
 
   validation_method = "DNS"
 

@@ -71,7 +71,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_options = { from: Rails.application.credentials.email[:address] }
   # config.action_mailer.default_url_options = { host: "localhost" }
-  config.action_mailer.default_url_options = { host: "lovehoteler.com" }
+  config.action_mailer.default_url_options = { host: "api.hoteler.jp" }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
@@ -106,13 +106,12 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.hosts << "eddb-180-26-103-7.jp.ngrok.io"
-  # config.hosts << "/\A[a-z0-9]+(-[a-z0-9]+)*\.jp\.ngrok\.io\z/"
-  # config.hosts << ".*\.jp\.ngrok\.io\z/"
+  config.hosts << "a4e6-180-26-103-7.jp.ngrok.io"
   config.hosts << "jp.lovehoteler.com"
   config.hosts << "localhost"
   config.hosts << "lovehoteler.com"
   config.hosts << "www.hoteler.jp"
+  config.hosts << "api.hoteler.jp"
   config.hosts << "localhost:80"
   config.hosts << "127.0.0.1"
 end

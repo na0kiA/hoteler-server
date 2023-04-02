@@ -1,5 +1,5 @@
 data "aws_route53_zone" "this" {
-  name = "lovehoteler.com"
+  name = "hoteler.jp"
 }
 
 resource "aws_route53_record" "certificate_validation" {
@@ -19,7 +19,7 @@ resource "aws_route53_record" "certificate_validation" {
 }
 
 resource "aws_route53_record" "root_a" {
-  name    = data.aws_route53_zone.this.name
+  name    = "api.hoteler.jp"
   type    = "A"
   zone_id = data.aws_route53_zone.this.zone_id
 
