@@ -6,17 +6,21 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::RoutingError, with: :path_not_found
-  # rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :allow_redirect
+  rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :allow_redirect_to
 
   before_action :convert_to_snake_case_params
 
-  # CSRF対策をすること
   skip_before_action :verify_authenticity_token
 
   before_action :set_csrf_token_header
   helper_method :current_user, :user_signed_in?
 
+
   private
+
+    def allow_redirect_to
+      redirect_to(params[:redirect_url], allow_other_host: true)
+    end
 
     def set_csrf_token_header
       response.set_header("X-CSRF-Token", form_authenticity_token)
