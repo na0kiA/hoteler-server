@@ -30,6 +30,8 @@ module App
 
     config.middleware.use ActionDispatch::Session::CookieStore, { key: "_app_session" }
 
+    config.action_controller.raise_on_open_redirects = false
+
     config.generators do |g|
       g.test_framework :rspec,
                        view_specs: false,
