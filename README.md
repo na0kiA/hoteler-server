@@ -1,4 +1,36 @@
-# 詳細設計図
+# サービス概要
+https://www.hoteler.jp/
+
+私は5年間レジャーホテル2店舗で、フロント業務をしてきました。そのため、常日頃、お客様からの問い合わせやお申しつけを受ける立場にあります。それらの問題点を当アプリに落とし込みました。
+
+電話対応でのお問い合わせで最も多いのは 「今空いていますか？」　
+
+来店されたお客様からのお申し付けで最も多いのは　「なんでこんなに高いんですか？」
+
+これらの問い合わせを当アプリを見るだけですぐに解決できるように、「空室状況」、「今日の曜日の今の時間の最安の料金」をトップページに記載しました
+
+<img width="1437" alt="スクリーンショット 2023-04-03 17 35 58" src="https://user-images.githubusercontent.com/96788618/229457450-684735a9-85cc-417f-ad23-71574f967b96.png">
+
+<img width="372" alt="スクリーンショット 2023-04-03 17 36 42" src="https://user-images.githubusercontent.com/96788618/229457605-00680373-22a6-42c6-a95c-5da431e038a1.png">
+
+曜日と時間と時期によって料金が変動するレジャーホテルでは、10個以上の休憩料金があることも珍しくありません。
+そこで、ホテル運営者は下記のようにテーブル形式で料金を管理できます。
+<img width="1440" alt="スクリーンショット 2023-04-03 18 04 42" src="https://user-images.githubusercontent.com/96788618/229463799-39495b4a-0532-47fc-9cad-e16149ae57c8.png">
+![画面収録_2023-04-03_18_07_44_AdobeExpress (1)](https://user-images.githubusercontent.com/96788618/229468208-2000ec97-cc90-4001-a086-d5780682e914.gif)
+
+ホテル運営者はワンクリックで満室と空室を切り替えられます。
+
+
+
+休憩料金、宿泊料金の値段による並び替え機能や口コミ数、お気に入り数による並び替え機能もあります。
+
+# インフラ構成図
+<img width="1072" alt="スクリーンショット 2023-03-30 2 47 16" src="https://user-images.githubusercontent.com/96788618/229451278-b0894507-db98-499a-929d-c1c1850dd4b5.png">
+
+# ER図
+<img width="1071" alt="スクリーンショット 2023-03-30 3 08 55" src="https://user-images.githubusercontent.com/96788618/229451346-49f59fe2-f1b1-44b9-8bd9-991a3877d98f.png">
+
+# 使用技術
 
 | バックエンド |
 | --- |
@@ -21,37 +53,6 @@
 | AWS(ECS, Fargate, ECR, Amplify, CodeDeploy, ALB, SSM, ParameterStore, RDS, CloudWatch, S3, Route53, VPC) |
 | IaC(Terraform) |
 | Github Actions(ECR, ECS, CodeDeploy, Rubocop, Rspec, Slack) |
-
-## インフラ
-
-![スクリーンショット 2023-03-30 2.47.16.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/42fee8f7-a6a9-4480-a1a1-55d3243e9723/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_2023-03-30_2.47.16.png)
-
-## ER図
-
-![スクリーンショット 2023-03-30 3.08.55.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/de9fffe5-412d-4379-b020-1f73f123bc54/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_2023-03-30_3.08.55.png)
-
-# 使用技術
-
-### フロントエンド
-
-- React  18.2.0
-- Next.js(SSR) 13.1.1
-- TypeScript
-- Jest, React Testing Librar
-- prettier, eslint
-- TailwindCSS, daisyUI
-
-### バックエンド
-
-- Ruby 3.1.2
-- Ruby on Rails 7.0.4.2
-- RSpec, Rubocop
-
-### インフラ
-
-- AWS(ECS, Fargate, ECR, Amplify, CodeDeploy, ALB, SSM, ParameterStore, RDS, CloudWatch, S3, Route53, VPC)
-- IaC(Terraform)
-- Github Actions(ECR, ECS, CodeDeploy, Rubocop, Rspec, Slack)
 
 # 機能一覧
 
