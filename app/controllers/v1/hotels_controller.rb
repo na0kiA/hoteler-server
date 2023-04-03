@@ -67,7 +67,7 @@ module V1
     private
 
       def prohibit_chages_to_guest_user_hotels
-        render_json_forbidden_with_custom_errors(message: "ゲストユーザーのホテルは削除できません。") if current_v1_user.uid == "iam_guest_user@eripo.net"
+        render_json_forbidden_with_custom_errors(message: "ゲストユーザーのホテルは削除できません。") if current_v1_user.uid == "na0ki199823@gmail.com"
       end
 
       def authenticated?

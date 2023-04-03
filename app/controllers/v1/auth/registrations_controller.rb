@@ -12,7 +12,7 @@ module V1
         end
 
         def prohibit_chages_to_guest_user
-          render_json_forbidden_with_custom_errors(message: "ゲストユーザーは削除できません。") if current_v1_user&.uid == "iam_guest_user@eripo.net"
+          render_json_forbidden_with_custom_errors(message: "ゲストユーザーは削除できません。") if current_v1_user&.uid == "na0ki199823@gmail.com"
         end
 
         def account_update_params
