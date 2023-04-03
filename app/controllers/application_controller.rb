@@ -15,7 +15,6 @@ class ApplicationController < ActionController::Base
   before_action :set_csrf_token_header
   helper_method :current_user, :user_signed_in?
 
-
   private
 
     def allow_redirect_to
