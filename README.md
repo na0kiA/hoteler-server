@@ -1,8 +1,7 @@
 
 # サービス概要
 下記リンクからアクセスできます。
-
-https://www.hoteler.jp/
+[ホテラー | hoteler.jp](https://www.hoteler.jp/)
 
 フロントエンドはこちらです
 [https://github.com/na0kiA/hoteler-client](https://github.com/na0kiA/hoteler-client)
