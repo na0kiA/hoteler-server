@@ -95,8 +95,9 @@ Rails.application.configure do
   # config.action_controller.forgery_protection_origin_check = false
   # config.action_cable.disable_request_forgery_protection = true
   # config.hosts << ENV.fetch("API_HOST")
-  config.hosts << ENV.fetch("NGROK_HOST")
-  config.hosts << ENV.fetch("CLIENT_HOST")
+  # config.hosts << ENV.fetch("NGROK_HOST")
+  # config.hosts << ENV.fetch("CLIENT_HOST")
+  config.hosts << "20e1-180-26-103-7.jp.ngrok.io"
   config.hosts << "localhost:3000"
   config.hosts << "localhost"
   config.hosts << "localhost:80"

@@ -8,19 +8,20 @@ class HotelFilter
     @hotel_list = hotel_list
     @filter_conditions = filter_conditions
     @hotels = []
-    freeze
   end
 
   def filter
-    filterd_result
+    filtered_result
   end
 
   private
 
-    def filterd_result
-      filter_conditions.each do |condition|
-        @hotels << hotel_list.select { |hotel| hotel.hotel_facility[condition.to_sym] }
+    def filtered_result
+      @hotels = hotel_list.select do |hotel|
+        filter_conditions.all? do |condition|
+          hotel.hotel_facility[condition.to_sym]
+        end
       end
-      @hotels.flatten.uniq
+      @hotels
     end
 end

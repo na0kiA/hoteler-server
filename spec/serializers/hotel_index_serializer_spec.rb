@@ -129,6 +129,7 @@ RSpec.describe HotelIndexSerializer, type: :serializer do
       it "金曜が表示されること" do
         services = ExtractTodayService.new(hotels: Hotel.accepted).extract_today_services
         json_serializer = HotelIndexSerializer.new(hotel, services:).as_json
+        expect(json_serializer[:stay_rates][:day]).to eq("金曜")
       end
     end
 

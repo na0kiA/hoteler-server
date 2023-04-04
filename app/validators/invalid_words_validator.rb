@@ -15,7 +15,7 @@ class InvalidWordsValidator < ActiveModel::EachValidator
 
     def url_and_sign_validator(value)
       invalid_regex = {
-        url_regex: %r{https?://[\w/:%#{Regexp.last_match(0)}?()~.=+\-]+},
+        url_regex: %r{https?://[\w/:%#{Regexp.last_match(0)}?()~.=+-]+},
         html_regex: /<(".*?"|'.*?'|[^'"])*?>/
       }
       invalid_regex.any? { |_invalid_key, invalid_value| invalid_value.match?(value) }
@@ -27,7 +27,10 @@ class InvalidWordsValidator < ActiveModel::EachValidator
     end
 
     def blacklist_words_validator(value)
-      blacklist = YAML.load_file("./config/blacklist.yml")
-      blacklist.any? { |word| value.include?(word) }
+      if File.exist?("./config/blacklist.yml")
+        YAML.load_file("./config/blacklist.yml").any? { |word| value.include?(word) }
+      else
+        YAML.load_file("./config/blacklist.yaml").any? { |word| value.include?(word) }
+      end
     end
 end

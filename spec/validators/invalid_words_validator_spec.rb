@@ -19,7 +19,7 @@ RSpec.describe InvalidWordsValidator, type: :model do
     end
 
     context "ブラックリストに検出される場合" do
-      let(:value) { "うんち" }
+      let(:value) { "てすと" }
 
       it "エラーが返ること" do
         expect(mock).to be_invalid

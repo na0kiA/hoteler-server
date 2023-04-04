@@ -42,22 +42,28 @@ gem "strscan"
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
+# rubocopをgithub actionsで実行した際に必要なgem
+gem "panolint", "~> 0.1.3"
+
 gem "aws-sdk"
 gem "brakeman"
 gem "counter_culture"
 gem "devise"
-gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_auth"
+gem "devise_token_auth", "~> 1.2", ">= 1.2.1"
 gem "rack-cors"
 gem "rails_admin"
 
 gem "faker"
 gem "sassc-rails"
 
+gem "factory_bot_rails"
+
+gem "unsplash"
+
 group :development, :test do
   gem "bullet"
   gem "debug", platforms: %i[mri mingw x64_mingw]
   gem "dotenv-rails"
-  gem "factory_bot_rails"
   gem "rspec-rails"
 end
 

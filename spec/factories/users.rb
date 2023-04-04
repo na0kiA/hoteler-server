@@ -3,9 +3,10 @@
 FactoryBot.define do
   factory :user do
     sequence(:name) { |n| "太郎#{n}" }
-    sequence(:email) { |n| "#{n}test#{n}@example.com" }
-    sequence(:password) { |n| "test#{n}111" }
-    sequence(:password_confirmation) { |n| "test#{n}111" }
+    sequence(:email) { |n| "tester9#{n}@example.com" }
+    sequence(:password) { |n| "test#{n}#{n}#{n}#{n}111" }
+    sequence(:password_confirmation) { |n| "test#{n}#{n}#{n}#{n}111" }
+    sequence(:image) { |n| "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/user-#{n}.jpg" }
 
     trait :with_hotel_user do
       after(:build) do |user|
@@ -20,21 +21,11 @@ FactoryBot.define do
     end
   end
 
-  factory :other_user, class: "User" do
-    sequence(:email) { |n| "#{n}tests#{n}@example.com" }
-    sequence(:password) { |n| "test#{n}111" }
-    sequence(:password_confirmation) { |n| "test#{n}111" }
-  end
-
-  factory :other_user2, class: "User" do
-    sequence(:email) { |n| "#{n}tester#{n}@example.com" }
-    sequence(:password) { |n| "test#{n}111" }
-    sequence(:password_confirmation) { |n| "test#{n}111" }
-  end
-
-  factory :other_user3, class: "User" do
-    sequence(:email) { |n| "#{n}testers#{n}@example.com" }
-    sequence(:password) { |n| "test#{n}111" }
-    sequence(:password_confirmation) { |n| "test#{n}111" }
+  factory :sample_user, class: "User" do
+    sequence(:name) { "かずき" }
+    sequence(:email) { |n| "testers9#{n}@example.com" }
+    sequence(:password) { |n| "test#{n}#{n}#{n}#{n}111" }
+    sequence(:password_confirmation) { |n| "test#{n}#{n}#{n}#{n}111" }
+    sequence(:image) { "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/user-top-#{(0..119).to_a.sample}.jpg" }
   end
 end

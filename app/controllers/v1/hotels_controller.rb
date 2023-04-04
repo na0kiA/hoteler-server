@@ -6,6 +6,7 @@ module V1
 
     before_action :authenticate_v1_user!, except: %i[index show]
     before_action :set_hotel, only: %i[show update destroy]
+    before_action :prohibit_chages_to_guest_user_hotels, only: %i[destroy]
 
     def index
       hotels = Hotel.preload(:hotel_images, :rest_rates, :stay_rates).accepted.page(params[:page])
@@ -16,13 +17,13 @@ module V1
 
     def show
       accepted_hotel = Hotel.accepted.find_by(id: @hotel.id)
-
-      return render json: @hotel, serializer: HotelShowSerializer if current_v1_user == @hotel.user
-
       if accepted_hotel.present?
         render json: accepted_hotel, serializer: HotelShowSerializer
       else
+        return render json: @hotel, serializer: HotelShowSerializer if current_v1_user == @hotel&.user
+
         record_not_found
+
       end
     end
 
@@ -64,6 +65,10 @@ module V1
     end
 
     private
+
+      def prohibit_chages_to_guest_user_hotels
+        render_json_forbidden_with_custom_errors(message: "ゲストユーザーのホテルは削除できません。") if current_v1_user.uid == "na0ki199823@gmail.com"
+      end
 
       def authenticated?
         @hotel.user.id == current_v1_user.id

@@ -6,26 +6,18 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActionController::RoutingError, with: :path_not_found
-  rescue_from ActionController::Redirecting::UnsafeRedirectError, with: :unsafe_path
 
   before_action :convert_to_snake_case_params
 
   skip_before_action :verify_authenticity_token
 
-  # CSRF対策をすること
-  # protect_from_forgery with: :exception
-
+  before_action :set_csrf_token_header
   helper_method :current_user, :user_signed_in?
 
   private
 
-    def set_csrf_token
-      cookies["CSRF-TOKEN"] = {
-        domain: ENV.fetch("NGROK_HOST"),
-        value: form_authenticity_token,
-        same_site: :none,
-        secure: true
-      }
+    def set_csrf_token_header
+      response.set_header("X-CSRF-Token", form_authenticity_token)
     end
 
     def convert_to_snake_case_params
@@ -48,7 +40,7 @@ class ApplicationController < ActionController::Base
       render json: { errors: { title:, body: } }, status: :bad_request
     end
 
-    def unsafe_path
-      render json: { errors: { title: "404 NOT FOUND", body: "安全ではないURLです。URLの打ち間違いがないか確認してください" } }, status: :not_found
+    def render_json_forbidden_with_custom_errors(message:)
+      render json: { errors: { message: } }, status: :forbidden
     end
 end

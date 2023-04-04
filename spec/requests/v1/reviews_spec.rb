@@ -16,7 +16,7 @@ RSpec.describe "V1::Reviews", type: :request do
 
     context "ログインしていて口コミの投稿ができる場合" do
       it "200を返すこと" do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: auth_tokens
 
         expect(response.status).to eq(200)
       end
@@ -25,7 +25,7 @@ RSpec.describe "V1::Reviews", type: :request do
     context "ログインしていてtitleの値が不正な場合" do
       it "400を返すこと" do
         params = { review: { title: "", content: "10月に改装したので綺麗でした", five_star_rate: 5 } }
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: auth_tokens
 
         expect(response.status).to eq(400)
       end
@@ -33,7 +33,7 @@ RSpec.describe "V1::Reviews", type: :request do
 
     context "未承認のホテルへの口コミ投稿をする場合" do
       it "404を返すこと" do
-        post v1_hotel_reviews_path(hotel_id: hotel.id), params: params, headers: auth_tokens
+        post v1_hotel_reviews_path(hotel_id: hotel.id), params:, headers: auth_tokens
 
         expect(symbolized_body(response)).not_to include(title: "綺麗でした")
         expect(response.status).to eq(404)
@@ -43,7 +43,7 @@ RSpec.describe "V1::Reviews", type: :request do
     context "星評価をしていない場合" do
       it "400を返すこと" do
         params = { review: { title: "綺麗でした", content: "10月に改装したので綺麗でした", five_star_rate: 0 } }
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: auth_tokens
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: auth_tokens
 
         expect(response.status).to eq(400)
         expect(symbolized_body(response)).not_to include(title: "綺麗でした", content: "10月に改装したので綺麗でした")
@@ -52,7 +52,7 @@ RSpec.describe "V1::Reviews", type: :request do
 
     context "ログインをしていない場合" do
       it "401を返すこと" do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: nil
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: nil
 
         expect(response).to have_http_status(:unauthorized)
         expect(response.status).to eq(401)
@@ -61,7 +61,7 @@ RSpec.describe "V1::Reviews", type: :request do
 
     context "ホテル運営者が自分のホテルに口コミを書こうとした場合" do
       it "400を返すこと" do
-        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params: params, headers: hotel_maneger_auth_tokens
+        post v1_hotel_reviews_path(hotel_id: accepted_hotel.id), params:, headers: hotel_maneger_auth_tokens
 
         expect(response).to have_http_status(:bad_request)
         expect(symbolized_body(response)[:errors][:body]).to eq("ホテル運営者様は自身のホテルに口コミを書くことは出来ません。")
@@ -168,7 +168,7 @@ RSpec.describe "V1::Reviews", type: :request do
     context "五つ星の編集ができる場合" do
       it "200を返すこと" do
         params = { review: { title: "五つ星を変えました", content: "後日行ってみると丁寧に対応してくれました", five_star_rate: 2 } }
-        patch v1_user_review_path(review.id), params: params, headers: auth_tokens
+        patch v1_user_review_path(review.id), params:, headers: auth_tokens
 
         expect(response.status).to eq(200)
         expect(review.reload.title).to eq("五つ星を変えました")
@@ -180,7 +180,7 @@ RSpec.describe "V1::Reviews", type: :request do
       let_it_be(:difference_review) { create(:review, user_id: difference_user.id, hotel_id: accepted_hotel.id) }
 
       it "400を返すこと" do
-        patch v1_user_review_path(difference_review.id), params: params, headers: auth_tokens
+        patch v1_user_review_path(difference_review.id), params:, headers: auth_tokens
 
         expect(symbolized_body(response)).not_to include("追記：ホテルの対応について")
         expect(response.status).to eq(400)
@@ -189,7 +189,7 @@ RSpec.describe "V1::Reviews", type: :request do
 
     context "ログインしていない場合" do
       it "401を返すこと" do
-        patch v1_user_review_path(review.id), params: params
+        patch(v1_user_review_path(review.id), params:)
 
         expect(response.status).to eq(401)
         expect(symbolized_body(response)).not_to include(title: "追記：ホテルの対応について", content: "後日行ってみると丁寧に対応してくれました")

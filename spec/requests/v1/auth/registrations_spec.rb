@@ -7,14 +7,14 @@ RSpec.describe "V1::Auth::Registrations", type: :request do
     context "ユーザー登録ができる場合" do
       it "200を返すこと" do
         params = { name: "渋谷太郎", email: "test12@example.com", password: "12345678", password_confirmation: "12345678", confirm_success_url: "http://example.com" }
-        post v1_user_registration_path, params: params
+        post(v1_user_registration_path, params:)
         expect(response.status).to eq(200)
       end
 
-      it "登録時にimageにデフォルトの画像のkeyがセットされていること" do
+      it "登録時にimageにデフォルトの画像のkeyがセットされていないこと" do
         params = { name: "渋谷太郎", email: "test12@example.com", password: "12345678", password_confirmation: "12345678", confirm_success_url: "http://example.com" }
-        post v1_user_registration_path, params: params
-        expect(User.first.image).to include("hoteler")
+        post(v1_user_registration_path, params:)
+        expect(User.first.image).to be_nil
       end
     end
   end
@@ -25,7 +25,7 @@ RSpec.describe "V1::Auth::Registrations", type: :request do
     context "ユーザー画像の更新ができる場合" do
       it "200を返すこと" do
         params = { image: "aws/s3/keys/" }
-        patch v1_user_registration_path, params: params, headers: auth_tokens
+        patch v1_user_registration_path, params:, headers: auth_tokens
         expect(response.status).to eq(200)
       end
     end
@@ -33,7 +33,7 @@ RSpec.describe "V1::Auth::Registrations", type: :request do
     context "emailの更新ができる場合" do
       it "200を返すこと" do
         params = { email: "test@example.com" }
-        patch v1_user_registration_path, params: params, headers: auth_tokens
+        patch v1_user_registration_path, params:, headers: auth_tokens
         expect(response.status).to eq(200)
       end
     end

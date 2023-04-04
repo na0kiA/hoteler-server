@@ -3,6 +3,29 @@
 require "rails_helper"
 
 RSpec.describe "V1::StayRates", type: :request do
+  describe "GET /v1/day/:day_id/rest_rates - v1/day/:day_id/rest_rates#index" do
+    let_it_be(:client_user) { create(:user) }
+    let_it_be(:auth_tokens) { client_user.create_new_auth_token }
+    let_it_be(:hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user_id: client_user.id) }
+    let_it_be(:day_id) { hotel.days.ids[0] }
+    let_it_be(:stay_rate_id) { hotel.days[0].stay_rates.ids[0] }
+
+    context "宿泊料金がある場合" do
+      it "ホテルの宿泊料金を取得できること" do
+        get v1_stay_rates_path(hotel.days.ids[0]), headers: auth_tokens
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "宿泊料金がない場合" do
+      it "ホテルの宿泊料金を取得できないこと" do
+        no_stay_hotel = create(:completed_profile_hotel, :with_days, user_id: client_user.id)
+        get v1_stay_rates_path(no_stay_hotel.days.ids[0]), headers: auth_tokens
+        expect(response.status).to eq(204)
+      end
+    end
+  end
+
   describe "POST /v1/day/:day_id/stay_rates - v1/day/:day_id/stay_rates#create" do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }

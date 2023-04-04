@@ -69,15 +69,16 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_options = { from: ENV.fetch("EMAIL_ADDRESS", nil) }
-  config.action_mailer.default_url_options = { host: "localhost" }
+  config.action_mailer.default_options = { from: Rails.application.credentials.email[:address] }
+  # config.action_mailer.default_url_options = { host: "localhost" }
+  config.action_mailer.default_url_options = { host: "api.hoteler.jp" }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,
     domain: "gmail.com",
-    user_name: ENV.fetch("EMAIL_ADDRESS", nil),
-    password: ENV.fetch("EMAIL_PASSWORD", nil),
+    user_name: Rails.application.credentials.email[:address],
+    password: Rails.application.credentials.email[:password],
     authentication: "plain",
     enable_starttls_auto: true
   }
@@ -90,7 +91,7 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"
@@ -105,8 +106,12 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.hosts << "845c-180-26-103-7.jp.ngrok.io"
+  config.hosts << "b61f-180-26-103-7.jp.ngrok.io"
+  config.hosts << "jp.lovehoteler.com"
   config.hosts << "localhost"
+  config.hosts << "lovehoteler.com"
+  config.hosts << "www.hoteler.jp"
+  config.hosts << "api.hoteler.jp"
   config.hosts << "localhost:80"
   config.hosts << "127.0.0.1"
 end

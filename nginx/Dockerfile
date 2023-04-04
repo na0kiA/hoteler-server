@@ -4,9 +4,13 @@ FROM nginx:alpine
 RUN rm -f /etc/nginx/conf.d/*
 
 # Nginxの設定ファイルをコンテナにコピー
-ADD nginx.conf /etc/nginx/conf.d/app.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d/nginx.conf
 
-# ビルド完了後にNginxを起動
-CMD /usr/sbin/nginx -g 'daemon off;' -c /etc/nginx/nginx.conf
+# RUN mkdir -p app
+# COPY tmp/sockets/puma.sock /app/sockets/puma.sock
+# COPY ./public /app/public
+# COPY ./tmp/sockets /app/tmp/sockets
+# VOLUME /app/public
+# VOLUME /app/tmp
 
 EXPOSE 80

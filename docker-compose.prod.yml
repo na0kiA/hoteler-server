@@ -5,9 +5,7 @@ services:
     image: mysql:8.0.29-oracle
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    ports:
-      - 4306:3306
+      MYSQL_ROOT_PASSWORD: password
     volumes:
       - mysql-db:/var/lib/mysql
   api:
@@ -17,17 +15,20 @@ services:
       - db
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile.prod
     ports:
       - 3001:3000
     volumes:
       - .:/app
       - public-data:/app/public
       - tmp-data:/app/tmp
-    command: 'bundle exec puma -t 5:5 -e production -C config/puma.rb'
   web:
-    build: ./nginx
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
     volumes:
+      # - ./nginx:/app/public
+      # - ./tmp/sockets:/app/tmp/sockets
       - public-data:/app/public
       - tmp-data:/app/tmp
     ports:

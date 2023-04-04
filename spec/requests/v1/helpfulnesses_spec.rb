@@ -3,6 +3,29 @@
 require "rails_helper"
 
 RSpec.describe "V1::Helpfulnesses", type: :request do
+  describe "GET /v1/reviews/:review_id/helpfulnesses/:id - v1/helpfulness#show" do
+    let_it_be(:client_user)  { create(:user) }
+    let_it_be(:auth_tokens)  { client_user.create_new_auth_token }
+    let_it_be(:accepted_hotel) { create(:accepted_hotel, user_id: client_user.id) }
+    let_it_be(:review) { create(:review, user_id: client_user.id, hotel_id: accepted_hotel.id) }
+    let_it_be(:other_review) { create(:review, hotel_id: accepted_hotel.id) }
+    let_it_be(:helpfulness) { create(:helpfulness, user_id: client_user.id, review_id: review.id) }
+
+    context "参考になったを既に押している場合" do
+      it "trueが返ること" do
+        get v1_helpfulnesses_path(review_id: review.id), headers: auth_tokens
+        expect(symbolized_body(response)[:helpful]).to be(true)
+      end
+    end
+
+    context "参考になったを押していない場合" do
+      it "falseが返ること" do
+        get v1_helpfulnesses_path(review_id: other_review.id), headers: auth_tokens
+        expect(symbolized_body(response)[:helpful]).to be(false)
+      end
+    end
+  end
+
   describe "POST /v1/reviews/:review_id/helpfulnesses - v1/helpfulness#create" do
     let_it_be(:client_user)  { create(:user) }
     let_it_be(:auth_tokens)  { client_user.create_new_auth_token }

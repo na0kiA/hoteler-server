@@ -58,6 +58,6 @@ class ReviewShowSerializer < ActiveModel::Serializer
   private
 
     def file_url(key)
-      Aws::S3::Object.new(ENV.fetch("S3_BUCKET", nil), key).public_url
+      Aws::S3::Object.new(Rails.application.credentials.aws[:s3_bucket], key).public_url
     end
 end
