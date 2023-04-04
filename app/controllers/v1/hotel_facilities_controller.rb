@@ -28,6 +28,6 @@ class V1::HotelFacilitiesController < ApplicationController
 
     def hotel_facility_params
       params.require(:hotel_facilities).permit(:wifi_enabled, :parking_enabled, :triple_rooms_enabled, :secret_payment_enabled, :credit_card_enabled, :phone_reservation_enabled,
-                                               :net_reservation_enabled, :cooking_enabled, :breakfast_enabled).merge(hotel_id: set_hotel.id)
+                                               :net_reservation_enabled, :cooking_enabled, :breakfast_enabled, :coupon_enabled).merge(hotel_id: set_hotel.id)
     end
 end
