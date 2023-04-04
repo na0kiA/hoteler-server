@@ -276,3 +276,25 @@ resource "aws_iam_user_policy_attachment" "s3_fullaccess_user_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
   user       = aws_iam_user.hoteler-s3-uploader.name
 }
+
+# -------------------------------------------
+# Amplif y
+# -------------------------------------------
+
+data "aws_iam_policy_document" "amplify_assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["amplify.amazonaws.com"]
+    }
+  }
+}
+
+#IAM role providing read-only access to CodeCommit
+resource "aws_iam_role" "amplify-codecommit" {
+  name                = "AmplifyCodeCommit"
+  assume_role_policy  = join("", data.aws_iam_policy_document.amplify_assume_role.*.json)
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AWSCodeCommitReadOnly"]
+}
