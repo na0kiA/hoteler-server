@@ -5,7 +5,7 @@
 https://www.hoteler.jp/
 
 フロントエンドはこちらです
-https://github.com/na0kiA/hoteler-client
+[https://github.com/na0kiA/hoteler-client](https://github.com/na0kiA/hoteler-client)
 
 
 #### 私は5年間レジャーホテル2店舗でフロント業務をしてきました。そのため、常日頃からお客様からのお問い合わせやお申しつけを受ける立場にありました。その経験から、レジャーホテルの問題点を当アプリに落とし込みました。
