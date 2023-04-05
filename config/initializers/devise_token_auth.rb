@@ -59,6 +59,7 @@ DeviseTokenAuth.setup do |config|
   # send email, set it to true. (This is a setting for compatibility)
   config.send_confirmation_email = true
   # config.default_confirm_success_url = "http://localhost/v1/hotels"
-  config.default_confirm_success_url = "https://www.hoteler.jp/signin"
+  config.default_confirm_success_url = "https://hoteler.jp/signin"
+  # config.default_confirm_success_url = "https://www.hoteler.jp/signin"
   # config.default_password_reset_url = "http://localhost:3001/"
 end
