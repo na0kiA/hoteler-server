@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   before_action :convert_to_snake_case_params
   before_action :set_csrf_token_header
-  
+
   helper_method :current_user, :user_signed_in?
 
   private
