@@ -24,16 +24,17 @@ resource "aws_amplify_app" "this" {
   EOT
 
 
-  enable_auto_branch_creation = true
-  enable_branch_auto_build    = true
-  enable_branch_auto_deletion = true
-  platform                    = "WEB"
+  enable_auto_branch_creation = false
+  enable_branch_auto_build    = false
+  enable_branch_auto_deletion = false
+  platform                    = "WEB_COMPUTE"
 
   custom_rule {
     source = "/<*>"
     status = "404-200"
     target = "/index.html"  
   }
+
 
   auto_branch_creation_config {
     enable_pull_request_preview = true
@@ -49,7 +50,7 @@ resource "aws_amplify_branch" "this" {
 
   enable_auto_build = true
 
-  framework = "Next.js"
+  framework = "Next.js - SSR"
   stage     = "DEVELOPMENT"
 
 
