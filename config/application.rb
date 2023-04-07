@@ -28,7 +28,7 @@ module App
 
     config.action_controller.forgery_protection_origin_check = false
 
-    config.middleware.use ActionDispatch::Session::CookieStore, { key: "_app_session", domani: "localhost", same_site: :none, secure: true }
+    config.middleware.use ActionDispatch::Session::CookieStore, { key: "_app_session", domani: "api.hoteler.jp", same_site: :none, secure: true }
 
     config.action_controller.raise_on_open_redirects = false
 
