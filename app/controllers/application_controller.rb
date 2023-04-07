@@ -8,10 +8,8 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, with: :path_not_found
 
   before_action :convert_to_snake_case_params
-
-  skip_before_action :verify_authenticity_token
-
   before_action :set_csrf_token_header
+  
   helper_method :current_user, :user_signed_in?
 
   private
