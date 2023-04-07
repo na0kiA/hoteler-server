@@ -10,6 +10,7 @@ class NotificationSerializer < ActiveModel::Serializer
              :hotel_id,
              :sender_id,
              :user_id,
+             :review_id,
              :hotel_name,
              :sender_name,
              :reviewer_rating,
@@ -50,5 +51,9 @@ class NotificationSerializer < ActiveModel::Serializer
 
   def reviewer_rating
     Review.find_by(user: object.sender)&.five_star_rate
+  end
+
+  def review_id
+    Review.find_by(user: object.sender)&.id
   end
 end
