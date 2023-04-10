@@ -4,7 +4,7 @@ resource "aws_acm_certificate" "root" {
   validation_method = "DNS"
 
   tags = {
-    Name = "${local.service_name}-lovehoteler-com"
+    Name = "${local.service_name}-jp"
   }
 
   # デフォルトではリソースが削除されてから作成されるが、証明書に関してはロードバランサーリスナーで使用中なのを考慮して、作成してから削除させる

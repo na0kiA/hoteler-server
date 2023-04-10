@@ -1,5 +1,5 @@
 resource "aws_lb" "this" {
-  name = "${local.service_name}-lovehoteler-com"
+  name = "${local.service_name}-jp"
 
   internal           = false
   load_balancer_type = "application"
@@ -7,7 +7,7 @@ resource "aws_lb" "this" {
   access_logs {
     bucket  = data.terraform_remote_state.log_alb.outputs.s3_bucket_this_id
     enabled = true
-    prefix  = "lovehoteler-com"
+    prefix  = "hoteler-jp"
   }
 
   security_groups = [
@@ -20,7 +20,7 @@ resource "aws_lb" "this" {
   ]
 
   tags = {
-    Name = "${local.service_name}-lovehoteler-com"
+    Name = "${local.service_name}-jp"
   }
 }
 
