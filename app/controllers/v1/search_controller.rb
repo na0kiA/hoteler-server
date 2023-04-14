@@ -6,8 +6,7 @@ class V1::SearchController < ApplicationController
     accepted_hotel = Hotel.accepted
 
     if search_params[:keyword].present?
-      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: empty_hotel_box_for_searched_list, accepted_hotel:).eager_load(:hotel_facility, :days, :rest_rates,
-                                                                                                                                                           :hotel_images, :stay_rates)
+      searched_by_keyword_hotel_list = search_each_params_of_keyword(box_for_searched_list: empty_hotel_box_for_searched_list, accepted_hotel:).eager_load(:hotel_facility, :days, :rest_rates, :hotel_images, :stay_rates)
 
       filterd_hotel_list = filterd_hotels(searched_by_keyword_hotel_list:)
 
@@ -56,7 +55,9 @@ class V1::SearchController < ApplicationController
 
     def sorting_not_needed(searched_by_keyword_hotel_list:)
       return render json: render_not_match_params(search_params[:keyword]), each_serializer: HotelIndexSerializer if searched_by_keyword_hotel_list.blank?
-      return render json: searched_by_keyword_hotel_list, each_serializer: HotelIndexSerializer if search_params[:sort].blank?
+
+      return render json: searched_by_keyword_hotel_list, each_serializer: HotelIndexSerializer, services: ExtractTodayService.new(hotels: searched_by_keyword_hotel_list).extract_today_services if search_params[:sort].blank?
+
       return search_not_found if not_match_any_sort_params?
     end
 

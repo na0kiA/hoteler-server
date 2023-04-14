@@ -55,9 +55,20 @@ RSpec.describe "V1::Searches", type: :request do
     end
 
     context "キーワードに存在するホテルの住所が与えられた場合" do
+      let_it_be(:cheap_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, :with_user, :with_reviews_and_helpfulnesses) }
+
+      before do
+        travel_to Time.zone.local(2022, 12, 12, 12, 0, 0)
+      end
+
       it "該当するホテルが検索されること" do
         get v1_search_index_path, params: { keyword: "丁目" }
         expect(symbolized_body(response)[:hotels].first.length).to eq(9)
+      end
+
+      it "該当するホテルの休憩料金が表示されること" do
+        get v1_search_index_path, params: { keyword: "丁目" }
+        expect(symbolized_body(response)[:hotels][1][:restRates][:plan]).to eq("休憩60分")
       end
 
       it "パラメーターが5つでも該当するホテルが検索されること" do
