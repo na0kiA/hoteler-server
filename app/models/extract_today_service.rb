@@ -16,7 +16,7 @@ class ExtractTodayService
 
     def select_services(hotel_and_today_services_list = [])
       return if hotels.is_a?(String)
-      
+
       hotels.map do |hotel|
         hotel_and_today_services_list << extract_open_rest_rate(hotel:) << extract_open_stay_rate(hotel:)
       end
