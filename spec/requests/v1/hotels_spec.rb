@@ -186,6 +186,20 @@ RSpec.describe "V1::Hotels", type: :request do
     let_it_be(:accepted_hotel) { create(:completed_profile_hotel, :with_days_and_service_rates, user: client_user) }
     let_it_be(:hotel_image) { create_list(:hotel_image, 3, hotel: accepted_hotel) }
 
+    context "月曜から木曜の料金が設定されてある場合" do
+      let_it_be(:hotel) { create(:accepted_hotel, user: create(:user)) }
+      let_it_be(:rest_rate) { create(:rest_rate, :normal_rest_rate, hotel:, day: hotel.days.first) }
+
+      before do
+        travel_to Time.zone.local(2023, 4, 18, 12, 0, 0)
+      end
+
+      it "料金を返すこと" do
+        get v1_search_index_path, params: { keyword: "hotel" }
+        expect(symbolized_body(response)[:hotels][0][:restRates][:rate]).to eq(3280)
+      end
+    end
+
     context "ホテルが承認されている場合" do
       it "ホテル一覧を取得できること" do
         get v1_hotels_path
