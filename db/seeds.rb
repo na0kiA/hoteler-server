@@ -6,10 +6,10 @@ include FactoryBot::Syntax::Methods
 one_to_nine = (1..9).to_a.sample
 
 
-100.times do |i|
+5.times do |i|
   hotel = create(
     :with_random_service_completed_hotel,
-    :with_user,
+    user: User.find_by(name: "ゲストユーザー"),
     name: hotel_names.sample,
     content: "#{hotel_content.sample}#{hotel_fee.sample}",
     accepted: true,
@@ -29,17 +29,17 @@ one_to_nine = (1..9).to_a.sample
     create(:hotel_image , hotel_id: hotel.id, key: "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/hotel-top-#{(0..119).to_a.sample}.jpg")
   end
 
-  (1..4).to_a.sample.times do
+  (1..3).to_a.sample.times do
     sample_user = create(:sample_user, name: user_name.sample)
     create(:review, hotel_id: hotel.id, five_star_rate: (1..2).to_a.sample, title: one_or_two_reviews_title.sample, content: two_or_one_reviews_content.sample, user: sample_user )
   end
 
-  (2..6).to_a.sample.times do
+  (2..5).to_a.sample.times do
     sample_user = create(:sample_user, name: user_name.sample)
     create(:review, hotel_id: hotel.id, five_star_rate: 3, title: three_reviews_title.sample, content: three_reviews_content.sample, user: sample_user)
   end
 
-  (3..20).to_a.sample.times do
+  (6..12).to_a.sample.times do
     sample_user = create(:sample_user, name: user_name.sample)
     create(:review, hotel_id: hotel.id, five_star_rate: (4..5).to_a.sample, title: five_or_four_reviews_title.sample, content: five_or_four_reviews_content.sample, user: sample_user)
   end
