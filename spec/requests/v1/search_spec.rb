@@ -6,6 +6,20 @@ RSpec.describe "V1::Searches", type: :request do
   describe "GET /v1/search/ - v1/search#index" do
     let_it_be(:hotel) { create(:accepted_hotel, user: create(:user)) }
 
+    context "月曜から木曜の料金が設定されてある場合" do
+      let_it_be(:completed_hotel) { create(:with_service_completed_hotel, user: create(:user)) }
+
+      before do
+        travel_to Time.zone.local(2023, 4, 18, 12, 0, 0)
+      end
+
+      it "料金を返すこと" do
+        get v1_search_index_path, params: { keyword: "hotel" }
+        p symbolized_body(response)
+        expect(symbolized_body(response)[:hotels][1][:restRates][:rate]).to eq(3280)
+      end
+    end
+
     context "キーワードに何も付与されていない場合" do
       it "404を返すこと" do
         get v1_search_index_path
