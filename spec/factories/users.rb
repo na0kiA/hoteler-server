@@ -23,7 +23,7 @@ FactoryBot.define do
 
   factory :sample_user, class: "User" do
     sequence(:name) { "かずき" }
-    sequence(:email) { |n| "testers9#{n}@example.com" }
+    sequence(:email) { |n| "testerss9#{n}@example.com" }
     sequence(:password) { |n| "test#{n}#{n}#{n}#{n}111" }
     sequence(:password_confirmation) { |n| "test#{n}#{n}#{n}#{n}111" }
     sequence(:image) { "uploads/hoteler/4786f605-a290-4849-929f-cafbacb46beb/user-top-#{(0..119).to_a.sample}.jpg" }
