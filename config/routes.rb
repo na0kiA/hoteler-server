@@ -41,7 +41,11 @@ Rails.application.routes.draw do
     resources :notifications, only: %i[index]
     resources :notification_or_not, only: %i[index]
 
-    resources :search, only: %i[index]
+    resources :search, only: %i[index] do
+      resources :room_status, only: %i[index]
+      resources :price, only: %i[index]
+      resources :location, only: %i[index]
+    end
 
     resources :images, only: %i[index]
 
